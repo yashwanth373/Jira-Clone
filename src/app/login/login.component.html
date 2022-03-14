@@ -57,21 +57,38 @@
             </span>
           </div>
           <div class="login-opts">
-              <div class="login-opt google">
-                  <img src="../../assets/login-google.svg" />
-                  <span class="login-opt-text">Sign in with Google</span>
+            <div class="login-opts-title">
+              <span>Sign In or Setup Account using</span>
+            </div>
+            <div class="login-opt google" (click) = "loginGoogle()">
+              <div style="display: flex; width: 1%; justify-content: center;padding-left:5%;">
+                <img src="../../assets/login-google.svg" />
               </div>
-              <div class="login-opt apple">
-                  <img src="../../assets/login-apple.svg" />
-                  <span class="login-opt-text">Sign in with Apple</span>
+              <div style="display: flex; width: 99%; justify-content: center">
+                <span class="login-opt-text">Google</span>
               </div>
-              <div class="login-opt github">
-                  <img src="../../assets/login-github.svg" />
-                  <span class="login-opt-text">Sign in with Github</span>
+            </div>
+            <div class="login-opt microsoft" (click) = "loginMicrosoft()">
+              <div style="display: flex; width: 1%; justify-content: center;padding-left:5%;">
+                <img src="../../assets/login-microsoft.svg" />
               </div>
-              <div class="login-reg-opt">
-                  <span class="login-reg-opt-text" routerLink="register">Don't have an account? Sign Up</span>
+              <div style="display: flex; width: 99%; justify-content: center;">
+                <span class="login-opt-text">Microsoft</span>
               </div>
+            </div>
+            <div class="login-opt github">
+              <div style="display: flex; width: 1%; justify-content: center;padding-left:5%;">
+                <img src="../../assets/login-github.svg" />
+              </div>
+              <div style="display: flex; width: 99%; justify-content: center">
+                <span class="login-opt-text">Github</span>
+              </div>
+            </div>
+            <div class="login-reg-opt">
+              <span class="login-reg-opt-text" routerLink="/register"
+                >Don't have an account? Sign Up</span
+              >
+            </div>
           </div>
         </div>
         <div class="login-right-img">

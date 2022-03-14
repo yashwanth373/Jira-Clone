@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-login',
@@ -7,9 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _dataService : DataService) { }
 
   ngOnInit(): void {
+  }
+
+  loginGoogle(){
+    this._dataService.loginGoogle();
+  }
+
+  loginMicrosoft(){
+    this._dataService.loginMicrosoft();
   }
 
 }
