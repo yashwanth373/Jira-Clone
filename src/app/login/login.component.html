@@ -60,24 +60,45 @@
             <div class="login-opts-title">
               <span>Sign In or Setup Account using</span>
             </div>
-            <div class="login-opt google" (click) = "loginGoogle()">
-              <div style="display: flex; width: 1%; justify-content: center;padding-left:5%;">
+            <div class="login-opt google" (click)="loginGoogle()">
+              <div
+                style="
+                  display: flex;
+                  width: 1%;
+                  justify-content: center;
+                  padding-left: 5%;
+                "
+              >
                 <img src="../../assets/login-google.svg" />
               </div>
               <div style="display: flex; width: 99%; justify-content: center">
                 <span class="login-opt-text">Google</span>
               </div>
             </div>
-            <div class="login-opt microsoft" (click) = "loginMicrosoft()">
-              <div style="display: flex; width: 1%; justify-content: center;padding-left:5%;">
+            <div class="login-opt microsoft" (click)="loginMicrosoft()">
+              <div
+                style="
+                  display: flex;
+                  width: 1%;
+                  justify-content: center;
+                  padding-left: 5%;
+                "
+              >
                 <img src="../../assets/login-microsoft.svg" />
               </div>
-              <div style="display: flex; width: 99%; justify-content: center;">
+              <div style="display: flex; width: 99%; justify-content: center">
                 <span class="login-opt-text">Microsoft</span>
               </div>
             </div>
-            <div class="login-opt github">
-              <div style="display: flex; width: 1%; justify-content: center;padding-left:5%;">
+            <div class="login-opt github" (click)="loginGithub()">
+              <div
+                style="
+                  display: flex;
+                  width: 1%;
+                  justify-content: center;
+                  padding-left: 5%;
+                "
+              >
                 <img src="../../assets/login-github.svg" />
               </div>
               <div style="display: flex; width: 99%; justify-content: center">

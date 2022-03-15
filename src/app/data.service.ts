@@ -21,6 +21,10 @@ export class DataService {
     window.open('/microsoft','_self')
   }
 
+  loginGithub (){
+    window.open('/github','_self')
+  }
+
   getDetails(){
     console.log("getDetails called")
     return this.http.get("/getDetails")

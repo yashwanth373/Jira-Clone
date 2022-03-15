@@ -1,6 +1,7 @@
 const {MongoClient} = require('mongodb');
+require('dotenv').config()
 
-const dburl = 'mongodb+srv://kakashi:Naruto@clusterme.ljagy.mongodb.net/JIRAClone?retryWrites=true&w=majority'
+const dburl = process.env.DB_URL;
 
 const client = new MongoClient(dburl, { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -17,13 +18,6 @@ async function insertUser(user){
         name: user.name,
         projects: [],
         displayPicture: user.img,
-        // bgImage: user.bgImg,
-        // details : {
-        //     role: user.role,
-        //     department: user.department,
-        //     org_name: user.org_name,
-        //     location: user.location
-        // }
     }
 
    return client.db('JIRAClone').collection('users').insertOne(document);

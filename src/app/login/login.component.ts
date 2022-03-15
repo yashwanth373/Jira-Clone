@@ -21,4 +21,8 @@ export class LoginComponent implements OnInit {
     this._dataService.loginMicrosoft();
   }
 
+  loginGithub(){
+    this._dataService.loginGithub();
+  }
+
 }
