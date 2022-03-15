@@ -1,0 +1,132 @@
+.mycontainer {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -99999999;
+  background-color: #fafbfc;
+}
+
+.top_nav {
+  height: 7%;
+  width: 100%;
+  box-shadow: 0px 4px 4px -3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 1.5%;
+  padding-right: 1.5%;
+}
+
+.top_nav_left {
+  height: 100%;
+  width: 40%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.top_nav_left_option {
+  font-size: 1rem;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.top_nav_left_option:hover {
+  border-bottom: 2px solid #0052cc;
+  cursor: pointer;
+}
+
+.top_nav_left_option_active {
+  border-bottom: 2px solid #0052cc;
+}
+
+.top_nav_left_button {
+  font-size: 1rem;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  color: white;
+  background-color: #0052cc;
+  padding: 6px 12px 6px 12px;
+  border-radius: 5px;
+}
+
+.top_nav_left_button:hover {
+  background-color: #1362d8;
+  color: white;
+  cursor: pointer;
+}
+
+.nav-logo {
+  color: #2684ff;
+  fill: #253858;
+}
+
+.top_nav_right {
+  height: 100%;
+  width: 10%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.top_nav_right_logo {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.top_nav_right_okay_logo {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: contain;
+}
+
+.top_nav_right_okay_logo:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+.top_nav_right_dummy_logo {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0052cc;
+  font-family: Roboto, sans-serif;
+  color: white;
+}
+
+.top_nav_right_dummy_logo:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-item {
+  font-family: Roboto, sans-serif;
+}
+.dropdown-item:hover {
+  cursor: pointer;
+}
+
+.dropdown-item:active {
+  color: black !important;
+  background-color: #e4e4e4 !important;
+}
+
+.content {
+  height: 93%;
+}

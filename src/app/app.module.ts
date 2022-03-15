@@ -7,13 +7,23 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
 import { RegisterComponent } from './register/register.component';
+import { YourworkComponent } from './yourwork/yourwork.component';
+import { ProjectslistComponent } from './projectslist/projectslist.component';
+import { PeoplelistComponent } from './peoplelist/peoplelist.component';
+import { ProjectboardComponent } from './projectboard/projectboard.component';
+import { ProjectdashboardComponent } from './projectdashboard/projectdashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ProjectsDashboardComponent,
-    RegisterComponent
+    RegisterComponent,
+    YourworkComponent,
+    ProjectslistComponent,
+    PeoplelistComponent,
+    ProjectboardComponent,
+    ProjectdashboardComponent
   ],
   imports: [
     AppRoutingModule,

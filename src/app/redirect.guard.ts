@@ -16,7 +16,7 @@ export class RedirectGuard implements CanActivate {
     return this._dataService.isAuthenticate().pipe(
       map((data : any) => {
       if(data.authenticate){
-        this.router.navigate(['/ProjectsDashboard']);
+        this.router.navigate(['/Projects']);
         return false;
       }
       else{

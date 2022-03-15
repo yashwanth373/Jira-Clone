@@ -46,15 +46,6 @@ app.get("/authenticate", (req, res) => {
     }
 })
 
-app.get("/getDetails", (req, res) => {
-    if (req.user) {
-        res.json({ user: req.user })
-    }
-    else {
-        res.json({ user: null })
-    }
-})
-
 
 //OAuth using google
 
@@ -67,7 +58,7 @@ app.get('/google/callback', passport.authenticate('google', { failureRedirect: '
         let result = await findUser(req.user.id)
         if (result) {
             console.log("exists", result)
-            res.redirect('/ProjectsDashboard');
+            res.redirect('/Projects');
         }
         else {
             let userDocument = {
@@ -82,7 +73,7 @@ app.get('/google/callback', passport.authenticate('google', { failureRedirect: '
             console.log("inserted", result)
 
             if (result)
-                res.redirect('/ProjectsDashboard');
+                res.redirect('/Projects');
         }
     })
 
@@ -97,7 +88,7 @@ app.get('/microsoft/callback', passport.authenticate('microsoft', { failureRedir
         let result = await findUser(req.user.id)
         if (result) {
             console.log("exists", result)
-            res.redirect('/ProjectsDashboard');
+            res.redirect('/Projects');
         }
         else {
             let userDocument = {
@@ -112,7 +103,7 @@ app.get('/microsoft/callback', passport.authenticate('microsoft', { failureRedir
             console.log("inserted", result)
 
             if (result)
-                res.redirect('/ProjectsDashboard');
+                res.redirect('/Projects');
         }
     }
 );
@@ -128,7 +119,7 @@ app.get('/github/callback', passport.authenticate('github', { failureRedirect: '
         let result = await findUser(req.user.id)
         if (result) {
             console.log("exists", result)
-            res.redirect('/ProjectsDashboard');
+            res.redirect('/Projects');
         }
         else {
             let userDocument = {
@@ -143,10 +134,42 @@ app.get('/github/callback', passport.authenticate('github', { failureRedirect: '
             console.log("inserted", result)
 
             if (result)
-                res.redirect('/ProjectsDashboard');
+                res.redirect('/Projects');
         }
     }
 );
+
+//Log out 
+
+app.get("/logout", (req, res) => {
+    console.log("logging out")
+    req.session = null;
+    req.logout();
+    res.redirect('/');
+})
+
+
+
+// DB operations 
+
+app.get("/getDetails", async (req, res) => {
+
+    try {
+        let result = await findUser(req.user.id)
+        console.log(result)
+
+        if (result) {
+            res.json({ user: result })
+        }
+        else {
+            res.json({ user: null })
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+
+})
 
 
 

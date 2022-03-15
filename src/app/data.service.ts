@@ -29,4 +29,9 @@ export class DataService {
     console.log("getDetails called")
     return this.http.get("/getDetails")
   }
+
+  logout(){
+    console.log("function invoked in service")
+    window.open('/logout','_self')
+  }
 }
