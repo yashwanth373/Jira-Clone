@@ -31,7 +31,13 @@ function findUser(user_id){
     return client.db('JIRAClone').collection('users').findOne({user_id: user_id})
 }
 
+
+function getProjectDetails(project_id){
+    return client.db('JIRAClone').collection('projects').findOne({project_id: project_id})
+}
+
 module.exports = {
     insertUser,
-    findUser
+    findUser,
+    getProjectDetails
 }

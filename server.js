@@ -4,9 +4,9 @@ const bodyparser = require("body-parser");
 const passport = require('passport');
 const path = require('path')
 const cookieSession = require('cookie-session');
-const { findUser, insertUser } = require('./database');
+const async = require('async');
+const { findUser, insertUser, getProjectDetails } = require('./database');
 require("./passport-setup");
-require("./database");
 require('dotenv').config()
 
 const app = express();
@@ -148,15 +148,25 @@ app.get("/logout", (req, res) => {
     res.redirect('/');
 })
 
+//middleware for authorization of API calls
+
+const isLoggedIn = (req,res,next) => {
+    if(req.user){
+        next()
+    }
+    else{
+        res.redirect('/')
+    }
+}
+
 
 
 // DB operations 
 
-app.get("/getDetails", async (req, res) => {
+app.get("/getDetails",isLoggedIn,  async (req, res) => {
 
     try {
         let result = await findUser(req.user.id)
-        console.log(result)
 
         if (result) {
             res.json({ user: result })
@@ -169,6 +179,28 @@ app.get("/getDetails", async (req, res) => {
         console.log(err)
     }
 
+})
+
+app.get("/getProjectsList",isLoggedIn, async (req,res) => {
+    const {projects} = await findUser(req.user.id)
+
+    let projectsList = []
+    async.each(projects, async (project_id,done) => {
+        let project = await getProjectDetails(project_id)
+
+        projectsList.push({
+            icon: project.icon,
+            name: project.name,
+            key: project.key,
+            owner_name: project.owner.name,
+            owner_img: project.owner.img,
+        })
+    },
+        function (er) {
+            res.json({data : projectsList})
+        }
+    )
+    
 })
 
 

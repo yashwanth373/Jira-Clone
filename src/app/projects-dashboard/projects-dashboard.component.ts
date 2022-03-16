@@ -10,7 +10,7 @@ export class ProjectsDashboardComponent implements OnInit {
 
   user : any = {}; // change to null in porduction
 
-  dummy_image: string = "YR";
+  dummy_image: string = "";
 
   constructor(private _dataService : DataService) { }
 
@@ -18,7 +18,15 @@ export class ProjectsDashboardComponent implements OnInit {
     this._dataService.getDetails().subscribe((data : any) => {
       this.user = data.user;
       console.log(this.user)
+      if(this.user.displayPicture === null)
+        this.createDummyImage(this.user.name)
     })
+  }
+
+  createDummyImage(name : string){
+    let words = name.split(" ")
+    let initials = words[0][0] + words[1][0]
+    this.dummy_image = initials.toUpperCase()
   }
 
   logout(){

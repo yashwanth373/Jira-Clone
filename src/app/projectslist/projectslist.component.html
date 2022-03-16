@@ -1,1 +1,119 @@
-<a routerLink="../5674673565"> Project Beta</a>
+<div class="mycontainer">
+  <div class="title">
+    <div class="title-left">Projects</div>
+    <div
+      class="title-right-create-button"
+      *ngIf="projectList && projectList.length > 0"
+    >
+      Create Project
+    </div>
+  </div>
+  <div class="content">
+    <div *ngIf="projectList" style="width: 100%; height: 100%">
+      <div *ngIf="projectList.length > 0; then list; else empty"></div>
+      <ng-template #list>
+        <div class="projects-list-full">
+          <div class="projects-list-full-search">
+            <input
+              type="text"
+              name="search"
+              id="search"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <svg width="25" height="15" viewBox="9 0 24 24" role="presentation">
+              <path
+                d="M16.436 15.085l3.94 4.01a1 1 0 01-1.425 1.402l-3.938-4.006a7.5 7.5 0 111.423-1.406zM10.5 16a5.5 5.5 0 100-11 5.5 5.5 0 000 11z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+          <div class="projects-list-full-table">
+            <table class="table">
+              <thead class="table-project-thead">
+                <tr>
+                  <td scope="col" class="thead-project-name">Name</td>
+                  <td scope="col" class="thead-project-key">KEY</td>
+                  <td scope="col" class="thead-project-lead">Lead</td>
+                  <td scope="col" class="thead-project-opts"></td>
+                </tr>
+              </thead>
+              <tbody class="table-project-tbody">
+                <tr *ngFor="let project of projectList">
+                  <td scope="row" class="tbody-project-name">
+                    <div class="project">
+                      <div class="project-logo">
+                        <img [src]="project.icon" alt="" />
+                      </div>
+                      <div class="project-name">
+                        {{ project.name }}
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbody-project-key">{{ project.key }}</td>
+                  <td class="tbody-project-lead">
+                    <div class="lead">
+                      <div class="lead-logo">
+                        <div
+                          *ngIf="
+                            project.owner_img;
+                            then logo;
+                            else dummy_logo
+                          "
+                        ></div>
+                        <ng-template #logo>
+                          <img
+                            [src]="project.owner_img"
+                          />
+                        </ng-template>
+                        <ng-template #dummy_logo>
+                          <div class="lead-dummy-logo">
+                            {{ project.dummy_img }}
+                          </div>
+                        </ng-template>
+                      </div>
+                      <div class="lead-name">
+                        {{ project.owner_name }}
+                      </div>
+                    </div>
+                  </td>
+                  <td style="padding: 0 5px 0 0 !important">
+                    <div class="tbody-project-opts">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        role="presentation"
+                      >
+                        <g fill="currentColor" fill-rule="evenodd">
+                          <circle cx="5" cy="12" r="2"></circle>
+                          <circle cx="12" cy="12" r="2"></circle>
+                          <circle cx="19" cy="12" r="2"></circle>
+                        </g>
+                      </svg>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #empty>
+        <div class="projects-list-empty">
+          <div class="projects-list-empty-img">
+            <img src="../../assets/projects-list-empty-img.svg" />
+          </div>
+          <div class="projects-list-empty-title">
+            You currently have no projects
+          </div>
+          <div class="projects-list-empty-subtitle">
+            Let's create your first project in Jira
+          </div>
+          <div class="projects-list-empty-create-button">Create Project</div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
