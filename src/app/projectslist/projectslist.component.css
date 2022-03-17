@@ -170,6 +170,10 @@ th {
   padding-left: 10px;
 }
 
+.tbody-project-name:hover {
+  cursor: pointer;
+}
+
 .tbody-project-name .project-logo {
   width: 8%;
   height: 100%;
@@ -231,4 +235,19 @@ th {
   font-family: Roboto, sans-serif;
   font-size: 0.5rem;
   color: white;
+}
+
+.dropdown-item:active {
+  color: white !important;
+  background-color: #de350b !important;
+}
+
+.dropdown-item:hover {
+  cursor: pointer;
+  color: white !important;
+  background-color: #de350b !important;
+}
+
+.dropdown-item {
+  font-family: Roboto, sans-serif;
 }

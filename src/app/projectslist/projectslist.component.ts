@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnChanges, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { DataService } from '../data.service';
 })
 export class ProjectslistComponent implements OnInit {
 
-  constructor(private _dataService : DataService) {
+  constructor(private _dataService : DataService, private router : Router) {
     console.log("ProjectsList constructor")
    }
 
@@ -29,6 +30,14 @@ export class ProjectslistComponent implements OnInit {
     let words = name.split(" ")
     let initials = words[0][0] + words[1][0]
     return initials.toUpperCase()
+  }
+
+  deleteProject(i : any){
+    console.log(i)
+  }
+
+  gotoProject(i : any){
+    this.router.navigate(['/Projects/' + i])
   }
 
 }

@@ -189,6 +189,7 @@ app.get("/getProjectsList",isLoggedIn, async (req,res) => {
         let project = await getProjectDetails(project_id)
 
         projectsList.push({
+            id : project.project_id,
             icon: project.icon,
             name: project.name,
             key: project.key,

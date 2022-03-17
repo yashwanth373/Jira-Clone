@@ -24,6 +24,7 @@ const routes: Routes = [
       {path: 'people',component: PeoplelistComponent, canActivate: [AuthGuard]},
       {path: ':projectId', component: ProjectdashboardComponent, canActivate: [AuthGuard] ,
         children:[
+          { path: '', redirectTo: 'board', pathMatch: 'full' },
           {path: 'board', component: ProjectboardComponent, canActivate: [AuthGuard]}
         ]
       },
@@ -35,7 +36,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes,{ enableTracing: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

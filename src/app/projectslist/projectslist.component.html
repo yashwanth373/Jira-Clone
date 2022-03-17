@@ -40,8 +40,8 @@
                 </tr>
               </thead>
               <tbody class="table-project-tbody">
-                <tr *ngFor="let project of projectList">
-                  <td scope="row" class="tbody-project-name">
+                <tr *ngFor="let project of projectList; index as i">
+                  <td scope="row" class="tbody-project-name" (click)="gotoProject(project.id)">
                     <div class="project">
                       <div class="project-logo">
                         <img [src]="project.icon" alt="" />
@@ -56,16 +56,10 @@
                     <div class="lead">
                       <div class="lead-logo">
                         <div
-                          *ngIf="
-                            project.owner_img;
-                            then logo;
-                            else dummy_logo
-                          "
+                          *ngIf="project.owner_img; then logo; else dummy_logo"
                         ></div>
                         <ng-template #logo>
-                          <img
-                            [src]="project.owner_img"
-                          />
+                          <img [src]="project.owner_img" />
                         </ng-template>
                         <ng-template #dummy_logo>
                           <div class="lead-dummy-logo">
@@ -79,19 +73,36 @@
                     </div>
                   </td>
                   <td style="padding: 0 5px 0 0 !important">
-                    <div class="tbody-project-opts">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        role="presentation"
+                    <div class="dropdown">
+                      <div
+                        class="tbody-project-opts"
+                        [id]="i"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
                       >
-                        <g fill="currentColor" fill-rule="evenodd">
-                          <circle cx="5" cy="12" r="2"></circle>
-                          <circle cx="12" cy="12" r="2"></circle>
-                          <circle cx="19" cy="12" r="2"></circle>
-                        </g>
-                      </svg>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          role="presentation"
+                        >
+                          <g fill="currentColor" fill-rule="evenodd">
+                            <circle cx="5" cy="12" r="2"></circle>
+                            <circle cx="12" cy="12" r="2"></circle>
+                            <circle cx="19" cy="12" r="2"></circle>
+                          </g>
+                        </svg>
+                      </div>
+                      <ul
+                        class="dropdown-menu"
+                        [attr.aria-labelledby]="i"
+                      >
+                        <li>
+                          <span class="dropdown-item" (click)="deleteProject(project.id)"
+                            >Move to Trash</span
+                          >
+                        </li>
+                      </ul>
                     </div>
                   </td>
                 </tr>
