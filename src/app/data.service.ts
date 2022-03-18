@@ -46,4 +46,9 @@ export class DataService {
     console.log("getProjectsList called")
     return this.http.get("/getProjectsList")
   }
+
+  deleteProject(id : any){
+    console.log("deleteProject called")
+    return this.http.delete("/deleteProject/" + id)
+  }
 }

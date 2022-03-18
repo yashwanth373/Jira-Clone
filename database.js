@@ -36,8 +36,13 @@ function getProjectDetails(project_id){
     return client.db('JIRAClone').collection('projects').findOne({project_id: project_id})
 }
 
+function deleteProject(project_id){
+    return client.db('JIRAClone').collection('projects').deleteOne({project_id: project_id})
+}
+
 module.exports = {
     insertUser,
     findUser,
-    getProjectDetails
+    getProjectDetails,
+    deleteProject
 }

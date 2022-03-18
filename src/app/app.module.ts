@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +13,7 @@ import { ProjectslistComponent } from './projectslist/projectslist.component';
 import { PeoplelistComponent } from './peoplelist/peoplelist.component';
 import { ProjectboardComponent } from './projectboard/projectboard.component';
 import { ProjectdashboardComponent } from './projectdashboard/projectdashboard.component';
+import { ProjectSearchPipe } from './project-search.pipe';
 
 @NgModule({
   declarations: [
@@ -23,12 +25,14 @@ import { ProjectdashboardComponent } from './projectdashboard/projectdashboard.c
     ProjectslistComponent,
     PeoplelistComponent,
     ProjectboardComponent,
-    ProjectdashboardComponent
+    ProjectdashboardComponent,
+    ProjectSearchPipe
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

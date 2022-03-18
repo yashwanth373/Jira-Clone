@@ -5,7 +5,7 @@ const passport = require('passport');
 const path = require('path')
 const cookieSession = require('cookie-session');
 const async = require('async');
-const { findUser, insertUser, getProjectDetails } = require('./database');
+const { findUser, insertUser, getProjectDetails, deleteProject } = require('./database');
 require("./passport-setup");
 require('dotenv').config()
 
@@ -188,6 +188,8 @@ app.get("/getProjectsList",isLoggedIn, async (req,res) => {
     async.each(projects, async (project_id,done) => {
         let project = await getProjectDetails(project_id)
 
+        let isOwner = req.user.id === project.owner.user_id
+
         projectsList.push({
             id : project.project_id,
             icon: project.icon,
@@ -195,6 +197,8 @@ app.get("/getProjectsList",isLoggedIn, async (req,res) => {
             key: project.key,
             owner_name: project.owner.name,
             owner_img: project.owner.img,
+            owner_id: project.owner.user_id,
+            isOwner: isOwner
         })
     },
         function (er) {
@@ -202,6 +206,14 @@ app.get("/getProjectsList",isLoggedIn, async (req,res) => {
         }
     )
     
+})
+
+app.delete("/deleteProject/:project_id",isLoggedIn, async (req,res) => {
+
+    let result = await deleteProject(req.params.project_id)
+    if(result.deletedCount > 0)
+        res.json({status : "success"})
+
 })
 
 

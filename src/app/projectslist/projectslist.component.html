@@ -20,6 +20,7 @@
               id="search"
               autocomplete="off"
               spellcheck="false"
+              [(ngModel)]="searchQuery"
             />
             <svg width="25" height="15" viewBox="9 0 24 24" role="presentation">
               <path
@@ -40,74 +41,110 @@
                 </tr>
               </thead>
               <tbody class="table-project-tbody">
-                <tr *ngFor="let project of projectList; index as i">
-                  <td scope="row" class="tbody-project-name" (click)="gotoProject(project.id)">
-                    <div class="project">
-                      <div class="project-logo">
-                        <img [src]="project.icon" alt="" />
+                <tr
+                  *ngFor="
+                    let project of projectList | projectSearch: searchQuery;
+                    index as i
+                  "
+                >
+                  <span *ngIf="projectList.length !== 0; then proList"></span>
+                  <ng-template #proList>
+                    <td
+                      scope="row"
+                      class="tbody-project-name"
+                      (click)="gotoProject(project.id)"
+                    >
+                      <div class="project">
+                        <div class="project-logo">
+                          <img [src]="project.icon" alt="" />
+                        </div>
+                        <div class="project-name">
+                          {{ project.name }}
+                        </div>
                       </div>
-                      <div class="project-name">
-                        {{ project.name }}
+                    </td>
+                    <td class="tbody-project-key">{{ project.key }}</td>
+                    <td class="tbody-project-lead">
+                      <div class="lead">
+                        <div class="lead-logo">
+                          <div
+                            *ngIf="
+                              project.owner_img;
+                              then logo;
+                              else dummy_logo
+                            "
+                          ></div>
+                          <ng-template #logo>
+                            <img [src]="project.owner_img" />
+                          </ng-template>
+                          <ng-template #dummy_logo>
+                            <div class="lead-dummy-logo">
+                              {{ project.dummy_img }}
+                            </div>
+                          </ng-template>
+                        </div>
+                        <div class="lead-name">
+                          {{ project.owner_name }}
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td class="tbody-project-key">{{ project.key }}</td>
-                  <td class="tbody-project-lead">
-                    <div class="lead">
-                      <div class="lead-logo">
+                    </td>
+                    <td style="padding: 0 5px 0 0 !important">
+                      <div class="dropdown">
                         <div
-                          *ngIf="project.owner_img; then logo; else dummy_logo"
-                        ></div>
-                        <ng-template #logo>
-                          <img [src]="project.owner_img" />
-                        </ng-template>
-                        <ng-template #dummy_logo>
-                          <div class="lead-dummy-logo">
-                            {{ project.dummy_img }}
-                          </div>
-                        </ng-template>
-                      </div>
-                      <div class="lead-name">
-                        {{ project.owner_name }}
-                      </div>
-                    </div>
-                  </td>
-                  <td style="padding: 0 5px 0 0 !important">
-                    <div class="dropdown">
-                      <div
-                        class="tbody-project-opts"
-                        [id]="i"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          role="presentation"
+                          class="tbody-project-opts"
+                          [id]="i"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
                         >
-                          <g fill="currentColor" fill-rule="evenodd">
-                            <circle cx="5" cy="12" r="2"></circle>
-                            <circle cx="12" cy="12" r="2"></circle>
-                            <circle cx="19" cy="12" r="2"></circle>
-                          </g>
-                        </svg>
-                      </div>
-                      <ul
-                        class="dropdown-menu"
-                        [attr.aria-labelledby]="i"
-                      >
-                        <li>
-                          <span class="dropdown-item" (click)="deleteProject(project.id)"
-                            >Move to Trash</span
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            role="presentation"
                           >
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
+                            <g fill="currentColor" fill-rule="evenodd">
+                              <circle cx="5" cy="12" r="2"></circle>
+                              <circle cx="12" cy="12" r="2"></circle>
+                              <circle cx="19" cy="12" r="2"></circle>
+                            </g>
+                          </svg>
+                        </div>
+                        <ul class="dropdown-menu" [attr.aria-labelledby]="i">
+                          <li>
+                            <span
+                              class="dropdown-item"
+                              (click)="gotoSettings(project.id)"
+                              >Project Settings
+                            </span>
+                          </li>
+                          <li *ngIf="project.isOwner">
+                            <span
+                              class="dropdown-item delete-project"
+                              (click)="deleteProject(project.id)"
+                              >Move to Trash
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    </td>
+                  </ng-template>
                 </tr>
               </tbody>
             </table>
+            <div
+              *ngIf="(projectList | projectSearch: searchQuery).length === 0"
+              class="project-list-search-fail"
+            >
+              <div class="project-list-search-fail-img">
+                <img
+                  src="../../assets/search-fail.svg"
+                  alt="No search result"
+                />
+              </div>
+              <div class="project-list-search-fail-text">
+                No projects were found that match your search
+              </div>
+            </div>
           </div>
         </div>
       </ng-template>

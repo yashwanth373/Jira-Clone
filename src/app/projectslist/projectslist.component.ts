@@ -15,14 +15,20 @@ export class ProjectslistComponent implements OnInit {
 
   projectList : any = null;
 
+  searchQuery : any = null;
+
   ngOnInit(): void {
+    this.getProjectsList()
+  }
+
+  getProjectsList(){
     this._dataService.getProjectsList().subscribe((data : any) => {
       this.projectList = data.data;
       this.projectList.forEach((project : any) => {
         if(project.owner_img === null)
           project.dummy_img = this.createDummyImage(project.owner_name)
       });
-      console.log("ProjectsList ngOnInit ", this.projectList)
+      console.log("ProjectsList ", this.projectList)
     })
   }
 
@@ -33,11 +39,22 @@ export class ProjectslistComponent implements OnInit {
   }
 
   deleteProject(i : any){
-    console.log(i)
+    var removeIndex = this.projectList.map((item : any) => item.id).indexOf(i);
+
+    this._dataService.deleteProject(i).subscribe((data : any) => {
+      if(data.status === "success"){
+        this.projectList.splice(removeIndex, 1);
+      }
+    })
   }
 
   gotoProject(i : any){
     this.router.navigate(['/Projects/' + i])
+  }
+
+  gotoSettings(i :any){
+    // this.router.navigate(['/Settings/' + i])
+    console.log("Settings routing")
   }
 
 }

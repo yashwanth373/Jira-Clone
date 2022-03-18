@@ -237,17 +237,49 @@ th {
   color: white;
 }
 
-.dropdown-item:active {
+.delete-project:active {
+  color: white !important;
+  background-color: #de350b !important;
+}
+
+.delete-project:hover {
+  cursor: pointer;
   color: white !important;
   background-color: #de350b !important;
 }
 
 .dropdown-item:hover {
   cursor: pointer;
-  color: white !important;
-  background-color: #de350b !important;
+}
+
+.dropdown-item:active {
+  color: black !important;
+  background-color: #e4e4e4 !important;
 }
 
 .dropdown-item {
   font-family: Roboto, sans-serif;
+}
+
+.project-list-search-fail{
+  margin-top: 2%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Roboto, sans-serif;
+}
+
+.project-list-search-fail-img img{
+  width: 150px;
+  height: 150px;
+}
+
+.project-list-search-fail-text{
+  width: 250px;
+  height: 150px;
+  text-align: center;
+  font-size: 1.2rem;
 }
