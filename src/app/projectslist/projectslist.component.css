@@ -261,7 +261,7 @@ th {
   font-family: Roboto, sans-serif;
 }
 
-.project-list-search-fail{
+.project-list-search-fail {
   margin-top: 2%;
   width: 100%;
   height: 100%;
@@ -272,14 +272,234 @@ th {
   font-family: Roboto, sans-serif;
 }
 
-.project-list-search-fail-img img{
+.project-list-search-fail-img img {
   width: 150px;
   height: 150px;
 }
 
-.project-list-search-fail-text{
+.project-list-search-fail-text {
   width: 250px;
   height: 150px;
   text-align: center;
   font-size: 1.2rem;
+}
+
+.modal-dialog {
+  max-width: unset;
+}
+
+.modal-dialog-centered {
+  justify-content: center;
+}
+
+.modal-content {
+  width: 850px;
+  height: 350px;
+}
+
+.modal-body {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Roboto, sans-serif;
+  padding-bottom: 0;
+}
+
+.create-project-left {
+  height: 100%;
+  width: 49%;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-project-left-title {
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+.create-project-left-subtitle {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: rgb(122, 134, 154);
+  margin-bottom: 5%;
+}
+
+.create-project-left-name-label,
+.create-project-left-key-label {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgb(122, 134, 154);
+}
+
+.required {
+  position: relative;
+  right: 2px;
+  color: red;
+  font-size: 0.7rem;
+  bottom: 1.5px;
+}
+
+.create-project-left-name-input-field {
+  width: 80%;
+  height: 40px;
+  border: 2px solid #dfe1e6;
+  border-radius: 3px;
+  transition: background-color 0.2s ease-in-out 0s,
+    border-color 0.2s ease-in-out 0s;
+  padding-left: 10px;
+  font-size: 0.9rem;
+  font-weight: 300;
+}
+
+.create-project-left-name-input-field::placeholder {
+  font-weight: 300;
+}
+
+.create-project-left-name-input-field:hover,
+.create-project-left-key-input-field:hover {
+  background-color: #ebecf0;
+}
+
+.create-project-left-name-input-field:focus-within,
+.create-project-left-key-input-field:focus-within {
+  background-color: white;
+  border-color: #4c9aff;
+}
+
+.create-project-left-name-input-field:focus,
+.create-project-left-key-input-field:focus {
+  box-shadow: unset;
+}
+
+.create-project-left-key-input-field {
+  width: 40%;
+  height: 35px;
+  border: 2px solid #dfe1e6;
+  border-radius: 3px;
+  transition: background-color 0.2s ease-in-out 0s,
+    border-color 0.2s ease-in-out 0s;
+  padding-left: 10px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.create-project-right {
+  height: fit-content;
+  width: 49%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3%;
+  background-color: rgb(250, 251, 252);
+  border-radius: 16px;
+}
+
+.create-project-right-title {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.create-project-right-template {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1%;
+  width: 100%;
+  height: 30%;
+  border-radius: 3px;
+  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
+}
+
+.create-project-right-template-img {
+  height: 100%;
+  width: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-project-right-template-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.create-project-right-template-content {
+  height: 100%;
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.create-project-right-template-content-title {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: rgb(122, 134, 154);
+}
+
+.create-project-right-template-content-subtitle {
+  font-size: 0.7rem;
+  font-weight: 300;
+  color: rgb(122, 134, 154);
+}
+
+.modal-footer {
+  border-top: none;
+  padding: 0;
+}
+
+.create-project-cancel-button {
+  width: 60px;
+  height: 35px;
+  border: none;
+  border-radius: 3px;
+  transition: background-color 0.2s ease-in-out 0s,
+    border-color 0.2s ease-in-out 0s;
+  font-size: 0.9rem;
+  font-weight: 400;
+  background-color: rgba(9, 30, 66, 0.04);
+  text-align: center;
+  color: #42526e;
+  position: relative;
+  bottom: 10px;
+  right: 25px;
+}
+
+.create-project-cancel-button:hover {
+  background-color: rgba(9, 30, 66, 0.08);
+  color: #42526e;
+}
+
+.create-project-cancel-button:active {
+  background-color: rgba(179, 212, 255, 0.6);
+  color: #0052cc;
+}
+
+.create-project-create-button {
+  width: 110px;
+  height: 35px;
+  border: none;
+  border-radius: 3px;
+  transition: background-color 0.2s ease-in-out 0s,
+    border-color 0.2s ease-in-out 0s;
+  font-size: 0.9rem;
+  font-weight: 400;
+  background-color: rgba(9, 30, 66, 0.04);
+  text-align: center;
+  background-color: #0052cc;
+  color: white;
+  position: relative;
+  bottom: 10px;
+  right: 25px;
+}
+
+.create-project-create-button:hover {
+  background-color: #0065ff;
+}
+
+.create-project-create-button:active {
+  background-color: #0747a6;
 }

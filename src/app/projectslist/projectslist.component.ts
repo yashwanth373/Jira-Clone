@@ -13,9 +13,13 @@ export class ProjectslistComponent implements OnInit {
     console.log("ProjectsList constructor")
    }
 
-  projectList : any = null;
+  projectList : any = [{}];
 
   searchQuery : any = null;
+
+  newProjectName : any = null;
+
+  newProjectKey : any = null;
 
   ngOnInit(): void {
     this.getProjectsList()
@@ -32,10 +36,21 @@ export class ProjectslistComponent implements OnInit {
     })
   }
 
+  getInitialKey(){
+    if(this.newProjectName.length > 2) 
+      this.newProjectKey = this.newProjectName.substring(0,3).toUpperCase()
+    if(this.newProjectName === "")
+      this.newProjectKey = ""
+  }
+
   createDummyImage(name : string){
     let words = name.split(" ")
     let initials = words[0][0] + words[1][0]
     return initials.toUpperCase()
+  }
+
+  createProject(){
+    console.log("creating project")
   }
 
   deleteProject(i : any){

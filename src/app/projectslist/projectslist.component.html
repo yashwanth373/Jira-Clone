@@ -4,8 +4,96 @@
     <div
       class="title-right-create-button"
       *ngIf="projectList && projectList.length > 0"
+      data-bs-toggle="modal"
+      data-bs-target="#newProjectModal"
     >
       Create Project
+    </div>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="newProjectModal"
+      tabindex="-1"
+      aria-labelledby="newProjectModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="create-project-left">
+              <div class="create-project-left-title">Add project details</div>
+              <div class="create-project-left-subtitle">
+                You can change these details anytime in your project settings
+              </div>
+              <div class="create-project-left-name-input">
+                <label for="projectName" class="create-project-left-name-label">
+                  Name <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control create-project-left-name-input-field"
+                  id="projectName"
+                  placeholder="Try a team name, project goal, milestone..."
+                  [(ngModel)]="newProjectName"
+                  required
+                />
+              </div>
+              <div class="create-project-left-subtitle">
+                Project Name should be unique among all your projects.
+              </div>
+              <div class="create-project-left-key-input">
+                <label for="projectKey" class="create-project-left-key-label">
+                  Key <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control create-project-left-key-input-field"
+                  id="projectKey"
+                  [(ngModel)]="newProjectKey"
+                  required
+                  [value]="getInitialKey()"
+                  maxlength="3"
+                />
+              </div>
+              <div class="create-project-left-subtitle">
+                Project key will be used as a prefix for all issues/tasks.
+              </div>
+            </div>
+            <div class="create-project-right">
+              <div class="create-project-right-title">Project Template</div>
+              <div class="create-project-right-template">
+                <div class="create-project-right-template-img">
+                  <img src="../../assets/scrum.svg" alt="Template" />
+                </div>
+                <div class="create-project-right-template-content">
+                  <div class="create-project-right-template-content-title">
+                    Scrum
+                  </div>
+                  <div class="create-project-right-template-content-subtitle">
+                    Sprint toward your project goals with a board, backlog, and
+                    roadmap.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              class="create-project-cancel-button"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              class="create-project-create-button"
+              (click)="createProject()"
+              [disabled]="!newProjectName || !newProjectKey"
+            >
+              Create project
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="content">

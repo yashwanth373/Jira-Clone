@@ -1,11 +1,12 @@
 .mycontainer {
   height: 100vh;
   width: 100vw;
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   left: 0;
   z-index: -99999999;
   background-color: #fafbfc;
+  overflow-y: hidden;
 }
 
 .top_nav {
