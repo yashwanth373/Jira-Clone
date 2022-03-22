@@ -1,0 +1,76 @@
+.mycontainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.head {
+  width: 55%;
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.head-add-people-button {
+  background-color: #0052cc;
+  color: white;
+  width: 14%;
+  height: 25%;
+  display: flex;
+  align-self: flex-end;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+}
+
+.head-add-people-button:hover {
+  background-color: #1362d8;
+  color: white;
+  cursor: pointer;
+}
+
+.head-people-search {
+  width: 100%;
+  height: 30%;
+  margin-top: 2%;
+  border-bottom: 2px solid #b3bac5;
+  transition: border-bottom-color 0.25s ease-in-out 0s;
+  display: flex;
+}
+
+.head-people-search:hover,
+.head-people-search:focus,
+.head-people-search:active {
+  border-bottom: 2px solid #4c9aff;
+}
+
+.head-people-search-input {
+  border: none;
+  outline: none;
+  height: 100%;
+  width: 95%;
+  background-color: transparent;
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: Roboto, sans-serif;
+}
+
+.head-people-search-icon {
+  height: 100%;
+  width: 5%;
+}
+
+.people {
+  width: 55%;
+  height: 80%;
+}
+.people-title {
+  font-family: Roboto, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+}

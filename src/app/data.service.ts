@@ -51,4 +51,16 @@ export class DataService {
     console.log("deleteProject called")
     return this.http.delete("/deleteProject/" + id)
   }
+
+  createProject(project_name : any, project_key : any){
+    console.log("createProject called")
+    return this.http.post("/createProject", {'project_name' : project_name, 'project_key' : project_key})
+  }
+
+
+  //Specific for People list Component
+
+  getProjectsMembers(){
+    return this.http.get("/getProjectsMembers")
+  }
 }

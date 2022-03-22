@@ -26,7 +26,7 @@ import { ProjectSearchPipe } from './project-search.pipe';
     PeoplelistComponent,
     ProjectboardComponent,
     ProjectdashboardComponent,
-    ProjectSearchPipe
+    ProjectSearchPipe,
   ],
   imports: [
     AppRoutingModule,

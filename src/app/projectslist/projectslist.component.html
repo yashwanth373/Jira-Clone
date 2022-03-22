@@ -4,6 +4,7 @@
     <div
       class="title-right-create-button"
       *ngIf="projectList && projectList.length > 0"
+      (click)="refresh()"
       data-bs-toggle="modal"
       data-bs-target="#newProjectModal"
     >
@@ -35,11 +36,28 @@
                   id="projectName"
                   placeholder="Try a team name, project goal, milestone..."
                   [(ngModel)]="newProjectName"
-                  required
+                  [ngStyle]="{
+                    'border-color':
+                      newProjectName != null
+                        ? newProjectName.length > 0
+                          ? showNameTakenError
+                            ? '#dc3545'
+                            : '#ced4da'
+                          : '#dc3545'
+                        : showEmptyNameError
+                        ? '#dc3545'
+                        : '#ced4da'
+                  }"
                 />
               </div>
-              <div class="create-project-left-subtitle">
-                Project Name should be unique among all your projects.
+              <div
+                class="create-project-left-subtitle"
+                [ngStyle]="{
+                  color:
+                    showEmptyNameError || showNameTakenError ? '#dc3545' : ''
+                }"
+              >
+                {{ NameSubtitle }}
               </div>
               <div class="create-project-left-key-input">
                 <label for="projectKey" class="create-project-left-key-label">
@@ -50,13 +68,27 @@
                   class="form-control create-project-left-key-input-field"
                   id="projectKey"
                   [(ngModel)]="newProjectKey"
-                  required
-                  [value]="getInitialKey()"
+                  autocomplete="off"
                   maxlength="3"
+                  [ngStyle]="{
+                    'border-color':
+                      newProjectKey != null
+                        ? newProjectKey.length > 0
+                          ? '#ced4da'
+                          : '#dc3545'
+                        : showEmptyKeyError
+                        ? '#dc3545'
+                        : '#ced4da'
+                  }"
                 />
               </div>
-              <div class="create-project-left-subtitle">
-                Project key will be used as a prefix for all issues/tasks.
+              <div
+                class="create-project-left-subtitle"
+                [ngStyle]="{
+                  color: showEmptyKeyError ? '#dc3545' : ''
+                }"
+              >
+                {{ KeySubtitle }}
               </div>
             </div>
             <div class="create-project-right">
@@ -81,13 +113,13 @@
             <button
               class="create-project-cancel-button"
               data-bs-dismiss="modal"
+              #close
             >
               Cancel
             </button>
             <button
               class="create-project-create-button"
               (click)="createProject()"
-              [disabled]="!newProjectName || !newProjectKey"
             >
               Create project
             </button>
@@ -247,7 +279,14 @@
           <div class="projects-list-empty-subtitle">
             Let's create your first project in Jira
           </div>
-          <div class="projects-list-empty-create-button">Create Project</div>
+          <div
+            class="projects-list-empty-create-button"
+            (click)="refresh()"
+            data-bs-toggle="modal"
+            data-bs-target="#newProjectModal"
+          >
+            Create Project
+          </div>
         </div>
       </ng-template>
     </div>

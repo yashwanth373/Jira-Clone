@@ -5,7 +5,7 @@ const passport = require('passport');
 const path = require('path')
 const cookieSession = require('cookie-session');
 const async = require('async');
-const { findUser, insertUser, getProjectDetails, deleteProject,deleteProjectFromUser } = require('./database');
+const { findUser, insertUser, getProjectDetails, deleteProject, deleteProjectFromUser, createProject, updateUserProjects } = require('./database');
 require("./passport-setup");
 require('dotenv').config()
 
@@ -36,6 +36,8 @@ app.use(cookieSession({
 app.use(passport.initialize())
 app.use(passport.session())
 
+////////////////////////////////////////////////////////////// Authentication //////////////////////////////////////////////////////////////
+
 app.get("/authenticate", (req, res) => {
     if (req.user) {
         res.json({ authenticate: true })
@@ -47,7 +49,9 @@ app.get("/authenticate", (req, res) => {
 })
 
 
-//OAuth using google
+////////////////////////////////////////////////////////////// OAUTH ///////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////// OAuth using google
 
 app.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
@@ -78,7 +82,7 @@ app.get('/google/callback', passport.authenticate('google', { failureRedirect: '
     })
 
 
-// OAuth using Microsoft
+/////////////////////////////////////////////////////////////// OAuth using Microsoft
 
 app.get('/microsoft', passport.authenticate('microsoft'));
 
@@ -109,7 +113,7 @@ app.get('/microsoft/callback', passport.authenticate('microsoft', { failureRedir
 );
 
 
-// OAUTH using Github
+//////////////////////////////////////////////////////////////////////// OAUTH using Github
 
 app.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
 
@@ -139,7 +143,7 @@ app.get('/github/callback', passport.authenticate('github', { failureRedirect: '
     }
 );
 
-//Log out 
+/////////////////////////////////////// Log out ///////////////////////////////////////////////// 
 
 app.get("/logout", (req, res) => {
     console.log("logging out")
@@ -148,22 +152,24 @@ app.get("/logout", (req, res) => {
     res.redirect('/');
 })
 
-//middleware for authorization of API calls
+////////////////////////////////// middleware for authorization of API calls ////////////////////
 
-const isLoggedIn = (req,res,next) => {
-    if(req.user){
+const isLoggedIn = (req, res, next) => {
+    if (req.user) {
         next()
     }
-    else{
+    else {
         res.redirect('/')
     }
 }
 
 
 
-// DB operations 
+////////////////////////////////////////////////////////// DB operations ///////////////////////////////////////////////////////////
 
-app.get("/getDetails",isLoggedIn,  async (req, res) => {
+//////////////////////////////////////////////////////// Get User Detail 
+
+app.get("/getDetails", isLoggedIn, async (req, res) => {
 
     try {
         let result = await findUser(req.user.id)
@@ -181,20 +187,22 @@ app.get("/getDetails",isLoggedIn,  async (req, res) => {
 
 })
 
-app.get("/getProjectsList",isLoggedIn, async (req,res) => {
-    const {projects} = await findUser(req.user.id)
+//////////////////////////////////////////////////////////// Get All Projects of Logged in User
+
+app.get("/getProjectsList", isLoggedIn, async (req, res) => {
+    const { projects } = await findUser(req.user.id)
 
     let projectsList = []
-    async.each(projects, async (project_id,done) => {
+    async.each(projects, async (project_id, done) => {
         let project = await getProjectDetails(project_id)
         console.log(project)
         let isOwner = req.user.id === project.owner.user_id
 
         projectsList.push({
-            id : project.project_id,
+            id: project.project_id,
             icon: project.icon,
-            name: project.name,
-            key: project.key,
+            name: project.project_name,
+            key: project.project_key,
             owner_name: project.owner.name,
             owner_img: project.owner.img,
             owner_id: project.owner.user_id,
@@ -203,22 +211,99 @@ app.get("/getProjectsList",isLoggedIn, async (req,res) => {
     },
         function (er) {
             console.log(projectsList)
-            res.json({data : projectsList})
+            res.json({ data: projectsList })
         }
     )
-    
+
 })
 
-app.delete("/deleteProject/:project_id",isLoggedIn, async (req,res) => {
+/////////////////////////////////////////////////////////// Get project Members  of all projects related to logged in user
+
+app.get("/getProjectsMembers", isLoggedIn, async (req, res) => {
+    const { projects } = await findUser(req.user.id)
+
+    let projectsMembers = []
+    async.each(projects, async (project_id, done) => {
+        let project = await getProjectDetails(project_id)
+
+        for (var i = 0; i < project.members.length; i++) {
+            let member = project.members[i]
+            projectsMembers.push(member)
+        }
+    },
+        function (er) {
+            console.log(projectsMembers)
+            res.json({ data: projectsMembers })
+        }
+    )
+
+})
+
+
+//////////////////////////////////////////////////////////////////// Create a New project
+
+app.post("/createProject", isLoggedIn, async (req, res) => {
+
+    let userDetails = await findUser(req.user.id)
+
+    const ownerNameWords = userDetails.name.split(" ");
+
+    for (var i = 0; i < ownerNameWords.length; i++) {
+        ownerNameWords[i] = ownerNameWords[i].charAt(0).toUpperCase() + ownerNameWords[i].slice(1);
+    }
+
+    ownerName = ownerNameWords.join(" ")
+
+    const project = {
+        project_id: (+ new Date()).toString().substring(3) + (req.user.id),
+        project_name: req.body.project_name,
+        project_key: req.body.project_key,
+        createdAt: + new Date(),
+        owner: {
+            user_id: userDetails.user_id,
+            name: ownerName,
+            img: userDetails.displayPicture
+        },
+        members: [],
+        Sprint: [],
+        Epics: [],
+        Issues: [],
+        Board: {
+            columns: ["To Do", "In Progress", "Done"],
+        },
+        icon: '../../assets/project-dummy-logo.svg',
+        code: {},
+        invited: []
+    }
+
+    let result = await createProject(project)
+
+    if (result.insertedId) {
+        let result2 = await updateUserProjects(req.user.id, project.project_id)
+
+        if (result2.modifiedCount) {
+            res.json({ status: "success" })
+        }
+    }
+
+
+})
+
+//////////////////////////////////////////////////////////////////  Deleting a Project
+
+app.delete("/deleteProject/:project_id", isLoggedIn, async (req, res) => {
 
     let result = await deleteProject(req.params.project_id)
 
-    let result2 = await deleteProjectFromUser(req.user.id,req.params.project_id)
+    let result2 = await deleteProjectFromUser(req.user.id, req.params.project_id)
 
-    if(result.deletedCount > 0 && result2)
-        res.json({status : "success"})
+    if (result.deletedCount > 0 && result2)
+        res.json({ status: "success" })
 
 })
+
+
+///////////////////////////////////////////////////////////////// Hosting Angular and Express Server /////////////////////////////////////////////////
 
 
 
