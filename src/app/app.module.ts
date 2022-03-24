@@ -14,6 +14,7 @@ import { PeoplelistComponent } from './peoplelist/peoplelist.component';
 import { ProjectboardComponent } from './projectboard/projectboard.component';
 import { ProjectdashboardComponent } from './projectdashboard/projectdashboard.component';
 import { ProjectSearchPipe } from './project-search.pipe';
+import { PeopleSearchPipe } from './people-search.pipe';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { ProjectSearchPipe } from './project-search.pipe';
     ProjectboardComponent,
     ProjectdashboardComponent,
     ProjectSearchPipe,
+    PeopleSearchPipe,
   ],
   imports: [
     AppRoutingModule,

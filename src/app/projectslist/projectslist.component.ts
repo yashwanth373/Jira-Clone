@@ -78,8 +78,11 @@ export class ProjectslistComponent implements OnInit {
 
   createDummyImage(name : string){
     let words = name.split(" ")
-    let initials = words[0][0] + words[1][0]
-    return initials.toUpperCase()
+    let initials = ""
+    for(var i = 0;i<words.length;i++){
+      initials.concat(words[i].charAt(0).toUpperCase())
+    }
+    return initials
   }
 
   createProject(){

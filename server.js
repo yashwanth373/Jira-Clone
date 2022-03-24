@@ -40,6 +40,7 @@ app.use(passport.session())
 
 app.get("/authenticate", (req, res) => {
     if (req.user) {
+        console.log(req.user)
         res.json({ authenticate: true })
     }
     else {
@@ -232,11 +233,32 @@ app.get("/getProjectsMembers", isLoggedIn, async (req, res) => {
         }
     },
         function (er) {
-            console.log(projectsMembers)
             res.json({ data: projectsMembers })
         }
     )
 
+})
+
+
+/////////////////////////////////////////////////////////// Get Work related to the logged in user
+
+app.get("/getYourWork", isLoggedIn, async (req, res) => {
+    const { projects } = await findUser(req.user.id)
+
+    let work = []
+    async.each(projects, async (project_id, done) => {
+        let project = await getProjectDetails(project_id)
+        work.push({
+            project_id: project.project_id,
+            project_name: project.project_name,
+            icon: project.icon,
+            issues: project.Issues.filter((issue) => issue.Assignee == req.user.id),
+            modifiedAt: project.modifiedAt
+        })
+    },
+        function (er) {
+            res.json({ data: work })
+        })
 })
 
 
@@ -273,7 +295,8 @@ app.post("/createProject", isLoggedIn, async (req, res) => {
         },
         icon: '../../assets/project-dummy-logo.svg',
         code: {},
-        invited: []
+        invited: [],
+        modifiedAt: + new Date()
     }
 
     let result = await createProject(project)

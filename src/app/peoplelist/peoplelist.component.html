@@ -1,11 +1,41 @@
 <div class="mycontainer">
   <div class="head">
-    <div class="head-add-people-button">Invite People</div>
+    <!-- <div
+      class="head-add-people-button"
+      data-bs-toggle="modal"
+      data-bs-target="#invitePeopleModal"
+    >
+      Invite People
+    </div>
+    <div
+      class="modal fade"
+      id="invitePeopleModal"
+      tabindex="-1"
+      aria-labelledby="invitePeopleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="invite-people-modal-title">
+
+            </div>
+            <div class="invite-people-modal-subtitle">
+
+            </div>
+            <div class="invite-people-modal-email-input">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
     <div class="head-people-search">
       <input
         type="text"
         placeholder="Search for People"
         class="head-people-search-input"
+        [(ngModel)]="searchQuery"
       />
       <div class="head-people-search-icon">
         <svg width="65%" height="65%" viewBox="0 0 24 24" role="presentation">
@@ -21,9 +51,25 @@
   <div class="people">
     <div class="people-title">People</div>
     <div class="people-list">
-      <div *ngFor="let row of formattedProjectMembers" class="people-list-item">
+      <div
+        *ngFor="let row of formattedProjectMembers | peopleSearch: searchQuery"
+        class="people-list-item"
+      >
         <div *ngFor="let item of row" class="people-list-item-member">
-          {{ item.name }}
+          <div class="people-list-item-member-img">
+            <div *ngIf="item.img; then logo; else dummy_logo"></div>
+            <ng-template #logo>
+              <img [src]="item.img" />
+            </ng-template>
+            <ng-template #dummy_logo>
+              <div class="member-dummy-logo">
+                {{ item.dummy_img }}
+              </div>
+            </ng-template>
+          </div>
+          <div class="people-list-item-member-name">
+            {{ item.name }}
+          </div>
         </div>
       </div>
     </div>

@@ -14,12 +14,34 @@ export class PeoplelistComponent implements OnInit {
 
   formattedProjectMembers : any = [];
 
+  searchQuery : any = null;
+
   ngOnInit(): void {
     this._dataService.getProjectsMembers().subscribe((data : any)=>{
       this.projectsMembers = data.data
+      this.projectsMembers = this.projectsMembers.filter((value : any, index : any, self : any) =>
+        index === self.findIndex((t : any) => (
+          t.user_id === value.user_id
+        ))
+      )
+      for(var i = 0;i<this.projectsMembers.length;i++){
+        if(this.projectsMembers[i].img === null){
+          this.projectsMembers[i].dummy_img = this.createDummyImage(this.projectsMembers[i].name)
+        }
+      }
+      
       this.prepareProjectsMembers();
     })
 
+  }
+
+  createDummyImage(name : string){
+    let words = name.split(" ")
+    let initials = ""
+    for(var i = 0;i<words.length;i++){
+      initials = initials.concat(words[i].charAt(0).toUpperCase())
+    }
+    return initials
   }
 
   prepareProjectsMembers(){

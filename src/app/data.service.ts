@@ -63,4 +63,10 @@ export class DataService {
   getProjectsMembers(){
     return this.http.get("/getProjectsMembers")
   }
+
+  //Specific for Your Work Component
+
+  getWork(){
+    return this.http.get("/getYourWork")
+  }
 }

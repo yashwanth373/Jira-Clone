@@ -1,1 +1,49 @@
-<p>yourwork works!</p>
+<div class="mycontainer">
+  <div class="head">
+    <div class="head-title">Your work</div>
+  </div>
+  <div class="content">
+    <div class="recent-projects">
+      <div class="recent-projects-title">
+        <div class="recent-projects-title-left">Recent projects</div>
+        <div class="recent-projects-title-right">View all projects</div>
+      </div>
+      <div class="recent-projects-list">
+        <div class="recent-projects-list-item" *ngFor="let project of work">
+          <div
+            class="recent-projects-list-item-title"
+            (click)="gotoProject(project.id, '')"
+          >
+            <div class="recent-projects-list-item-title-logo">
+              <img [src]="project.icon" alt="project_icon" />
+            </div>
+            <div class="recent-projects-list-item-title-name">
+              {{ project.project_name }}
+            </div>
+          </div>
+          <div class="recent-projects-list-item-quick-links">
+            <div class="recent-projects-list-item-quick-links-title">
+              QUICK LINKS
+            </div>
+            <div
+              class="recent-projects-list-item-quick-links-link"
+              (click)="gotoProject(project.id, 'roadmap')"
+            >
+              Roadmap
+            </div>
+            <div
+              class="recent-projects-list-item-quick-links-link"
+              (click)="gotoProject(project.id, 'code')"
+            >
+              Code
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="recent-issues">
+      <div class="recent-issues-title">Recently worked on</div>
+      <div class="recent-issues-list"></div>
+    </div>
+  </div>
+</div>

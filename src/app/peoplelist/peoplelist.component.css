@@ -73,4 +73,84 @@
   font-family: Roboto, sans-serif;
   font-size: 1rem;
   font-weight: 500;
+  width: 100%;
+  height: 4%;
+}
+
+.people-list {
+  width: 100%;
+  height: 95%;
+  margin-top: 1%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.people-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.people-list::-webkit-scrollbar-track {
+  border-radius: 100px;
+}
+
+.people-list::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-color: rgb(122, 122, 122);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+}
+
+.people-list-item {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+
+.people-list-item-member {
+  width: 15.5%;
+  height: 150px;
+  margin: 0.5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Roboto, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  border-radius: 3px;
+  box-shadow: 0 1px 1px rgba(9, 30, 66, 0.25), 0 0 1px 1px rgba(9, 30, 66, 0.13);
+}
+
+.people-list-item-member-img {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5%;
+}
+
+.people-list-item-member-img img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.member-dummy-logo {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0052cc;
+  font-family: Roboto, sans-serif;
+  font-size: 1.3rem;
+  color: white;
 }

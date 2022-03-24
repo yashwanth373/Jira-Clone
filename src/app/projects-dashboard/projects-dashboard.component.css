@@ -6,7 +6,8 @@
   left: 0;
   z-index: -99999999;
   background-color: #fafbfc;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
+  overflow: hidden;
 }
 
 .top_nav {
@@ -18,6 +19,9 @@
   justify-content: space-between;
   padding-left: 1.5%;
   padding-right: 1.5%;
+  position: fixed;
+  top: 0;
+  background-color: #fafbfc;
 }
 
 .top_nav_left {
@@ -131,4 +135,5 @@
 
 .content {
   height: 93%;
+  margin-top: 3%;
 }
