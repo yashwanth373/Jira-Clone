@@ -140,3 +140,140 @@
   background-color: #f4f5f7;
   cursor: pointer;
 }
+
+.recent-issues {
+  width: 100%;
+  height: 58%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 1%;
+}
+
+.recent-issues-title {
+  font-family: Roboto, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  width: 100%;
+  height: 10%;
+}
+
+.recent-issues-list {
+  width: 100%;
+  height: 80%;
+  overflow-y: auto;
+  margin-top: 0.5%;
+}
+
+.recent-issues-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.recent-issues-list::-webkit-scrollbar-track {
+  border-radius: 100px;
+}
+
+.recent-issues-list::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  background-color: rgb(122, 122, 122);
+  box-shadow: inset 2px 2px 5px 0 rgba(#fff, 0.5);
+}
+
+.recent-issues-list-item {
+  width: 99%;
+  height: 15%;
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+  margin: 0.5%;
+  box-shadow: 0 1px 1px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+  transition: box-shadow 0.3s ease-in-out 0s, border-color 0.6s ease-in 0s;
+}
+
+.recent-issues-list-item:hover {
+  box-shadow: 0 2px 4px rgba(9, 30, 66, 0.25), 0 0 1px rgba(9, 30, 66, 0.31);
+  cursor: pointer;
+}
+
+.recent-issues-list-item-left {
+  width: 70%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.recent-issues-list-item-left img {
+  width: 20px;
+  height: 20px;
+  margin: 10px;
+}
+
+.recent-issues-list-item-right {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recent-issues-list-item-content-title {
+  font-family: Roboto, sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  width: 40%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.recent-issues-list-item-content-tag {
+  font-family: Roboto, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #6b778c;
+  width: 20%;
+  text-align: center;
+}
+
+.recent-issues-list-item-content-project-name {
+  font-family: Roboto, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #6b778c;
+  width: 20%;
+  text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.recent-issues-list-item-content-status {
+  width: 25%;
+  height: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Roboto, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.recent-issues-list-item-content-status-todo {
+  background-color: #d3d3d3;
+  border-radius: 3px;
+  color: #3d3d3d;
+  padding: 2px 5px 2px 5px;
+}
+
+.recent-issues-list-item-content-status-inprogress {
+  border-radius: 3px;
+  color: #0747a6;
+  background-color: #deebff;
+  padding: 2px 5px 2px 5px;
+}
+
+.recent-issues-list-item-content-status-done {
+  border-radius: 3px;
+  color: #006644;
+  background-color: #e3fcef;
+  padding: 2px 5px 2px 5px;
+}

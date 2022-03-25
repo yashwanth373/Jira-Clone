@@ -61,14 +61,38 @@
             </g></svg
         ></span>
       </div>
-      <div class="top_nav_left_option" routerLink = "./your-work" routerLinkActive="top_nav_left_option_active" >Your Work</div>
-      <div class="top_nav_left_option" routerLink = "./Projectslist" routerLinkActive="top_nav_left_option_active">Projects</div>
-      <div class="top_nav_left_option" routerLink = "./people" routerLinkActive="top_nav_left_option_active">People</div>
-      <div class="top_nav_left_button">Create</div>
+      <div
+        class="top_nav_left_option"
+        routerLink="./your-work"
+        routerLinkActive="top_nav_left_option_active"
+      >
+        Your Work
+      </div>
+      <div
+        class="top_nav_left_option"
+        routerLink="./Projectslist"
+        routerLinkActive="top_nav_left_option_active"
+      >
+        Projects
+      </div>
+      <div
+        class="top_nav_left_option"
+        routerLink="./people"
+        routerLinkActive="top_nav_left_option_active"
+      >
+        People
+      </div>
+      <!-- <div class="top_nav_left_button">Create</div> -->
     </div>
     <div class="top_nav_right">
       <div class="dropdown">
-        <div class="top_nav_right_logo" *ngIf="user" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        <div
+          class="top_nav_right_logo"
+          *ngIf="user"
+          id="dropdownMenuButton1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
           <div *ngIf="user.displayPicture; then logo; else dummy_logo"></div>
           <ng-template #logo>
             <img [src]="user.displayPicture" class="top_nav_right_okay_logo" />

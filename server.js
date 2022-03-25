@@ -261,6 +261,18 @@ app.get("/getYourWork", isLoggedIn, async (req, res) => {
         })
 })
 
+//////////////////////////////////////////////////////////////////// Get Basic details of selected project for side navbar
+
+app.get("/getBasicprojectDetails/:project_id", isLoggedIn, async (req, res) => {
+    let project = await getProjectDetails(req.params.project_id)
+    let result = {
+        project_id: project.project_id,
+        project_name: project.project_name,
+        icon: project.icon,
+    }
+    res.json({ data: result })
+})
+
 
 //////////////////////////////////////////////////////////////////// Create a New project
 

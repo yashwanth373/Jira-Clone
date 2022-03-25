@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { DataService } from '../data.service';
 })
 export class YourworkComponent implements OnInit {
 
-  constructor(private _dataService : DataService) { }
+  constructor(private _dataService : DataService, private router : Router) { }
 
   work : any = null;
 
@@ -27,6 +28,14 @@ export class YourworkComponent implements OnInit {
       console.log(this.work)
       console.log(this.issues)
     })
+    this.recentSort();
+
+      this.seperateIssues();
+
+      this.work = this.work.splice(0,5)
+
+      console.log(this.work)
+      console.log(this.issues)
   }
 
   recentSort(){
@@ -46,6 +55,7 @@ export class YourworkComponent implements OnInit {
   seperateIssues(){
     for(let i = 0; i < this.work.length; i++){
       for(let j = 0; j < this.work[i].issues.length; j++){
+        this.work[i].issues[j].project_name = this.work[i].project_name;
         this.issues.push(this.work[i].issues[j])
       }
     }
@@ -65,7 +75,8 @@ export class YourworkComponent implements OnInit {
   gotoProject(id:any,tab:any){
     switch(tab){
       case '' :
-        console.log("project board");
+        this.router.navigate(['/Projects/' + id])
+        console.log('gotoProject ',id)
         break;
       case 'roadmap' :
         console.log("roadmap");
@@ -74,6 +85,10 @@ export class YourworkComponent implements OnInit {
         console.log("code");
         break;
     }
+  }
+
+  gotoProjectsList(){
+    this.router.navigate(['/Projects/Projectslist']);
   }
 
 }

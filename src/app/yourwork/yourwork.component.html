@@ -6,13 +6,15 @@
     <div class="recent-projects">
       <div class="recent-projects-title">
         <div class="recent-projects-title-left">Recent projects</div>
-        <div class="recent-projects-title-right">View all projects</div>
+        <div class="recent-projects-title-right" (click)="gotoProjectsList()">
+          View all projects
+        </div>
       </div>
-      <div class="recent-projects-list">
+      <div class="recent-projects-list" *ngIf="work; else emptyRecentProjects">
         <div class="recent-projects-list-item" *ngFor="let project of work">
           <div
             class="recent-projects-list-item-title"
-            (click)="gotoProject(project.id, '')"
+            (click)="gotoProject(project.project_id, '')"
           >
             <div class="recent-projects-list-item-title-logo">
               <img [src]="project.icon" alt="project_icon" />
@@ -27,23 +29,63 @@
             </div>
             <div
               class="recent-projects-list-item-quick-links-link"
-              (click)="gotoProject(project.id, 'roadmap')"
+              (click)="gotoProject(project.project_id, 'roadmap')"
             >
               Roadmap
             </div>
             <div
               class="recent-projects-list-item-quick-links-link"
-              (click)="gotoProject(project.id, 'code')"
+              (click)="gotoProject(project.project_id, 'code')"
             >
               Code
             </div>
           </div>
         </div>
       </div>
+      <ng-template class="recent-projects-title-left" #emptyRecentProjects>
+        Your recently worked projects will appear here
+      </ng-template>
     </div>
     <div class="recent-issues">
       <div class="recent-issues-title">Recently worked on</div>
-      <div class="recent-issues-list"></div>
+      <div class="recent-issues-list">
+        <div class="recent-issues-list-item" *ngFor="let issue of issues">
+          <div class="recent-issues-list-item-left">
+            <img src="../../assets/issue-type-story.svg" alt="issue-story" />
+            <div class="recent-issues-list-item-content-title">
+              {{ issue.name }}
+            </div>
+            <div class="recent-issues-list-item-content-tag">
+              {{ issue.tag }}
+            </div>
+            <div class="recent-issues-list-item-content-project-name">
+              {{ issue.project_name }}
+            </div>
+          </div>
+          <div class="recent-issues-list-item-right">
+            <div class="recent-issues-list-item-content-status">
+              <div
+                class="recent-issues-list-item-content-status-todo"
+                *ngIf="issue.status === 'todo'"
+              >
+                TODO
+              </div>
+              <div
+                class="recent-issues-list-item-content-status-inprogress"
+                *ngIf="issue.status === 'in progress'"
+              >
+                IN PROGRESS
+              </div>
+              <div
+                class="recent-issues-list-item-content-status-done"
+                *ngIf="issue.status === 'done'"
+              >
+                DONE
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

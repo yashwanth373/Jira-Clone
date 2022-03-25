@@ -69,4 +69,10 @@ export class DataService {
   getWork(){
     return this.http.get("/getYourWork")
   }
+
+  //Specific for Project Dashboard Component
+
+  getBasicprojectDetails(project_id : any){
+    return this.http.get("/getBasicprojectDetails/" + project_id)
+  }
 }

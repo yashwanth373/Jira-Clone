@@ -11,9 +11,14 @@ import { YourworkComponent } from './yourwork/yourwork.component';
 import { PeoplelistComponent } from './peoplelist/peoplelist.component';
 import { ProjectboardComponent } from './projectboard/projectboard.component';
 import { ProjectdashboardComponent } from './projectdashboard/projectdashboard.component';
+import { RoadmapComponent } from './roadmap/roadmap.component';
+import { BacklogComponent } from './backlog/backlog.component';
+import { CodeComponent } from './code/code.component';
+import { MembersComponent } from './members/members.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
-  {path: '', component: LoginComponent, canActivate: [RedirectGuard]},
+  {path: '', component: LoginComponent, canActivate: [RedirectGuard, ], pathMatch: 'full'},
   { path: 'Projects', 
     component: ProjectsDashboardComponent, 
     canActivate: [AuthGuard],
@@ -25,7 +30,12 @@ const routes: Routes = [
       {path: ':projectId', component: ProjectdashboardComponent, canActivate: [AuthGuard] ,
         children:[
           { path: '', redirectTo: 'board', pathMatch: 'full' },
-          {path: 'board', component: ProjectboardComponent, canActivate: [AuthGuard]}
+          {path: 'board', component: ProjectboardComponent, canActivate: [AuthGuard]},
+          {path: 'roadmap', component: RoadmapComponent, canActivate: [AuthGuard]},
+          {path: 'backlog', component: BacklogComponent, canActivate: [AuthGuard]},
+          {path: 'code', component: CodeComponent, canActivate: [AuthGuard]},
+          {path: 'members', component: MembersComponent, canActivate: [AuthGuard]},
+          {path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
         ]
       },
       // {path: '', redirectTo: 'your-work'}

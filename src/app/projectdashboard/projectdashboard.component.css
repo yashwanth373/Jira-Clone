@@ -1,0 +1,143 @@
+.mycontainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.side-nav {
+  width: 15%;
+  height: 100%;
+  box-shadow: 4px 0px 4px -3px rgba(0, 0, 0, 0.2);
+  background-color: #fafbfc;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-nav-title {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  align-items: center;
+}
+
+.side-nav-title-project-icon {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.side-nav-title-project-icon img {
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+}
+
+.side-nav-title-project-name {
+  width: 68%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 2%;
+  font-family: Roboto, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.side-nav-content {
+  width: 100%;
+  height: 85%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.side-nav-content-section {
+  width: 95%;
+  height: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 8%;
+}
+
+.development {
+  height: 10% !important;
+}
+
+.side-nav-content-section-title {
+  width: 100%;
+  height: 15%;
+  display: flex;
+  color: #414a5a;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: Roboto, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-left: 5%;
+}
+
+.side-nav-content-section-links {
+  width: 100%;
+  height: 85%;
+  display: flex;
+  flex-direction: column;
+}
+
+.side-nav-content-section-link {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 2%;
+  font-family: Roboto, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  border-radius: 3px;
+}
+
+.side-nav-content-section-link:hover {
+  background-color: #e6effc;
+  cursor: pointer;
+}
+
+.side-nav-content-section-link-active {
+  background-color: #e6effc;
+  color: #0052cc;
+}
+
+.side-nav-content-section-link-active::before {
+  content: "";
+  width: 5px;
+  height: 20px;
+  background-color: #0052cc;
+  border-radius: 10px;
+}
+
+.side-nav-content-section-link-active .side-nav-content-section-link-text {
+  color: #0052cc;
+}
+
+.development .side-nav-content-section-link {
+  height: 70% !important;
+  margin-top: 7%;
+}
+
+.side-nav-content-section-link-icon {
+  width: 20%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.side-nav-content-section-link-text {
+  font-family: Roboto, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #42526e;
+}

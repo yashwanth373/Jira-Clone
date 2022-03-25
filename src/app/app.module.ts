@@ -15,6 +15,11 @@ import { ProjectboardComponent } from './projectboard/projectboard.component';
 import { ProjectdashboardComponent } from './projectdashboard/projectdashboard.component';
 import { ProjectSearchPipe } from './project-search.pipe';
 import { PeopleSearchPipe } from './people-search.pipe';
+import { RoadmapComponent } from './roadmap/roadmap.component';
+import { BacklogComponent } from './backlog/backlog.component';
+import { CodeComponent } from './code/code.component';
+import { MembersComponent } from './members/members.component';
+import { SettingsComponent } from './settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +34,11 @@ import { PeopleSearchPipe } from './people-search.pipe';
     ProjectdashboardComponent,
     ProjectSearchPipe,
     PeopleSearchPipe,
+    RoadmapComponent,
+    BacklogComponent,
+    CodeComponent,
+    MembersComponent,
+    SettingsComponent,
   ],
   imports: [
     AppRoutingModule,
