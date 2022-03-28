@@ -141,3 +141,8 @@
   font-weight: 300;
   color: #42526e;
 }
+
+.content {
+  width: 85%;
+  height: 100%;
+}

@@ -79,9 +79,11 @@ export class YourworkComponent implements OnInit {
         console.log('gotoProject ',id)
         break;
       case 'roadmap' :
+        this.router.navigate(['/Projects/' + id+'/roadmap'])
         console.log("roadmap");
         break;
       case 'code' :
+        this.router.navigate(['/Projects/' + id+'/code'])
         console.log("code");
         break;
     }

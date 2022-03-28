@@ -20,6 +20,7 @@ import { BacklogComponent } from './backlog/backlog.component';
 import { CodeComponent } from './code/code.component';
 import { MembersComponent } from './members/members.component';
 import { SettingsComponent } from './settings/settings.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { SettingsComponent } from './settings/settings.component';
     AppRoutingModule,
     BrowserModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
