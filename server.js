@@ -303,7 +303,7 @@ app.post("/createProject", isLoggedIn, async (req, res) => {
         Epics: [],
         Issues: [],
         Board: {
-            columns: ["To Do", "In Progress", "Done"],
+            columns: ["to do", "in progress", "done"],
         },
         icon: '../../assets/project-dummy-logo.svg',
         code: {},

@@ -11,8 +11,8 @@
         <div class="board-title-left-title">{{ project.key }} Board</div>
       </ng-template>
     </div>
-    <div class="board-title-right" *ngIf="activeSprint">
-      <div class="board-title-right-subtitle">
+    <div class="board-title-right">
+      <div class="board-title-right-subtitle" *ngIf="activeSprint">
         <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
           <path
             d="M12 4c-4.412 0-8 3.588-8 8s3.588 8 8 8 8-3.588 8-8-3.588-8-8-8zm0 14.222A6.23 6.23 0 015.778 12 6.23 6.23 0 0112 5.778 6.23 6.23 0 0118.222 12 6.23 6.23 0 0112 18.222zm.889-6.59V8.448c0-.489-.4-.889-.889-.889s-.889.4-.889.89v3.555c0 .248.103.471.268.633l2.195 2.194a.891.891 0 001.257 0 .891.891 0 000-1.256l-1.942-1.943z"
@@ -22,7 +22,12 @@
         </svg>
         {{ activeSprint.remainingTime }} days remaining
       </div>
-      <div class="board-title-right-button">Complete sprint</div>
+      <div
+        class="board-title-right-button"
+        *ngIf="activeSprint && project.isOwner"
+      >
+        Complete sprint
+      </div>
       <div class="dropdown">
         <div
           class="board-title-right-dropdown-button"
@@ -40,9 +45,115 @@
         </div>
         <ul class="dropdown-menu" aria-labelledby="1">
           <li>
-            <span class="dropdown-item">Configure Project Board </span>
+            <span
+              class="dropdown-item"
+              data-bs-toggle="modal"
+              data-bs-target="#boardModal"
+              >Configure Project Board
+            </span>
           </li>
         </ul>
+      </div>
+      <div
+        class="modal fade"
+        id="boardModal"
+        tabindex="-1"
+        aria-labelledby="boardModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="board-modal-body-head">Board Settings</div>
+              <div class="board-modal-body-content">
+                <div class="board-modal-body-content-add-section">
+                  <div class="board-modal-body-content-add-section-title">
+                    Add a section to your board
+                  </div>
+                  <div class="board-modal-body-content-add-section-subtitle">
+                    Adding a section adds a stage for your issues in your
+                    workflow
+                  </div>
+                  <div class="board-modal-body-content-add-section-input">
+                    <input
+                      type="text"
+                      class="form-control board-modal-body-content-add-section-input-field"
+                      [placeholder]="sectionNamePlaceholder"
+                      [(ngModel)]="newSectionName"
+                    />
+                    <div
+                      class="btn-success board-modal-body-content-add-section-input-button"
+                      (click)="addSection()"
+                    >
+                      ADD
+                    </div>
+                  </div>
+                  <div class="seperator"></div>
+                </div>
+                <div class="board-modal-body-content-edit-section">
+                  <div class="board-modal-body-content-edit-section-title">
+                    Edit your workflow
+                  </div>
+                  <div class="board-modal-body-content-edit-section-subtitle">
+                    Rearrange stages by dragging and dropping them
+                  </div>
+                  <div class="board-modal-body-content-edit-sections">
+                    <div
+                      class="board-modal-body-content-edit-sections-area"
+                      cdkDropList
+                      (cdkDropListDropped)="dropStage($event)"
+                    >
+                      <div
+                        class="board-modal-body-content-edit-sections-item"
+                        *ngFor="let section of stagingArea; let j = index"
+                        cdkDrag
+                      >
+                        <div
+                          class="board-modal-body-content-edit-sections-item-text"
+                        >
+                          {{ section.toUpperCase() }}
+                        </div>
+                        <div
+                          class="board-modal-body-content-edit-sections-item-delete-icon"
+                          (click)="deleteSectionfromStageArea(j)"
+                          *ngIf="stagingArea.length > 1"
+                        >
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 30 30"
+                            role="presentation"
+                          >
+                            <path
+                              d="M12 10.586L6.707 5.293a1 1 0 00-1.414 1.414L10.586 12l-5.293 5.293a1 1 0 001.414 1.414L12 13.414l5.293 5.293a1 1 0 001.414-1.414L13.414 12l5.293-5.293a1 1 0 10-1.414-1.414L12 10.586z"
+                              fill="currentColor"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="board-modal-body-footer">
+                <div
+                  class="board-modal-body-footer-cancel-button"
+                  data-bs-dismiss="modal"
+                  (click)="refresh()"
+                  #close
+                >
+                  Cancel
+                </div>
+                <div
+                  class="board-modal-body-footer-save-button"
+                  (click)="updateBoard()"
+                >
+                  Save
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -93,15 +204,22 @@
             </div>
             <ul class="dropdown-menu" aria-labelledby="1">
               <li>
-                <span class="dropdown-item" (click)="changeGroupBy('None')">
+                <span class="dropdown-item" (click)="groupBy('None')">
                   None
                 </span>
               </li>
               <li>
                 <span
                   class="dropdown-item delete-project"
-                  (click)="changeGroupBy('User')"
+                  (click)="groupBy('User')"
                   >User
+                </span>
+              </li>
+              <li>
+                <span
+                  class="dropdown-item delete-project"
+                  (click)="groupBy('Priority')"
+                  >Priority
                 </span>
               </li>
             </ul>
@@ -117,38 +235,42 @@
         <div class="board-content-body-section-title">
           <div class="board-content-body-section-title-left">
             {{ section.toUpperCase() }}
-          </div>
-          <div class="dropdown">
-            <div
-              class="board-content-body-section-title-right-button"
-              [id]="i"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                role="presentation"
+            <span *ngIf="activeSprint[section].length > 1">
+              <span
+                style="
+                  position: relative;
+                  bottom: 2px;
+                  margin-left: 5px;
+                  margin-right: 5px;
+                "
               >
-                <g fill="currentColor" fill-rule="evenodd">
-                  <circle cx="5" cy="12" r="2"></circle>
-                  <circle cx="12" cy="12" r="2"></circle>
-                  <circle cx="19" cy="12" r="2"></circle>
-                </g>
-              </svg>
-            </div>
-            <ul
-              class="dropdown-menu dropdown-menu-end"
-              [attr.aria-labelledby]="i"
-            >
-              <li>
-                <span class="dropdown-item">Delete Column </span>
-              </li>
-            </ul>
+                .
+              </span>
+              {{ activeSprint[section].length }} ISSUES
+            </span>
+            <span *ngIf="activeSprint[section].length == 1">
+              <span
+                style="
+                  position: relative;
+                  bottom: 2px;
+                  margin-left: 5px;
+                  margin-right: 5px;
+                "
+              >
+                .
+              </span>
+              {{ activeSprint[section].length }} ISSUE
+            </span>
           </div>
         </div>
-        <div class="board-content-body-section-body">
+        <div
+          class="board-content-body-section-body"
+          cdkDropList
+          id="section{{ i }}"
+          [cdkDropListData]="activeSprint[section]"
+          [cdkDropListConnectedTo]="connections"
+          (cdkDropListDropped)="drop($event)"
+        >
           <div
             class="board-content-body-section-body-empty"
             *ngIf="!activeSprint && i == 0"
@@ -169,9 +291,280 @@
           </div>
           <div
             class="board-content-body-section-body-issue"
-            *ngFor="let issue of activeSprint[section]"
+            *ngFor="
+              let issue of activeSprint[section] | issueSearch: searchQuery
+            "
+            (click)="updateSelectedIssue(issue)"
+            cdkDrag
+            data-bs-toggle="modal"
+            data-bs-target="#issueModal"
           >
-            {{ issue.issue_id }}
+            <div class="board-content-body-section-body-issue-title">
+              {{ issue.name }}
+            </div>
+            <div
+              class="board-content-body-section-body-issue-tag"
+              *ngIf="issue.epic"
+            >
+              {{ issue.epic.name.toUpperCase() }}
+            </div>
+            <div class="board-content-body-section-body-issue-subtitle">
+              <div class="board-content-body-section-body-issue-subtitle-left">
+                <img [src]="issue.icon" alt="" />
+                {{ issue.tag }}
+              </div>
+              <div class="board-content-body-section-body-issue-subtitle-right">
+                <div
+                  class="board-content-body-section-body-issue-subtitle-right-priority"
+                >
+                  <img
+                    src="../../assets/issue-priority-high.svg"
+                    alt=""
+                    *ngIf="issue.priority === 'High'"
+                  />
+                  <img
+                    src="../../assets/issue-priority-medium.svg"
+                    alt=""
+                    *ngIf="issue.priority === 'Medium'"
+                  />
+                  <img
+                    src="../../assets/issue-priority-low.svg"
+                    alt=""
+                    *ngIf="issue.priority === 'Low'"
+                  />
+                </div>
+                <div
+                  class="board-content-body-section-body-issue-subtitle-right-icon"
+                >
+                  <div *ngIf="issue.assignee.img; else noAssigneeImg">
+                    <img [src]="issue.assignee.img" alt="" />
+                  </div>
+                  <ng-template #noAssigneeImg>
+                    <div class="issue-assignee-no-img">
+                      {{ issue.assignee.dummy_img }}
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade issueModal"
+      id="issueModal"
+      tabindex="-1"
+      aria-labelledby="issueModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="issue-modal-left">
+              <div class="issue-modal-left-subtitle">
+                <div
+                  class="issue-model-left-subtitle-epic"
+                  *ngIf="selectedIssue?.epic"
+                >
+                  <img src="../../assets/epic.svg" alt="epicIcon" />
+                  {{ selectedIssue?.epic.name }} /
+                </div>
+                <div class="issue-model-left-subtitle-issue-tag">
+                  <img
+                    src="../../assets/issue-type-story.svg"
+                    alt="issueIcon"
+                  />
+                  {{ selectedIssue?.tag }}
+                </div>
+              </div>
+              <div class="issue-modal-left-title">
+                {{ selectedIssue?.name }}
+              </div>
+              <div class="issue-modal-left-buttons">
+                <div class="issue-modal-left-buttons-attach">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    role="presentation"
+                  >
+                    <path
+                      d="M11.643 17.965c-1.53 1.495-4.016 1.496-5.542.004a3.773 3.773 0 01.002-5.412l7.147-6.985a2.316 2.316 0 013.233-.003c.893.873.895 2.282.004 3.153l-6.703 6.55a.653.653 0 01-.914-.008.62.62 0 010-.902l6.229-6.087a.941.941 0 000-1.353.995.995 0 00-1.384 0l-6.23 6.087a2.502 2.502 0 000 3.607 2.643 2.643 0 003.683.009l6.703-6.55a4.074 4.074 0 00-.003-5.859 4.306 4.306 0 00-6.002.003l-7.148 6.985a5.655 5.655 0 00-.001 8.118c2.29 2.239 6.015 2.238 8.31-.005l6.686-6.533a.941.941 0 000-1.353.995.995 0 00-1.384 0l-6.686 6.534z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    ></path>
+                  </svg>
+                  &nbsp; Attach
+                </div>
+                <div class="issue-modal-left-buttons-edit">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    x="0px"
+                    y="0px"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    style="fill: #42526e"
+                  >
+                    <path
+                      d="M 18 2 L 15.585938 4.4140625 L 19.585938 8.4140625 L 22 6 L 18 2 z M 14.076172 5.9238281 L 3 17 L 3 21 L 7 21 L 18.076172 9.9238281 L 14.076172 5.9238281 z"
+                    ></path>
+                  </svg>
+                  &nbsp; Edit
+                </div>
+              </div>
+              <div class="issue-modal-left-description">
+                <div class="issue-modal-left-description-title">
+                  Description
+                </div>
+                <div class="issue-modal-left-description-content">
+                  {{ selectedIssue?.description }}
+                </div>
+              </div>
+              <div class="issue-modal-left-attachments">
+                <div class="issue-modal-left-attachments-title">
+                  Attachments
+                </div>
+                <div class="issue-modal-left-attachments-area">
+                  All issue attachments will be previewed here.
+                </div>
+              </div>
+            </div>
+            <div class="issue-modal-right">
+              <div class="issue-modal-right-status-dropdown">
+                <div class="dropdown">
+                  <div
+                    class="issue-modal-right-status-dropdown-button"
+                    id="1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {{ selectedIssue?.status.toUpperCase() }}
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      role="presentation"
+                    >
+                      <path
+                        d="M8.292 10.293a1.009 1.009 0 000 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 000-1.419.987.987 0 00-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 00-1.406 0z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <ul class="dropdown-menu" aria-labelledby="1">
+                    <li *ngFor="let section of myFilter(project.board)">
+                      <span
+                        class="dropdown-item"
+                        (click)="changeIssueStatus(section)"
+                      >
+                        {{ section.toUpperCase() }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="issue-modal-right-details-section">
+                <div class="issue-modal-right-details-title">Details</div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Priority
+                  </div>
+                  <div class="issue-modal-right-details-subtitle-right">
+                    <img
+                      src="../../assets/issue-priority-high.svg"
+                      alt=""
+                      *ngIf="selectedIssue?.priority === 'High'"
+                    />
+                    <img
+                      src="../../assets/issue-priority-medium.svg"
+                      alt=""
+                      *ngIf="selectedIssue?.priority === 'Medium'"
+                    />
+                    <img
+                      src="../../assets/issue-priority-low.svg"
+                      alt=""
+                      *ngIf="selectedIssue?.priority === 'Low'"
+                    />
+                    {{ selectedIssue?.priority }}
+                  </div>
+                </div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Due Date
+                  </div>
+                  <div class="issue-modal-right-details-subtitle-right">
+                    {{ selectedIssue?.dueDateHR }}
+                  </div>
+                </div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Assignee
+                  </div>
+                  <div class="issue-modal-right-details-subtitle-right">
+                    <img
+                      [src]="selectedIssue?.assignee.img"
+                      alt=""
+                      *ngIf="selectedIssue?.assignee.img; else noImgIcon"
+                    />
+                    <ng-template #noImgIcon>
+                      <div class="issue-assignee-no-img">
+                        {{ selectedIssue?.assignee.dummy_img }}
+                      </div>
+                    </ng-template>
+                    {{ selectedIssue?.assignee.name }}
+                  </div>
+                </div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Sprint
+                  </div>
+                  <div class="issue-modal-right-details-subtitle-right">
+                    {{ selectedIssue?.sprint.sprint_name }}
+                  </div>
+                </div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Development
+                  </div>
+                  <div class="issue-modal-right-details-subtitle-right">
+                    Commit/Branch :
+                  </div>
+                </div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Reporter
+                  </div>
+                  <div class="issue-modal-right-details-subtitle-right">
+                    <img
+                      [src]="selectedIssue?.reporter.img"
+                      alt=""
+                      *ngIf="selectedIssue?.reporter.img; else noImgIcon"
+                    />
+                    <ng-template #noImgIcon>
+                      <div class="issue-assignee-no-img">
+                        {{ selectedIssue?.reporter.dummy_img }}
+                      </div>
+                    </ng-template>
+                    {{ selectedIssue?.reporter.name }}
+                  </div>
+                </div>
+                <div class="issue-modal-right-details-subtitle-mini">
+                  <span style="width: 25%">Created</span
+                  >{{ selectedIssue?.createdAtHR }}
+                </div>
+                <div class="issue-modal-right-details-subtitle-mini">
+                  <span style="width: 25%">Last Updated</span
+                  >{{ selectedIssue?.modifiedAtHR }}
+                </div>
+              </div>
+              <div class="issue-model-right-buttons">
+                <div class="issue-modal-right-button-cancel">Cancel</div>
+                <div class="issue-modal-right-button-save">Save</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

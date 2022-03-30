@@ -21,6 +21,8 @@ import { CodeComponent } from './code/code.component';
 import { MembersComponent } from './members/members.component';
 import { SettingsComponent } from './settings/settings.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { IssueSearchPipe } from './issue-search.pipe';
 
 @NgModule({
   declarations: [
@@ -40,13 +42,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CodeComponent,
     MembersComponent,
     SettingsComponent,
+    IssueSearchPipe,
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

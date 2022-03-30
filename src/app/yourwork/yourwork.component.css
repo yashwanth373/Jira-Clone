@@ -277,3 +277,10 @@
   background-color: #e3fcef;
   padding: 2px 5px 2px 5px;
 }
+
+.recent-issues-list-item-content-status-other {
+  border-radius: 3px;
+  color: #0747a6;
+  background-color: #deebff;
+  padding: 2px 5px 2px 5px;
+}

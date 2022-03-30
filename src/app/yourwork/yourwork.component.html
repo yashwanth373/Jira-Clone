@@ -66,9 +66,9 @@
             <div class="recent-issues-list-item-content-status">
               <div
                 class="recent-issues-list-item-content-status-todo"
-                *ngIf="issue.status === 'todo'"
+                *ngIf="issue.status === 'to do'"
               >
-                TODO
+                TO DO
               </div>
               <div
                 class="recent-issues-list-item-content-status-inprogress"
@@ -81,6 +81,16 @@
                 *ngIf="issue.status === 'done'"
               >
                 DONE
+              </div>
+              <div
+                class="recent-issues-list-item-content-status-other"
+                *ngIf="
+                  issue.status !== 'done' &&
+                  issue.status !== 'in progress' &&
+                  issue.status !== 'to do'
+                "
+              >
+                {{ issue.stats.toUpperCase() }}
               </div>
             </div>
           </div>
