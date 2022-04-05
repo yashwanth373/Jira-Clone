@@ -397,7 +397,11 @@
                   </svg>
                   &nbsp; Attach
                 </div>
-                <div class="issue-modal-left-buttons-edit">
+                <div
+                  class="issue-modal-left-buttons-edit"
+                  (click)="editIssueOption()"
+                  *ngIf="!editIssue"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     x="0px"
@@ -418,9 +422,22 @@
                 <div class="issue-modal-left-description-title">
                   Description
                 </div>
-                <div class="issue-modal-left-description-content">
+                <div
+                  class="issue-modal-left-description-content"
+                  *ngIf="!editIssue; else descInput"
+                >
                   {{ selectedIssue?.description }}
                 </div>
+                <ng-template #descInput>
+                  <div class="issue-modal-left-description-content editing">
+                    <textarea
+                      class="issue-modal-left-description-content-input-field"
+                      autocomplete="off"
+                      spellcheck="false"
+                      [(ngModel)]="updatedSelectedIssue.description"
+                    ></textarea>
+                  </div>
+                </ng-template>
               </div>
               <div class="issue-modal-left-attachments">
                 <div class="issue-modal-left-attachments-title">
@@ -432,6 +449,60 @@
               </div>
             </div>
             <div class="issue-modal-right">
+              <div class="issue-modal-right-top">
+                <div class="issue-modal-right-top-options">
+                  <div class="dropdown">
+                    <div
+                      class="issue-modal-right-top-options-dropdown-button"
+                      [id]="selectedIssue?.issue_id"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        role="presentation"
+                      >
+                        <g fill="currentColor" fill-rule="evenodd">
+                          <circle cx="5" cy="12" r="2"></circle>
+                          <circle cx="12" cy="12" r="2"></circle>
+                          <circle cx="19" cy="12" r="2"></circle>
+                        </g>
+                      </svg>
+                    </div>
+                    <ul
+                      class="dropdown-menu dropdown-menu-end"
+                      [attr.aria-labelledby]="selectedIssue?.issue_id"
+                    >
+                      <li>
+                        <span
+                          class="dropdown-item delete-issue"
+                          (click)="deleteIssue()"
+                          >Delete
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div
+                  class="issue-modal-right-top-close"
+                  data-bs-dismiss="modal"
+                  #closeIssueModal
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    role="presentation"
+                  >
+                    <path
+                      d="M12 10.586L6.707 5.293a1 1 0 00-1.414 1.414L10.586 12l-5.293 5.293a1 1 0 001.414 1.414L12 13.414l5.293 5.293a1 1 0 001.414-1.414L13.414 12l5.293-5.293a1 1 0 10-1.414-1.414L12 10.586z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
               <div class="issue-modal-right-status-dropdown">
                 <div class="dropdown">
                   <div
@@ -472,7 +543,10 @@
                   <div class="issue-modal-right-details-subtitle-left">
                     Priority
                   </div>
-                  <div class="issue-modal-right-details-subtitle-right">
+                  <div
+                    class="issue-modal-right-details-subtitle-right"
+                    *ngIf="!editIssue; else priorityInput"
+                  >
                     <img
                       src="../../assets/issue-priority-high.svg"
                       alt=""
@@ -490,20 +564,124 @@
                     />
                     {{ selectedIssue?.priority }}
                   </div>
+                  <ng-template #priorityInput>
+                    <div class="issue-modal-right-details-subtitle-right">
+                      <div class="dropdown">
+                        <div
+                          class="issue-modal-right-details-subtitle-right-dropdown-button"
+                          id="1"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <div
+                            class="issue-modal-right-details-subtitle-right right-editing"
+                            style="margin-left: 0"
+                          >
+                            <img
+                              src="../../assets/issue-priority-high.svg"
+                              alt=""
+                              *ngIf="updatedSelectedIssue?.priority === 'High'"
+                            />
+                            <img
+                              src="../../assets/issue-priority-medium.svg"
+                              alt=""
+                              *ngIf="
+                                updatedSelectedIssue?.priority === 'Medium'
+                              "
+                            />
+                            <img
+                              src="../../assets/issue-priority-low.svg"
+                              alt=""
+                              *ngIf="updatedSelectedIssue?.priority === 'Low'"
+                            />
+                            {{ updatedSelectedIssue?.priority }}
+                          </div>
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            role="presentation"
+                          >
+                            <path
+                              d="M8.292 10.293a1.009 1.009 0 000 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 000-1.419.987.987 0 00-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 00-1.406 0z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </div>
+                        <ul class="dropdown-menu" aria-labelledby="1">
+                          <li>
+                            <span
+                              class="dropdown-item"
+                              (click)="updatedSelectedIssue.priority = 'Low'"
+                            >
+                              <img src="../../assets/issue-priority-low.svg" />
+                              Low
+                            </span>
+                          </li>
+                          <li>
+                            <span
+                              class="dropdown-item delete-project"
+                              (click)="updatedSelectedIssue.priority = 'Medium'"
+                            >
+                              <img
+                                src="../../assets/issue-priority-medium.svg"
+                              />
+                              Medium
+                            </span>
+                          </li>
+                          <li>
+                            <span
+                              class="dropdown-item delete-project"
+                              (click)="updatedSelectedIssue.priority = 'High'"
+                            >
+                              <img src="../../assets/issue-priority-high.svg" />
+                              High
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </ng-template>
                 </div>
                 <div class="issue-modal-right-details-subtitle">
                   <div class="issue-modal-right-details-subtitle-left">
                     Due Date
                   </div>
-                  <div class="issue-modal-right-details-subtitle-right">
+                  <div
+                    class="issue-modal-right-details-subtitle-right"
+                    *ngIf="!editIssue; else dueDateInput"
+                  >
                     {{ selectedIssue?.dueDateHR }}
                   </div>
+                  <ng-template #dueDateInput>
+                    <div
+                      class="issue-modal-right-details-subtitle-right date-editing"
+                    >
+                      <input
+                        matInput
+                        class="issue-modal-right-details-subtitle-right-date-input"
+                        [matDatepicker]="dp"
+                        [formControl]="updatedSelectedIssueDueDate"
+                        (click)="dp.open()"
+                        placeholder="MM/DD/YYYY"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="dp"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #dp></mat-datepicker>
+                    </div>
+                  </ng-template>
                 </div>
                 <div class="issue-modal-right-details-subtitle">
                   <div class="issue-modal-right-details-subtitle-left">
                     Assignee
                   </div>
-                  <div class="issue-modal-right-details-subtitle-right">
+                  <div
+                    class="issue-modal-right-details-subtitle-right"
+                    *ngIf="!editIssue; else assigneeInput"
+                  >
                     <img
                       [src]="selectedIssue?.assignee.img"
                       alt=""
@@ -516,6 +694,69 @@
                     </ng-template>
                     {{ selectedIssue?.assignee.name }}
                   </div>
+                  <ng-template #assigneeInput>
+                    <div class="issue-modal-right-details-subtitle-right">
+                      <div class="dropdown">
+                        <div
+                          class="issue-modal-right-details-subtitle-right-dropdown-button"
+                          id="1"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <div
+                            class="issue-modal-right-details-subtitle-right right-editing"
+                          >
+                            <img
+                              [src]="updatedSelectedIssue?.assignee.img"
+                              alt=""
+                              *ngIf="
+                                updatedSelectedIssue?.assignee.img;
+                                else noImgIcon
+                              "
+                            />
+                            <ng-template #noImgIcon>
+                              <div class="issue-assignee-no-img">
+                                {{ updatedSelectedIssue?.assignee.dummy_img }}
+                              </div>
+                            </ng-template>
+                            {{ updatedSelectedIssue?.assignee.name }}
+                          </div>
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            role="presentation"
+                          >
+                            <path
+                              d="M8.292 10.293a1.009 1.009 0 000 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 000-1.419.987.987 0 00-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 00-1.406 0z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </div>
+                        <ul class="dropdown-menu" aria-labelledby="1">
+                          <li *ngFor="let assignee of project.members">
+                            <span
+                              class="dropdown-item"
+                              (click)="updateSelectedIssueAssignee(assignee)"
+                            >
+                              <img
+                                [src]="assignee.img"
+                                alt=""
+                                *ngIf="assignee.img; else noImgIcon"
+                              />
+                              <ng-template #noImgIcon>
+                                <div class="issue-assignee-no-img">
+                                  {{ assignee.dummy_img }}
+                                </div>
+                              </ng-template>
+                              {{ assignee.name }}
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </ng-template>
                 </div>
                 <div class="issue-modal-right-details-subtitle">
                   <div class="issue-modal-right-details-subtitle-left">
@@ -529,9 +770,17 @@
                   <div class="issue-modal-right-details-subtitle-left">
                     Development
                   </div>
-                  <div class="issue-modal-right-details-subtitle-right">
-                    Commit/Branch :
+                  <div
+                    class="issue-modal-right-details-subtitle-right"
+                    *ngIf="selectedIssue?.development; else nodev"
+                  >
+                    Branch : {{ selectedIssue?.development.branch_name }}
                   </div>
+                  <ng-template #nodev>
+                    <div class="issue-modal-right-details-subtitle-right">
+                      Not linked
+                    </div>
+                  </ng-template>
                 </div>
                 <div class="issue-modal-right-details-subtitle">
                   <div class="issue-modal-right-details-subtitle-left">
@@ -561,8 +810,16 @@
                 </div>
               </div>
               <div class="issue-model-right-buttons">
-                <div class="issue-modal-right-button-cancel">Cancel</div>
-                <div class="issue-modal-right-button-save">Save</div>
+                <div
+                  class="issue-modal-right-button-cancel"
+                  (click)="editIssueOption()"
+                  *ngIf="editIssue"
+                >
+                  Cancel
+                </div>
+                <div class="issue-modal-right-button-save" *ngIf="editIssue">
+                  Save
+                </div>
               </div>
             </div>
           </div>

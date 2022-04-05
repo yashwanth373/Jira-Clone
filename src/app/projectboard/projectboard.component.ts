@@ -1,6 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {CdkDragDrop, CDK_DRAG_CONFIG, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import {FormControl} from '@angular/forms';
+import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+
+import * as _moment from 'moment';
+
+const moment = _moment;
 
 const DragConfig = {
   dragStartThreshold: 0,
@@ -8,11 +15,30 @@ const DragConfig = {
   zIndex: 10000
 };
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'L',
+  },
+  display: {
+    dateInput: 'LL',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'L',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
 @Component({
   selector: 'app-projectboard',
   templateUrl: './projectboard.component.html',
   styleUrls: ['./projectboard.component.css'],
-  providers: [{ provide: CDK_DRAG_CONFIG, useValue: DragConfig }]
+  providers: [{ provide: CDK_DRAG_CONFIG, useValue: DragConfig },
+    {
+      provide: DateAdapter,
+      useClass: MomentDateAdapter,
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+    },
+
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },]
 })
 export class ProjectboardComponent implements OnInit {
 
@@ -33,7 +59,8 @@ export class ProjectboardComponent implements OnInit {
         user_id : "1",
         name : "Yashwanth 2",
         email : "sdfsdfsdff",
-        img : "sdfsdsffd"
+        img : null,
+        dummy_img : "Y"
       },
       {
         user_id : "2",
@@ -156,6 +183,7 @@ export class ProjectboardComponent implements OnInit {
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "Low",
+        development : null,
         status : "in progress",
         sprint : {
           sprint_id : "345345345",
@@ -187,6 +215,7 @@ export class ProjectboardComponent implements OnInit {
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "Medium",
+        development : null,
         status : "in progress",
         sprint : {
           sprint_id : "345345345",
@@ -243,6 +272,10 @@ export class ProjectboardComponent implements OnInit {
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "Low",
+        development : {
+          branch_id : "3245354",
+          branch_name: "main",
+        },
         status : "in progress",
         sprint : {
           sprint_id : "345345345",
@@ -299,6 +332,10 @@ export class ProjectboardComponent implements OnInit {
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "High",
+        development : {
+          branch_id : "3245354",
+          branch_name: "main",
+        },
         status : "in progress",
         sprint : {
           sprint_id : "345345345",
@@ -350,6 +387,8 @@ export class ProjectboardComponent implements OnInit {
   stagingArea : any = [];
 
   @ViewChild('close') closebtn : ElementRef | undefined;
+
+  @ViewChild('closeIssueModal') closeIssueModalbtn : ElementRef | undefined;
   
   sectionNamePlaceholder : any = "Section Name"
 
@@ -360,6 +399,12 @@ export class ProjectboardComponent implements OnInit {
   updateIssueStatus : any = null
 
   selectedIssue : any = null;
+
+  updatedSelectedIssue : any = null;
+
+  editIssue : boolean = false;
+
+  updatedSelectedIssueDueDate : any = null;
 
   ngOnInit(): void {
 
@@ -521,7 +566,12 @@ export class ProjectboardComponent implements OnInit {
   }
 
   updateSelectedIssue(issue : any){
+    this.updatedSelectedIssue = null
+    this.updatedSelectedIssueDueDate = null;
+    this.editIssue = false
     this.selectedIssue = issue;
+    this.updatedSelectedIssue = {...this.selectedIssue};
+    this.updatedSelectedIssueDueDate = new FormControl(moment.utc(parseInt(this.updatedSelectedIssue.dueDate)).toISOString())
     this.selectedIssue.createdAtHR = this.HRDateFormat(this.selectedIssue.createdAt, false)
     this.selectedIssue.modifiedAtHR = this.HRDateFormat(this.selectedIssue.modifiedAt, false)
     this.selectedIssue.dueDateHR = this.HRDateFormat(this.selectedIssue.dueDate, true)
@@ -562,9 +612,37 @@ export class ProjectboardComponent implements OnInit {
     var minutes = minutesIST < 10 ? "0" + minutesIST : minutesIST;
 
     if(isDueDate)
-      return day2 + " " + month + " " + year;
-    return ''+day2+' '+month+' '+year+', '+hours2+':'+minutes+' '+(hoursIST >= 12 ? 'PM' : 'AM');
+      return month + " " + day2 + ", " + year;
+    return ''+month+' '+day2+', '+year+', '+hours2+':'+minutes+' '+(hoursIST >= 12 ? 'PM' : 'AM');
 
+  }
+
+  deleteIssue(){
+    //delete from backend
+    
+    //delete it from project issues using filter function
+    this.closeIssueModalbtn?.nativeElement.click();
+    //delete from active sprint issues
+    this.activeSprint.issues = this.activeSprint.issues.filter((id : any) => id !== this.selectedIssue.issue_id)
+    this.project.issues = this.project.issues.filter((issue : any) => issue.issue_id !== this.selectedIssue.issue_id)
+    console.log(this.project.issues)
+    this.selectedIssue = null;
+    console.log(this.activeSprint)
+    this.seperateIssues();
+  }
+
+  editIssueOption(){
+    this.editIssue = !this.editIssue;
+    console.log("edited",this.updatedSelectedIssue)
+    this.updatedSelectedIssue = {...this.selectedIssue};
+    this.updatedSelectedIssueDueDate = new FormControl(moment.utc(parseInt(this.updatedSelectedIssue.dueDate)).toISOString())
+    console.log(this.updatedSelectedIssueDueDate)
+    console.log("original",this.selectedIssue)
+    console.log("edited",this.updatedSelectedIssue)
+  }
+
+  updateSelectedIssueAssignee(assignee : any){
+    this.updatedSelectedIssue.assignee = {...assignee};
   }
 
 }
