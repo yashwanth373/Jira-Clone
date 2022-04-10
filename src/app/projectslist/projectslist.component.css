@@ -179,6 +179,11 @@ th {
   height: 100%;
 }
 
+.tbody-project-name .project-name{
+  display: flex;
+  align-items: center;
+}
+
 .tbody-project-name .project-logo img {
   width: 25px;
   height: 25px;
@@ -198,6 +203,11 @@ th {
 .tbody-project-lead .lead-logo {
   width: 8%;
   height: 100%;
+}
+
+.tbody-project-lead , .lead-name{
+  display: flex;
+  align-items: center;
 }
 
 .tbody-project-lead .lead-logo img {

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes,ExtraOptions } from '@angular/router';
 import { AuthGuard } from './auth.guard';
 import { LoginComponent } from './login/login.component';
 import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
@@ -16,6 +16,10 @@ import { BacklogComponent } from './backlog/backlog.component';
 import { CodeComponent } from './code/code.component';
 import { MembersComponent } from './members/members.component';
 import { SettingsComponent } from './settings/settings.component';
+
+export const routingConfiguration: ExtraOptions = {
+  paramsInheritanceStrategy: 'always'
+};
 
 const routes: Routes = [
   {path: '', component: LoginComponent, canActivate: [RedirectGuard, ], pathMatch: 'full'},
@@ -46,7 +50,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes,{ enableTracing: true })],
+  imports: [RouterModule.forRoot(routes,
+                                 // { enableTracing: true }
+                                routingConfiguration
+                                )],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

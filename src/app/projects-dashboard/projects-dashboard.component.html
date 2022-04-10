@@ -95,7 +95,11 @@
         >
           <div *ngIf="user.displayPicture; then logo; else dummy_logo"></div>
           <ng-template #logo>
-            <img [src]="user.displayPicture" class="top_nav_right_okay_logo" />
+            <img
+              [src]="user.displayPicture"
+              class="top_nav_right_okay_logo"
+              referrerpolicy="no-referrer"
+            />
           </ng-template>
           <ng-template #dummy_logo>
             <div class="top_nav_right_dummy_logo">

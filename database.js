@@ -52,6 +52,11 @@ function deleteProjectFromUser(user_id, project_id) {
     return client.db('JIRAClone').collection('users').updateOne({ user_id: user_id }, { $pull: { projects: project_id } })
 }
 
+function replaceIssue(project_id, issue) {
+    return client.db('JIRAClone').collection('projects').findOneAndUpdate({ project_id: project_id, 'Issues.issue_id': issue.issue_id }, { $set: { 'Issues.$': issue } })
+
+}
+
 module.exports = {
     insertUser,
     findUser,
@@ -59,5 +64,6 @@ module.exports = {
     deleteProject,
     deleteProjectFromUser,
     createProject,
-    updateUserProjects
+    updateUserProjects,
+    replaceIssue
 }

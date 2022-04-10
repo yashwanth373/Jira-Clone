@@ -17,25 +17,28 @@ export class YourworkComponent implements OnInit {
 
   ngOnInit(): void {
     this._dataService.getWork().subscribe((data : any) => {
+      console.log("work api call",data)
       this.work = data.data
+      if(this.work != null){
+        this.recentSort();
+  
+        this.seperateIssues();
+  
+        this.work = this.work.splice(0,5)
+      }
 
-      this.recentSort();
 
-      this.seperateIssues();
-
-      this.work = this.work.splice(0,5)
-
-      console.log(this.work)
-      console.log(this.issues)
+      console.log("Your work",this.work)
+      console.log("Your issues",this.issues)
     })
-    this.recentSort();
+    // this.recentSort();
 
-      this.seperateIssues();
+    //   this.seperateIssues();
 
-      this.work = this.work.splice(0,5)
+    //   this.work = this.work.splice(0,5)
 
-      console.log(this.work)
-      console.log(this.issues)
+    //   console.log(this.work)
+    //   console.log(this.issues)
   }
 
   recentSort(){

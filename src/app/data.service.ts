@@ -75,4 +75,14 @@ export class DataService {
   getBasicprojectDetails(project_id : any){
     return this.http.get("/getBasicprojectDetails/" + project_id)
   }
+
+  //Specific for Project Board Component
+  getProjectDetails(project_id : any){
+    return this.http.get("/getProjectDetails/" + project_id)
+  }
+
+  updateIssue(project_id : any, issue : any){
+    console.log("updating issue",project_id,issue)
+    return this.http.put("/updateIssue/" + project_id, { issue : issue})
+  }
 }

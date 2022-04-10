@@ -11,11 +11,7 @@ export class ProjectdashboardComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private _dataService : DataService) { }
 
-  project : any = {
-    project_name : "Hello 5",
-    project_id : "348673485",
-    icon : "../../assets/project-dummy-logo.svg"
-  };
+  project : any = null;
   ngOnInit(): void {
     this._dataService.getBasicprojectDetails(this.route.snapshot.paramMap.get('projectId')).subscribe((data : any)=>{
       this.project = data.data

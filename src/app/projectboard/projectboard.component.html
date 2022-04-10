@@ -1,4 +1,4 @@
-<div class="mycontainer">
+<div class="mycontainer" *ngIf="project">
   <div class="board-title">
     <div class="board-title-left">
       <div class="board-title-left-subtitle">
@@ -235,7 +235,7 @@
         <div class="board-content-body-section-title">
           <div class="board-content-body-section-title-left">
             {{ section.toUpperCase() }}
-            <span *ngIf="activeSprint[section].length > 1">
+            <span *ngIf="activeSprint && activeSprint[section].length > 1">
               <span
                 style="
                   position: relative;
@@ -248,7 +248,7 @@
               </span>
               {{ activeSprint[section].length }} ISSUES
             </span>
-            <span *ngIf="activeSprint[section].length == 1">
+            <span *ngIf="activeSprint && activeSprint[section].length == 1">
               <span
                 style="
                   position: relative;
@@ -267,13 +267,13 @@
           class="board-content-body-section-body"
           cdkDropList
           id="section{{ i }}"
-          [cdkDropListData]="activeSprint[section]"
+          [cdkDropListData]="activeSprint && activeSprint[section]"
           [cdkDropListConnectedTo]="connections"
           (cdkDropListDropped)="drop($event)"
         >
           <div
             class="board-content-body-section-body-empty"
-            *ngIf="!activeSprint && i == 0"
+            *ngIf="activeSprint == null && i == 0"
           >
             <div class="board-content-body-section-body-empty-title">
               You haven't started a sprint
@@ -289,61 +289,53 @@
               Go to Backlog
             </div>
           </div>
-          <div
-            class="board-content-body-section-body-issue"
-            *ngFor="
-              let issue of activeSprint[section] | issueSearch: searchQuery
-            "
-            (click)="updateSelectedIssue(issue)"
-            cdkDrag
-            data-bs-toggle="modal"
-            data-bs-target="#issueModal"
-          >
-            <div class="board-content-body-section-body-issue-title">
-              {{ issue.name }}
-            </div>
+          <div *ngIf="activeSprint != null">
             <div
-              class="board-content-body-section-body-issue-tag"
-              *ngIf="issue.epic"
+              class="board-content-body-section-body-issue"
+              *ngFor="
+                let issue of activeSprint[section] | issueSearch: searchQuery
+              "
+              (click)="selectIssue(issue)"
+              cdkDrag
+              data-bs-toggle="modal"
+              data-bs-target="#issueModal"
             >
-              {{ issue.epic.name.toUpperCase() }}
-            </div>
-            <div class="board-content-body-section-body-issue-subtitle">
-              <div class="board-content-body-section-body-issue-subtitle-left">
-                <img [src]="issue.icon" alt="" />
-                {{ issue.tag }}
+              <div class="board-content-body-section-body-issue-title">
+                {{ issue.name }}
               </div>
-              <div class="board-content-body-section-body-issue-subtitle-right">
+              <div
+                class="board-content-body-section-body-issue-tag"
+                *ngIf="issue.epic"
+              >
+                {{ issue.epic.name.toUpperCase() }}
+              </div>
+              <div class="board-content-body-section-body-issue-subtitle">
                 <div
-                  class="board-content-body-section-body-issue-subtitle-right-priority"
+                  class="board-content-body-section-body-issue-subtitle-left"
                 >
-                  <img
-                    src="../../assets/issue-priority-high.svg"
-                    alt=""
-                    *ngIf="issue.priority === 'High'"
-                  />
-                  <img
-                    src="../../assets/issue-priority-medium.svg"
-                    alt=""
-                    *ngIf="issue.priority === 'Medium'"
-                  />
-                  <img
-                    src="../../assets/issue-priority-low.svg"
-                    alt=""
-                    *ngIf="issue.priority === 'Low'"
-                  />
+                  <img [src]="issue.type_icon" alt="" />
+                  {{ issue.tag }}
                 </div>
                 <div
-                  class="board-content-body-section-body-issue-subtitle-right-icon"
+                  class="board-content-body-section-body-issue-subtitle-right"
                 >
-                  <div *ngIf="issue.assignee.img; else noAssigneeImg">
-                    <img [src]="issue.assignee.img" alt="" />
+                  <div
+                    class="board-content-body-section-body-issue-subtitle-right-priority"
+                  >
+                    <img [src]="issue?.priority_icon" alt="" />
                   </div>
-                  <ng-template #noAssigneeImg>
-                    <div class="issue-assignee-no-img">
-                      {{ issue.assignee.dummy_img }}
+                  <div
+                    class="board-content-body-section-body-issue-subtitle-right-icon"
+                  >
+                    <div *ngIf="issue.assignee.img; else noAssigneeImg">
+                      <img [src]="issue.assignee.img" alt="" />
                     </div>
-                  </ng-template>
+                    <ng-template #noAssigneeImg>
+                      <div class="issue-assignee-no-img">
+                        {{ issue.assignee.dummy_img }}
+                      </div>
+                    </ng-template>
+                  </div>
                 </div>
               </div>
             </div>
@@ -366,23 +358,154 @@
                 <div
                   class="issue-model-left-subtitle-epic"
                   *ngIf="selectedIssue?.epic"
+                  [ngClass]="{ epicEditing: editIssue }"
                 >
-                  <img src="../../assets/epic.svg" alt="epicIcon" />
-                  {{ selectedIssue?.epic.name }} /
+                  <div
+                    *ngIf="!editIssue; else epicInput"
+                    class="issue-modal-left-subtitle-epic-button"
+                  >
+                    <img src="../../assets/epic.svg" alt="epicIcon" />
+                    {{ selectedIssue?.epic.name }} /
+                  </div>
+                  <ng-template #epicInput>
+                    <div class="issue-modal-left-subtitle-epic-button">
+                      <div class="dropdown">
+                        <div
+                          class="issue-modal-left-subtitle-epic-dropdown-button"
+                          id="1"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <div class="issue-modal-left-subtitle-epic-button">
+                            <img src="../../assets/epic.svg" alt="epicIcon" />
+                            {{ updatedSelectedIssue?.epic.name }}
+                          </div>
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            role="presentation"
+                          >
+                            <path
+                              d="M8.292 10.293a1.009 1.009 0 000 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 000-1.419.987.987 0 00-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 00-1.406 0z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            ></path>
+                          </svg>
+                        </div>
+                        <ul class="dropdown-menu" aria-labelledby="1">
+                          <li *ngFor="let epic of project.epics">
+                            <span
+                              class="dropdown-item"
+                              (click)="updateSelectedIssueEpic(epic)"
+                            >
+                              <img
+                                src="../../assets/epic.svg"
+                                alt="Epic Logo"
+                              />
+                              {{ epic.name }}
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </ng-template>
                 </div>
-                <div class="issue-model-left-subtitle-issue-tag">
+                <div
+                  class="issue-model-left-subtitle-issue-tag"
+                  [ngClass]="{ issueTypeEditing: editIssue }"
+                >
                   <img
-                    src="../../assets/issue-type-story.svg"
+                    [src]="selectedIssue?.type_icon"
                     alt="issueIcon"
+                    *ngIf="!editIssue; else issueTypeInput"
                   />
+                  <ng-template #issueTypeInput>
+                    <div class="dropdown">
+                      <div
+                        class="issue-modal-left-subtitle-issuetype-dropdown-button"
+                        id="1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <img
+                          [src]="updatedSelectedIssue?.type_icon"
+                          alt="issueIcon"
+                        />
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          role="presentation"
+                        >
+                          <path
+                            d="M8.292 10.293a1.009 1.009 0 000 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 000-1.419.987.987 0 00-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 00-1.406 0z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                      <ul class="dropdown-menu" aria-labelledby="1">
+                        <li>
+                          <span
+                            class="dropdown-item"
+                            (click)="updateSelectedIssueType('story')"
+                          >
+                            <img
+                              src="../../assets/issue-type-story.svg"
+                              alt="Issue Type Logo"
+                            />
+                            Story
+                          </span>
+                        </li>
+                        <li>
+                          <span
+                            class="dropdown-item"
+                            (click)="updateSelectedIssueType('task')"
+                          >
+                            <img
+                              src="../../assets/issue-type-task.svg"
+                              alt="Issue Type Logo"
+                            />
+                            Task
+                          </span>
+                        </li>
+                        <li>
+                          <span
+                            class="dropdown-item"
+                            (click)="updateSelectedIssueType('bug')"
+                          >
+                            <img
+                              src="../../assets/issue-type-bug.svg"
+                              alt="Issue Type Logo"
+                            />
+                            Bug
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </ng-template>
                   {{ selectedIssue?.tag }}
                 </div>
               </div>
-              <div class="issue-modal-left-title">
+              <div
+                class="issue-modal-left-title"
+                *ngIf="!editIssue; else titleInput"
+              >
                 {{ selectedIssue?.name }}
               </div>
+              <ng-template #titleInput>
+                <div class="issue-modal-left-title">
+                  <input
+                    class="issue-modal-left-title-input-field"
+                    autocomplete="off"
+                    spellcheck="false"
+                    [(ngModel)]="updatedSelectedIssue.name"
+                  />
+                </div>
+              </ng-template>
               <div class="issue-modal-left-buttons">
-                <div class="issue-modal-left-buttons-attach">
+                <!-- <div class="issue-modal-left-buttons-attach">
                   <svg
                     width="24"
                     height="24"
@@ -396,7 +519,7 @@
                     ></path>
                   </svg>
                   &nbsp; Attach
-                </div>
+                </div> -->
                 <div
                   class="issue-modal-left-buttons-edit"
                   (click)="editIssueOption()"
@@ -439,14 +562,14 @@
                   </div>
                 </ng-template>
               </div>
-              <div class="issue-modal-left-attachments">
+              <!-- <div class="issue-modal-left-attachments">
                 <div class="issue-modal-left-attachments-title">
                   Attachments
                 </div>
                 <div class="issue-modal-left-attachments-area">
                   All issue attachments will be previewed here.
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="issue-modal-right">
               <div class="issue-modal-right-top">
@@ -547,21 +670,7 @@
                     class="issue-modal-right-details-subtitle-right"
                     *ngIf="!editIssue; else priorityInput"
                   >
-                    <img
-                      src="../../assets/issue-priority-high.svg"
-                      alt=""
-                      *ngIf="selectedIssue?.priority === 'High'"
-                    />
-                    <img
-                      src="../../assets/issue-priority-medium.svg"
-                      alt=""
-                      *ngIf="selectedIssue?.priority === 'Medium'"
-                    />
-                    <img
-                      src="../../assets/issue-priority-low.svg"
-                      alt=""
-                      *ngIf="selectedIssue?.priority === 'Low'"
-                    />
+                    <img [src]="selectedIssue?.priority_icon" alt="" />
                     {{ selectedIssue?.priority }}
                   </div>
                   <ng-template #priorityInput>
@@ -578,21 +687,8 @@
                             style="margin-left: 0"
                           >
                             <img
-                              src="../../assets/issue-priority-high.svg"
+                              [src]="updatedSelectedIssue?.priority_icon"
                               alt=""
-                              *ngIf="updatedSelectedIssue?.priority === 'High'"
-                            />
-                            <img
-                              src="../../assets/issue-priority-medium.svg"
-                              alt=""
-                              *ngIf="
-                                updatedSelectedIssue?.priority === 'Medium'
-                              "
-                            />
-                            <img
-                              src="../../assets/issue-priority-low.svg"
-                              alt=""
-                              *ngIf="updatedSelectedIssue?.priority === 'Low'"
                             />
                             {{ updatedSelectedIssue?.priority }}
                           </div>
@@ -613,7 +709,7 @@
                           <li>
                             <span
                               class="dropdown-item"
-                              (click)="updatedSelectedIssue.priority = 'Low'"
+                              (click)="updateSelectedIssuePriority('Low')"
                             >
                               <img src="../../assets/issue-priority-low.svg" />
                               Low
@@ -622,7 +718,7 @@
                           <li>
                             <span
                               class="dropdown-item delete-project"
-                              (click)="updatedSelectedIssue.priority = 'Medium'"
+                              (click)="updateSelectedIssuePriority('Medium')"
                             >
                               <img
                                 src="../../assets/issue-priority-medium.svg"
@@ -633,7 +729,7 @@
                           <li>
                             <span
                               class="dropdown-item delete-project"
-                              (click)="updatedSelectedIssue.priority = 'High'"
+                              (click)="updateSelectedIssuePriority('High')"
                             >
                               <img src="../../assets/issue-priority-high.svg" />
                               High
@@ -817,7 +913,11 @@
                 >
                   Cancel
                 </div>
-                <div class="issue-modal-right-button-save" *ngIf="editIssue">
+                <div
+                  class="issue-modal-right-button-save"
+                  *ngIf="editIssue"
+                  (click)="saveEditedIssue()"
+                >
                   Save
                 </div>
               </div>

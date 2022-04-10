@@ -1,11 +1,12 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {CdkDragDrop, CDK_DRAG_CONFIG, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {FormControl} from '@angular/forms';
 import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 
 import * as _moment from 'moment';
+import { DataService } from '../data.service';
 
 const moment = _moment;
 
@@ -42,17 +43,19 @@ export const MY_FORMATS = {
 })
 export class ProjectboardComponent implements OnInit {
 
-  constructor(private router : Router) { }
+  constructor(private router : Router, private _dsService : DataService, private route : ActivatedRoute) { }
 
-  project : any = {
+  dummy_project : any = {
     project_id : "346345345",
     project_name : "Dummy 5",
-    key : "DM5",
+    project_key : "DM5",
     createdAt : "324234324234",
     owner : {
       user_id : "345345345",
       name : "Yashwanth Reddy",
-      img : "dfgdfgdfg"
+      img : "dfgdfgdfg",
+      dummy_img : "YR",
+      email : "sdfdsfdsf"
     },
     members : [
       {
@@ -95,16 +98,45 @@ export class ProjectboardComponent implements OnInit {
         backlog : ["1221"]
       }
     ],
+    epics : [
+      {
+        epic_id : "345345345",
+        tag : "DM5-1",
+        name : "Backend",
+        issues : ["1221","1222","1220"],
+        startDate: "25324534535",
+        endDate : "345345345",
+        priority : "High",
+        priority_icon : "../../assets/issue-priority-high.svg",
+        Reporter : "45345346",
+        description : "sdfdsfdsfdsffd",
+        createdAt : "346546546"
+      },
+      {
+        epic_id : "345345345",
+        tag : "DM5-1",
+        name : "Frontend",
+        issues : ["1218","1219"],
+        startDate: "25324534535",
+        endDate : "345345345",
+        priority : "High",
+        Reporter : "45345346",
+        description : "sdfdsfdsfdsffd",
+        createdAt : "346546546"
+      }
+    ],
     issues : [
       {
         issue_id : "1218",
         tag : "DM5-1",
         name : "Abstract",
         type : "story",
+        type_icon : "../../assets/issue-type-story.svg",
         createdAt:"1648356780000",
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "High",
+        priority_icon : "../../assets/issue-priority-high.svg",
         status : "in progress",
         sprint : {
           sprint_id : "345345345",
@@ -125,17 +157,18 @@ export class ProjectboardComponent implements OnInit {
           dummy_img : "RG"
         },
         modifiedAt : "1648647309625",
-        icon : "../../assets/issue-type-story.svg"
       },
       {
         issue_id : "1219",
         tag : "DM5-2",
         name : "Drafting Abstract",
         type : "story",
+        type_icon : "../../assets/issue-type-story.svg",
         createdAt:"1648356790000",
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "High",
+        priority_icon : "../../assets/issue-priority-high.svg",
         status : "in progress",
         sprint : "32534534",
         epic : "4567456",
@@ -154,16 +187,21 @@ export class ProjectboardComponent implements OnInit {
         tag : "DM5-3",
         name : "Design",
         type : "task",
+        type_icon : "../../assets/issue-type-task.svg",
         createdAt:"1648356800000",
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "High",
+        priority_icon : "../../assets/issue-priority-high.svg",
         status : "in progress",
         sprint : {
           sprint_id : "345345345",
           sprint_name : "Sprint 2",
         },
-        epic : "4567456",
+        epic : {
+          epic_id : "345345345",
+          name : "Backend",
+        },
         dueDate : "1648838000000",
         assignee : {
           user_id : "1",
@@ -172,24 +210,28 @@ export class ProjectboardComponent implements OnInit {
         },
         reporter : "345345345",
         modifiedAt : "1648647309623",
-        icon : "../../assets/issue-type-task.svg"
       },
       {
         issue_id : "1221",
         tag : "DM5-4",
         name : "Architecture",
         type : "task",
+        type_icon : "../../assets/issue-type-task.svg",
         createdAt:"1648359000000",
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "Low",
+        priority_icon : "../../assets/issue-priority-low.svg",
         development : null,
         status : "in progress",
         sprint : {
           sprint_id : "345345345",
           sprint_name : "Sprint 2",
         },
-        epic : null,
+        epic : {
+          epic_id : "345345345",
+          name : "Backend",
+        },
         dueDate : "1648838100000",
         assignee : {
           user_id : "1",
@@ -204,17 +246,18 @@ export class ProjectboardComponent implements OnInit {
           dummy_img : "RG"
         },
         modifiedAt : "1648647309622",
-        icon : "../../assets/issue-type-task.svg"
       },
       {
         issue_id : "1222",
         tag : "DM5-5",
         name : "Implementation",
         type : "story",
+        type_icon : "../../assets/issue-type-story.svg",
         createdAt:"1648359100000",
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "Medium",
+        priority_icon : "../../assets/issue-priority-medium.svg",
         development : null,
         status : "in progress",
         sprint : {
@@ -222,7 +265,7 @@ export class ProjectboardComponent implements OnInit {
           sprint_name : "Sprint 2",
         },
         epic : {
-          epic_id : "4567456",
+          epic_id : "345345345",
           name : "Backend",
         },
         dueDate : "1648838200000",
@@ -239,17 +282,18 @@ export class ProjectboardComponent implements OnInit {
           dummy_img : "YR"
         },
         modifiedAt : "1648647309621",
-        icon : "../../assets/issue-type-story.svg"
       },
       {
         issue_id : "1223",
         tag : "DM5-6",
         name : "Modal display bug",
         type : "bug",
+        type_icon : "../../assets/issue-type-bug.svg",
         createdAt:"1648359200000",
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "High",
+        priority_icon : "../../assets/issue-priority-high.svg",
         status : "in progress",
         sprint : "32534534",
         epic : "4567456",
@@ -261,17 +305,18 @@ export class ProjectboardComponent implements OnInit {
         },
         reporter : "345345345",
         modifiedAt : "1648647309620",
-        icon : "../../assets/issue-type-bug.svg"
       },
       {
         issue_id : "1224",
         tag : "DM5-7",
         name : "Side nav bug",
         type : "bug",
+        type_icon : "../../assets/issue-type-bug.svg",
         createdAt:"1648359300000",
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "Low",
+        priority_icon : "../../assets/issue-priority-low.svg",
         development : {
           branch_id : "3245354",
           branch_name: "main",
@@ -281,10 +326,7 @@ export class ProjectboardComponent implements OnInit {
           sprint_id : "345345345",
           sprint_name : "Sprint 2",
         },
-        epic : {
-          epic_id : "4567456",
-          name : "Backend",
-        },
+        epic : null,
         dueDate : "1648838400000",
         assignee : {
           user_id : "1",
@@ -299,17 +341,18 @@ export class ProjectboardComponent implements OnInit {
           dummy_img : "RG"
         },
         modifiedAt : "1648647309619",
-        icon : "../../assets/issue-type-bug.svg"
       },
       {
         issue_id : "1225",
         tag : "DM5-8",
         name : "Routing bug",
         type : "bug",
+        type_icon : "../../assets/issue-type-bug.svg",
         createdAt : "1648359400000",
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "High",
+        priority_icon : "../../assets/issue-priority-high.svg",
         status : "in progress",
         sprint : "32534534",
         epic : "4567456",
@@ -321,17 +364,18 @@ export class ProjectboardComponent implements OnInit {
         },
         reporter : "345345345",
         modifiedAt : "1648647309618",
-        icon : "../../assets/issue-type-bug.svg"
       },
       {
         issue_id : "1226",
         tag : "DM5-9",
         name : "Create user backend bug",
         type : "bug",
+        type_icon : "../../assets/issue-type-bug.svg",
         createdAt:"1648359500000",
         attachment : "sdfdsfdf",
         description : "sdfsdfsdf",
         priority : "High",
+        priority_icon : "../../assets/issue-priority-high.svg",
         development : {
           branch_id : "3245354",
           branch_name: "main",
@@ -341,10 +385,7 @@ export class ProjectboardComponent implements OnInit {
           sprint_id : "345345345",
           sprint_name : "Sprint 2",
         },
-        epic : {
-          epic_id : "4567456",
-          name : "Backend",
-        },
+        epic : null,
         dueDate : "1648838600000",
         assignee : {
           user_id : "2",
@@ -359,7 +400,6 @@ export class ProjectboardComponent implements OnInit {
           dummy_img : "YR"
         },
         modifiedAt : "1648647309617",
-        icon : "../../assets/issue-type-bug.svg"
       },
     ],
     board : ["to do", "in progress", "done"],
@@ -371,14 +411,15 @@ export class ProjectboardComponent implements OnInit {
     invited : ["sdfsdfsdf","sdfsdfsdfdf","sdfsdfsdf"],
     modifiedAt : "324234324234",
     isOwner : true,
-
   }
+  
+  project : any = null;
 
   searchQuery: string = '';
 
   groupByOption : string = 'None';
 
-  activeSprint : any;
+  activeSprint : any = null;
 
   connections : any = []
 
@@ -406,14 +447,31 @@ export class ProjectboardComponent implements OnInit {
 
   updatedSelectedIssueDueDate : any = null;
 
+  madeUpdates : boolean = false;
+
   ngOnInit(): void {
 
-    this.prepareActiveSprint();
-    console.log(this.activeSprint)
-    for(var i =0;i<this.project.board.length;i++){
-      this.connections.push("section"+i)
-      this.stagingArea.push(this.project.board[i])
-    }
+    let projectId = this.route.snapshot.paramMap.get('projectId');
+    console.log("board project id",this.route)
+
+
+    this._dsService.getProjectDetails(projectId).subscribe((data : any) => {
+      console.log("board api call",data)
+      this.project = data.data;
+      if(this.project != null){
+        this.prepareActiveSprint();
+        console.log("board active sprint",this.activeSprint)
+        
+        for(var i =0;i<this.project.board.length;i++){
+          this.connections.push("section"+i)
+          this.stagingArea.push(this.project.board[i])
+        }
+      }
+      // else{
+      //   this.router.navigate(['../ProjectsList']);
+      // }
+    })
+
   }
 
   prepareActiveSprint(){
@@ -426,16 +484,18 @@ export class ProjectboardComponent implements OnInit {
         let startOfDay : any = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         let timestamp = startOfDay / 1;
         this.activeSprint.remainingTime = (this.activeSprint.endDate -  timestamp)/(1000*60*60*24);
+        
+        this.seperateIssues();
+        this.groupBy("None");
       }
     }
-    this.seperateIssues();
-    this.groupBy("None");
 
 
   }
 
   seperateIssues(){
   //Preparing empty status arrays in activeSprint object
+    console.log("seperate issues called", this.activeSprint)
     for(let section of this.project.board){
       this.activeSprint[section] = [];
     }
@@ -512,7 +572,7 @@ export class ProjectboardComponent implements OnInit {
     for(let section of this.project.board){
       for(let issue of this.activeSprint[section]){
         if(section !== issue.status){
-          //call backend to update status
+          //call backend to update status as well as update modifiedAt of the issue
 
           issue.status = section;
         }
@@ -565,7 +625,7 @@ export class ProjectboardComponent implements OnInit {
     this.newSectionName = ''
   }
 
-  updateSelectedIssue(issue : any){
+  selectIssue(issue : any){
     this.updatedSelectedIssue = null
     this.updatedSelectedIssueDueDate = null;
     this.editIssue = false
@@ -585,6 +645,8 @@ export class ProjectboardComponent implements OnInit {
   changeIssueStatus(status : any){
     let prevSection = this.selectedIssue.status;
     this.selectedIssue.status = status;
+    this.selectedIssue.modifiedAt = Date.now();
+    this.selectedIssue.modifiedAtHR = this.HRDateFormat(this.selectedIssue.modifiedAt, false)
     //update in backend
 
     this.seperateIssues()
@@ -636,13 +698,63 @@ export class ProjectboardComponent implements OnInit {
     console.log("edited",this.updatedSelectedIssue)
     this.updatedSelectedIssue = {...this.selectedIssue};
     this.updatedSelectedIssueDueDate = new FormControl(moment.utc(parseInt(this.updatedSelectedIssue.dueDate)).toISOString())
-    console.log(this.updatedSelectedIssueDueDate)
+    console.log(this.updatedSelectedIssueDueDate.value.valueOf())
     console.log("original",this.selectedIssue)
     console.log("edited",this.updatedSelectedIssue)
   }
 
   updateSelectedIssueAssignee(assignee : any){
     this.updatedSelectedIssue.assignee = {...assignee};
+  }
+
+  updateSelectedIssuePriority(priority : any){
+    this.updatedSelectedIssue.priority = priority;
+    this.updatedSelectedIssue.priority_icon = priority === "High" ? "../../assets/issue-priority-high.svg" : (priority === "Medium" ? "../../assets/issue-priority-medium.svg" : "../../assets/issue-priority-low.svg")
+  }
+
+  updateSelectedIssueEpic(epic : any){
+    this.updatedSelectedIssue.epic = {...epic};
+  }
+
+  updateSelectedIssueType(type : any){
+    this.updatedSelectedIssue.type = type;
+    this.updatedSelectedIssue.type_icon = type === "story" ? "../../assets/issue-type-story.svg" : (type === "task" ? "../../assets/issue-type-task.svg" : "../../assets/issue-type-bug.svg")
+  }
+
+  isNumeric(value: any): boolean {
+    return !isNaN(value - parseFloat(value));
+}
+
+  saveEditedIssue(){
+    this.editIssue = !this.editIssue;
+    if(this.isNumeric(this.updatedSelectedIssueDueDate.value.valueOf())){
+      this.updatedSelectedIssue.dueDate = this.updatedSelectedIssueDueDate.value.valueOf()
+      this.updatedSelectedIssue.dueDateHR = this.HRDateFormat(this.updatedSelectedIssue.dueDate, true)
+    }
+    if(
+      this.selectedIssue.epic?.epic_id !== this.updatedSelectedIssue.epic?.epic_id ||
+      this.selectedIssue.assignee.user_id !== this.updatedSelectedIssue.assignee.user_id ||
+      this.selectedIssue.priority !== this.updatedSelectedIssue.priority ||
+      this.selectedIssue.type !== this.updatedSelectedIssue.type ||
+      this.selectedIssue.dueDate !== this.updatedSelectedIssue.dueDate ||
+      this.selectedIssue.description !== this.updatedSelectedIssue.description ||
+      this.selectedIssue.name !== this.updatedSelectedIssue.name
+      ){
+      this.updatedSelectedIssue.modifiedAt = Date.now();
+      this.updatedSelectedIssue.modifiedAtHR = this.HRDateFormat(this.updatedSelectedIssue.modifiedAt, false)
+      this.selectedIssue = {...this.updatedSelectedIssue};
+      console.log("saving selectedIssue",this.selectedIssue)
+      let foundIndex = this.activeSprint[this.selectedIssue.status].findIndex((issue : any) => issue.issue_id === this.selectedIssue.issue_id);
+      let foundIndex2 = this.project.issues.findIndex((issue : any) => issue.issue_id === this.selectedIssue.issue_id);
+      
+      this.activeSprint[this.selectedIssue.status].splice(foundIndex,1,{...this.selectedIssue})
+      this.project.issues.splice(foundIndex2,1,{...this.selectedIssue})
+      this._dsService.updateIssue(this.project.project_id,this.selectedIssue).subscribe(
+        (data : any) => {
+          console.log(data)
+        }
+      )
+    }
   }
 
 }

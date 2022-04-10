@@ -5,7 +5,7 @@ const passport = require('passport');
 const path = require('path')
 const cookieSession = require('cookie-session');
 const async = require('async');
-const { findUser, insertUser, getProjectDetails, deleteProject, deleteProjectFromUser, createProject, updateUserProjects } = require('./database');
+const { findUser, insertUser, getProjectDetails, deleteProject, deleteProjectFromUser, createProject, updateUserProjects, replaceIssue } = require('./database');
 require("./passport-setup");
 require('dotenv').config()
 
@@ -244,21 +244,24 @@ app.get("/getProjectsMembers", isLoggedIn, async (req, res) => {
 
 app.get("/getYourWork", isLoggedIn, async (req, res) => {
     const { projects } = await findUser(req.user.id)
-
-    let work = []
-    async.each(projects, async (project_id, done) => {
-        let project = await getProjectDetails(project_id)
-        work.push({
-            project_id: project.project_id,
-            project_name: project.project_name,
-            icon: project.icon,
-            issues: project.Issues.filter((issue) => issue.Assignee == req.user.id),
-            modifiedAt: project.modifiedAt
-        })
-    },
-        function (er) {
-            res.json({ data: work })
-        })
+    if (projects.length > 0) {
+        let work = []
+        async.each(projects, async (project_id, done) => {
+            let project = await getProjectDetails(project_id)
+            work.push({
+                project_id: project.project_id,
+                project_name: project.project_name,
+                icon: project.icon,
+                issues: project.Issues.filter((issue) => issue.Assignee == req.user.id),
+                modifiedAt: project.modifiedAt
+            })
+        },
+            function (er) {
+                res.json({ data: work })
+            })
+    }
+    else
+        res.json({ data: null })
 })
 
 //////////////////////////////////////////////////////////////////// Get Basic details of selected project for side navbar
@@ -274,6 +277,37 @@ app.get("/getBasicprojectDetails/:project_id", isLoggedIn, async (req, res) => {
 })
 
 
+//////////////////////////////////////////////////////////////////// Get details of selected project for project board
+
+app.get("/getProjectDetails/:project_id", isLoggedIn, async (req, res) => {
+    let project = await getProjectDetails(req.params.project_id)
+
+    if (project) {
+        let result = {
+            project_id: project.project_id,
+            project_name: project.project_name,
+            project_key: project.project_key,
+            createdAt: project.createdAt,
+            board: project.Board.columns,
+            icon: project.icon,
+            invited: project.invited,
+            modifiedAt: project.modifiedAt,
+            isOwner: req.user.id === project.owner.user_id,
+            owner: project.owner,
+            members: project.members,
+            sprint: project.Sprint,
+            issues: project.Issues,
+            epics: project.Epics,
+            code: project.code,
+        }
+        res.json({ data: result })
+    }
+    else
+        res.json({ data: null })
+
+})
+
+
 //////////////////////////////////////////////////////////////////// Create a New project
 
 app.post("/createProject", isLoggedIn, async (req, res) => {
@@ -282,8 +316,11 @@ app.post("/createProject", isLoggedIn, async (req, res) => {
 
     const ownerNameWords = userDetails.name.split(" ");
 
+    let ownerDummyImg = ''
+
     for (var i = 0; i < ownerNameWords.length; i++) {
         ownerNameWords[i] = ownerNameWords[i].charAt(0).toUpperCase() + ownerNameWords[i].slice(1);
+        ownerDummyImg += ownerNameWords[i].charAt(0).toUpperCase()
     }
 
     ownerName = ownerNameWords.join(" ")
@@ -296,9 +333,19 @@ app.post("/createProject", isLoggedIn, async (req, res) => {
         owner: {
             user_id: userDetails.user_id,
             name: ownerName,
-            img: userDetails.displayPicture
+            img: userDetails.displayPicture,
+            dummy_img: ownerDummyImg,
+            email: userDetails.email
         },
-        members: [],
+        members: [
+            {
+                user_id: userDetails.user_id,
+                name: ownerName,
+                img: userDetails.displayPicture,
+                dummy_img: ownerDummyImg,
+                email: userDetails.email
+            }
+        ],
         Sprint: [],
         Epics: [],
         Issues: [],
@@ -322,6 +369,15 @@ app.post("/createProject", isLoggedIn, async (req, res) => {
     }
 
 
+})
+
+////////////////////////////////////////////////////////////////// Updating an issue of a specific project
+
+app.put("/updateIssue/:project_id", isLoggedIn, async (req, res) => {
+    let result = await replaceIssue(req.params.project_id, req.body.issue)
+    if (result.modifiedCount) {
+        res.json({ status: "success" })
+    }
 })
 
 //////////////////////////////////////////////////////////////////  Deleting a Project
