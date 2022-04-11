@@ -54,7 +54,22 @@ function deleteProjectFromUser(user_id, project_id) {
 
 function replaceIssue(project_id, issue) {
     return client.db('JIRAClone').collection('projects').findOneAndUpdate({ project_id: project_id, 'Issues.issue_id': issue.issue_id }, { $set: { 'Issues.$': issue } })
+}
 
+function updateBoard(project_id, board) {
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $set: { 'Board.columns': board } })
+}
+
+function updateSprint(project_id, sprint) {
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id, 'Sprint.sprint_id': sprint.sprint_id }, { $set: { 'Sprint.$': sprint } })
+}
+
+function deleteIssueFromProject(project_id, issue_id) {
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $pull: { 'Issues': { issue_id: issue_id } } })
+}
+
+function deleteIssueFromSprint(project_id, issue_id, sprint_id) {
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id, 'Sprint.sprint_id': sprint_id }, { $pull: { 'Sprint.$.issues': issue_id } })
 }
 
 module.exports = {
@@ -65,5 +80,9 @@ module.exports = {
     deleteProjectFromUser,
     createProject,
     updateUserProjects,
-    replaceIssue
+    replaceIssue,
+    deleteIssueFromProject,
+    deleteIssueFromSprint,
+    updateBoard,
+    updateSprint
 }

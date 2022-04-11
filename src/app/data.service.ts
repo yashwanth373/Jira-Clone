@@ -85,4 +85,19 @@ export class DataService {
     console.log("updating issue",project_id,issue)
     return this.http.put("/updateIssue/" + project_id, { issue : issue})
   }
+
+  deleteIssue(project_id : any, issue_id : any, sprint_id : any){
+    console.log("deleting issue",project_id,issue_id)
+    return this.http.delete("/deleteIssue/" + project_id + "/" + issue_id + "/" + sprint_id)
+  }
+
+  updateBoard(project_id : any, board : any){
+    console.log("updating board",project_id,board)
+    return this.http.put("/updateBoard/" + project_id, { board : board})
+  }
+
+  updateSprint(project_id : any, sprint : any){
+    console.log("updating sprint",project_id,sprint)
+    return this.http.put("/updateSprint/" + project_id, { sprint : sprint})
+  }
 }

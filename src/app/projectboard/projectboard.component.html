@@ -25,6 +25,7 @@
       <div
         class="board-title-right-button"
         *ngIf="activeSprint && project.isOwner"
+        (click)="completeSprint()"
       >
         Complete sprint
       </div>
@@ -276,10 +277,10 @@
             *ngIf="activeSprint == null && i == 0"
           >
             <div class="board-content-body-section-body-empty-title">
-              You haven't started a sprint
+              No Active Sprint
             </div>
             <div class="board-content-body-section-body-empty-subtitle">
-              You can't do anything on your board because you haven't started a
+              You can't do anything on your board because you have no active
               sprint yet. Go to the backlog to plan and start a sprint.
             </div>
             <div

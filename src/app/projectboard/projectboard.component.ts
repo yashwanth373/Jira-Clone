@@ -511,7 +511,8 @@ export class ProjectboardComponent implements OnInit {
   groupBy(option: string) {
     this.groupByOption = option;
 
-    if(this.groupByOption === "None"){
+    if(this.activeSprint){
+      if(this.groupByOption === "None"){
       console.log("grouping by none")
       for(let section of this.project.board){
         this.activeSprint[section].sort((a : any,b : any)=> {
@@ -548,6 +549,9 @@ export class ProjectboardComponent implements OnInit {
         this.activeSprint[section] = temp;
       }
     }
+    }
+
+    
     
   }
 
@@ -575,6 +579,13 @@ export class ProjectboardComponent implements OnInit {
           //call backend to update status as well as update modifiedAt of the issue
 
           issue.status = section;
+
+          issue.modifiedAt = Date.now();
+          issue.modifiedAtHR = this.HRDateFormat(issue.modifiedAt, false)
+
+          this._dsService.updateIssue(this.project.project_id,issue).subscribe((data : any) => {
+            console.log("issue updated")
+          })
         }
       }
     }
@@ -611,9 +622,15 @@ export class ProjectboardComponent implements OnInit {
     if(this.updateIssueStatus){
       for(let issue of this.activeSprint[this.fromSection]){
         issue.status = this.toSection;
+        this._dsService.updateIssue(this.project.project_id,issue).subscribe((data : any) => {
+            console.log("issue updated")
+          })
       }
     }
     this.project.board = [...this.stagingArea];
+    this._dsService.updateBoard(this.project.project_id,this.project.board).subscribe((data : any) => {
+      console.log("project board updated")
+    })
     this.seperateIssues();
     this.closebtn?.nativeElement.click();
 
@@ -648,7 +665,9 @@ export class ProjectboardComponent implements OnInit {
     this.selectedIssue.modifiedAt = Date.now();
     this.selectedIssue.modifiedAtHR = this.HRDateFormat(this.selectedIssue.modifiedAt, false)
     //update in backend
-
+    this._dsService.updateIssue(this.project.project_id,this.selectedIssue).subscribe((data : any) => {
+            console.log("issue updated")
+      })
     this.seperateIssues()
 
   }
@@ -681,26 +700,23 @@ export class ProjectboardComponent implements OnInit {
 
   deleteIssue(){
     //delete from backend
-    
+    this._dsService.deleteIssue(this.project.project_id,this.selectedIssue.issue_id, this.selectedIssue.sprint.sprint_id).subscribe((data : any) => {
+      console.log("issue deleted")
+    })
     //delete it from project issues using filter function
     this.closeIssueModalbtn?.nativeElement.click();
     //delete from active sprint issues
     this.activeSprint.issues = this.activeSprint.issues.filter((id : any) => id !== this.selectedIssue.issue_id)
     this.project.issues = this.project.issues.filter((issue : any) => issue.issue_id !== this.selectedIssue.issue_id)
-    console.log(this.project.issues)
     this.selectedIssue = null;
-    console.log(this.activeSprint)
     this.seperateIssues();
   }
 
   editIssueOption(){
     this.editIssue = !this.editIssue;
-    console.log("edited",this.updatedSelectedIssue)
     this.updatedSelectedIssue = {...this.selectedIssue};
     this.updatedSelectedIssueDueDate = new FormControl(moment.utc(parseInt(this.updatedSelectedIssue.dueDate)).toISOString())
     console.log(this.updatedSelectedIssueDueDate.value.valueOf())
-    console.log("original",this.selectedIssue)
-    console.log("edited",this.updatedSelectedIssue)
   }
 
   updateSelectedIssueAssignee(assignee : any){
@@ -755,6 +771,28 @@ export class ProjectboardComponent implements OnInit {
         }
       )
     }
+  }
+
+  completeSprint(){
+    this.activeSprint.completed = true;
+    this.activeSprint.completedAt = Date.now();
+    this.activeSprint.completedAtHR = this.HRDateFormat(this.activeSprint.completedAt, false)
+    this._dsService.updateSprint(this.project.project_id,this.activeSprint).subscribe(
+      (data : any) => {
+        console.log(data)
+      }
+    )
+    this.activeSprint = null;
+    //update sprint status in this.project.Sprint
+    this.project.sprint = this.project.sprint.map((sprint : any) => {
+      if(sprint.sprint_id === this.activeSprint.sprint_id){
+        sprint.completed = true;
+        sprint.completedAt = Date.now();
+        sprint.completedAtHR = this.HRDateFormat(sprint.completedAt, false)
+      }
+      return sprint;
+    })
+    this.prepareActiveSprint();
   }
 
 }
