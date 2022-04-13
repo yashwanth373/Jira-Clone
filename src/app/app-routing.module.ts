@@ -16,6 +16,7 @@ import { BacklogComponent } from './backlog/backlog.component';
 import { CodeComponent } from './code/code.component';
 import { MembersComponent } from './members/members.component';
 import { SettingsComponent } from './settings/settings.component';
+import { AccessGuard } from './access.guard';
 
 export const routingConfiguration: ExtraOptions = {
   paramsInheritanceStrategy: 'always'
@@ -34,12 +35,12 @@ const routes: Routes = [
       {path: ':projectId', component: ProjectdashboardComponent, canActivate: [AuthGuard] ,
         children:[
           { path: '', redirectTo: 'board', pathMatch: 'full' },
-          {path: 'board', component: ProjectboardComponent, canActivate: [AuthGuard]},
-          {path: 'roadmap', component: RoadmapComponent, canActivate: [AuthGuard]},
-          {path: 'backlog', component: BacklogComponent, canActivate: [AuthGuard]},
-          {path: 'code', component: CodeComponent, canActivate: [AuthGuard]},
-          {path: 'members', component: MembersComponent, canActivate: [AuthGuard]},
-          {path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]},
+          {path: 'board', component: ProjectboardComponent, canActivate: [AuthGuard,AccessGuard]},
+          {path: 'roadmap', component: RoadmapComponent, canActivate: [AuthGuard,AccessGuard]},
+          {path: 'backlog', component: BacklogComponent, canActivate: [AuthGuard,AccessGuard]},
+          {path: 'code', component: CodeComponent, canActivate: [AuthGuard,AccessGuard]},
+          {path: 'members', component: MembersComponent, canActivate: [AuthGuard,AccessGuard]},
+          {path: 'settings', component: SettingsComponent, canActivate: [AuthGuard,AccessGuard]},
         ]
       },
       // {path: '', redirectTo: 'your-work'}

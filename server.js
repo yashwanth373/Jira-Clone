@@ -6,11 +6,13 @@ const path = require('path')
 const cookieSession = require('cookie-session');
 const async = require('async');
 const db = require('./database');
+const ms = require('./mail');
 require("./passport-setup");
 require('dotenv').config()
 
 const app = express();
 
+//////////////////////////////////////////// cors specs //////////////////////////////////////////////
 const corsOpts = {
     origin: '*',
 
@@ -24,6 +26,8 @@ const corsOpts = {
     ],
 };
 
+//////////////////////////////////////////// middleware //////////////////////////////////////////////
+
 app.use(cors(corsOpts));
 
 app.use(bodyparser.json())
@@ -36,7 +40,20 @@ app.use(cookieSession({
 app.use(passport.initialize())
 app.use(passport.session())
 
-////////////////////////////////////////////////////////////// Authentication //////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////// Authentication && Authorization //////////////////////////////////////////////////////////////
+
+////////////////////////////////// middleware for authorization of API calls
+
+const isLoggedIn = (req, res, next) => {
+    if (req.user) {
+        next()
+    }
+    else {
+        res.redirect('/')
+    }
+}
+
+////////////////////////////////// authenticate user
 
 app.get("/authenticate", (req, res) => {
     if (req.user) {
@@ -46,6 +63,23 @@ app.get("/authenticate", (req, res) => {
     else {
         console.log("not logged in")
         res.json({ authenticate: false })
+    }
+})
+
+////////////////////////////////// authorize user
+
+app.get("/authorize/:project_id", isLoggedIn, async (req, res) => {
+    let { members } = await db.getProjectDetails(req.params.project_id)
+
+    let userId = req.user.id
+
+    let isMember = members.findIndex(member => member.user_id === userId) >= 0 ? true : false
+
+    if (isMember) {
+        res.json({ authorize: true })
+    }
+    else {
+        res.json({ authorize: false })
     }
 })
 
@@ -153,18 +187,21 @@ app.get("/logout", (req, res) => {
     res.redirect('/');
 })
 
-////////////////////////////////// middleware for authorization of API calls ////////////////////
+////////////////////////////////////////////////////////// Mailing APIs //////////////////////////////////////////////////////////////
 
-const isLoggedIn = (req, res, next) => {
-    if (req.user) {
-        next()
-    }
-    else {
-        res.redirect('/')
-    }
-}
+///////////////////////////////////////////////////////// Sending invite for a project
 
+app.post("/sendInvite", isLoggedIn, async (req, res) => {
 
+})
+
+app.post("/revokeAccess", isLoggedIn, async (req, res) => {
+
+})
+
+app.post("/alert", async (req, res) => {
+
+})
 
 ////////////////////////////////////////////////////////// DB operations ///////////////////////////////////////////////////////////
 
@@ -307,6 +344,20 @@ app.get("/getProjectDetails/:project_id", isLoggedIn, async (req, res) => {
 
 })
 
+//////////////////////////////////////////////////////////////////// Get Members' details of selected project
+
+app.get("/getMembersDetails/:project_id", isLoggedIn, async (req, res) => {
+    let project = await db.getProjectDetails(req.params.project_id)
+    let details = {
+        project_id: project.project_id,
+        project_name: project.project_name,
+        owner: project.owner,
+        members: project.members,
+        isOwner: req.user.id === project.owner.user_id,
+    }
+    res.json({ data: details })
+})
+
 
 //////////////////////////////////////////////////////////////////// Create a New project
 
@@ -371,6 +422,25 @@ app.post("/createProject", isLoggedIn, async (req, res) => {
 
 })
 
+////////////////////////////////////////////////////////////////// Inserting user into invited list of a project
+
+app.post("/inviteUser", isLoggedIn, async (req, res) => {
+    let project_id = req.body.project.project_id
+    let project_name = req.body.project.project_name
+    let { name } = await db.findUser(req.user.id)
+    let mails = req.body.mails
+
+    ms.invite(project_id, project_name, name, mails)
+
+    let result = await db.inviteUser(project_id, mails)
+
+    if (result.modifiedCount) {
+        res.json({ status: "success" })
+    }
+    else
+        res.json({ status: "failure" })
+})
+
 ////////////////////////////////////////////////////////////////// Updating an issue of a specific project
 
 app.put("/updateIssue/:project_id", isLoggedIn, async (req, res) => {
@@ -396,6 +466,26 @@ app.put("/updateBoard/:project_id", isLoggedIn, async (req, res) => {
 app.put("/updateSprint/:project_id", isLoggedIn, async (req, res) => {
     let result = await db.updateSprint(req.params.project_id, req.body.sprint)
     if (result.modifiedCount) {
+        res.json({ status: "success" })
+    }
+    else
+        res.json({ status: "failure" })
+})
+
+////////////////////////////////////////////////////////////////// Removing a member from a project
+
+app.delete("/removeMember/:project_id/:user_id", isLoggedIn, async (req, res) => {
+
+    let { project_name } = await db.getProjectDetails(req.params.project_id)
+
+    let user = await db.findUser(req.params.user_id);
+
+    let result = await db.removeMemberFromProject(req.params.project_id, req.params.user_id)
+
+    let result2 = await db.removeProjectFromUser(req.params.user_id, req.params.project_id)
+
+    if (result.modifiedCount && result2.modifiedCount) {
+        ms.revoke(project_name, user.email);
         res.json({ status: "success" })
     }
     else

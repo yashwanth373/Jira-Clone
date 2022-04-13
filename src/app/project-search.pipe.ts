@@ -12,7 +12,6 @@ export class ProjectSearchPipe implements PipeTransform {
     let filteredProjects = projects.filter( (pro : any) => {
       return pro.name.toLowerCase().includes(searchQuery);
     });
-    console.log(filteredProjects.length)
     return filteredProjects;
   }
 

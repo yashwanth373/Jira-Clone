@@ -72,6 +72,18 @@ function deleteIssueFromSprint(project_id, issue_id, sprint_id) {
     return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id, 'Sprint.sprint_id': sprint_id }, { $pull: { 'Sprint.$.issues': issue_id } })
 }
 
+function removeMemberFromProject(project_id, user_id) {
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $pull: { 'members': { user_id: user_id } } })
+}
+
+function removeProjectFromUser(user_id, project_id) {
+    return client.db('JIRAClone').collection('users').updateOne({ user_id: user_id }, { $pull: { projects: project_id } })
+}
+
+function inviteUser(project_id, mails) {
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $push: { 'invited': { $each: mails } } })
+}
+
 module.exports = {
     insertUser,
     findUser,
@@ -84,5 +96,8 @@ module.exports = {
     deleteIssueFromProject,
     deleteIssueFromSprint,
     updateBoard,
-    updateSprint
+    updateSprint,
+    removeMemberFromProject,
+    removeProjectFromUser,
+    inviteUser
 }

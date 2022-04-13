@@ -1,1 +1,229 @@
-<p>members works!</p>
+<div class="mycontainer">
+  <div class="head">
+    <div class="head-subtitle-left" *ngIf="projectDetails">
+      Projects / {{ projectDetails.project_name }} / Members
+    </div>
+    <div class="head-title">
+      <div class="head-title-left">Access</div>
+      <div
+        class="head-title-right"
+        data-bs-toggle="modal"
+        data-bs-target="#addMemberModal"
+      >
+        Add people
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="addMemberModal"
+      tabindex="-1"
+      aria-labelledby="addMemberModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="member-modal-body-head">
+              <div class="member-modal-body-head-title">Add People</div>
+              <div class="member-modal-body-head-subtitle">
+                Invite people to access your project through mail.
+              </div>
+            </div>
+            <div class="member-modal-body-content">
+              <div class="member-modal-body-content-add-section">
+                <div class="member-modal-body-content-add-section-input">
+                  <mat-form-field
+                    class="member-modal-body-content-add-section-list"
+                    appearance="fill"
+                  >
+                    <mat-label>Enter Emails to send invites</mat-label>
+                    <mat-chip-list #chipList aria-label="Email selection">
+                      <mat-chip
+                        *ngFor="let email of emails"
+                        (removed)="remove(email)"
+                      >
+                        <div
+                          style="
+                            width: 94%;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                          "
+                        >
+                          {{ email.mail }}
+                        </div>
+                        <button matChipRemove>
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip>
+                      <input
+                        placeholder="Email"
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur"
+                        (matChipInputTokenEnd)="add($event)"
+                      />
+                    </mat-chip-list>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="member-modal-body-footer">
+              <div
+                class="member-modal-body-footer-cancel-button"
+                data-bs-dismiss="modal"
+                (click)="refresh()"
+                #close
+              >
+                Cancel
+              </div>
+              <div
+                class="member-modal-body-footer-send-button"
+                (click)="sendInvites()"
+              >
+                Send
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="head-subtitle">
+      Control who can access your project and who cannot.
+    </div>
+  </div>
+  <div class="content">
+    <div class="content-title">
+      <div class="content-title-left">
+        <div class="content-title-left-search">
+          <input
+            type="text"
+            name="search"
+            id="search"
+            autocomplete="off"
+            placeholder="Search for a Name"
+            spellcheck="false"
+            [(ngModel)]="searchQuery"
+          />
+          <svg width="25" height="15" viewBox="9 0 24 24" role="presentation">
+            <path
+              d="M16.436 15.085l3.94 4.01a1 1 0 01-1.425 1.402l-3.938-4.006a7.5 7.5 0 111.423-1.406zM10.5 16a5.5 5.5 0 100-11 5.5 5.5 0 000 11z"
+              fill="currentColor"
+              fill-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="content-body">
+      <div *ngIf="projectDetails">
+        <div class="members-list-full">
+          <div class="members-list-full-table">
+            <table class="table">
+              <thead class="table-member-thead">
+                <tr>
+                  <td scope="col" class="thead-member-name">Name</td>
+                  <td scope="col" class="thead-member-mail">Email</td>
+                  <td scope="col" class="thead-member-role">Role</td>
+                  <td scope="col" class="thead-member-opts"></td>
+                </tr>
+              </thead>
+              <tbody class="table-member-tbody">
+                <tr
+                  *ngFor="
+                    let member of projectDetails.members
+                      | projectSearch: searchQuery;
+                    index as i
+                  "
+                >
+                  <td scope="row" class="tbody-member-name">
+                    <div class="member">
+                      <div class="member-logo">
+                        <div
+                          *ngIf="member.img; then logo; else dummy_logo"
+                        ></div>
+                        <ng-template #logo>
+                          <img [src]="member.img" />
+                        </ng-template>
+                        <ng-template #dummy_logo>
+                          <div class="member-dummy-logo">
+                            {{ member.dummy_img }}
+                          </div>
+                        </ng-template>
+                      </div>
+                      <div class="member-name">
+                        {{ member.name }}
+                      </div>
+                    </div>
+                  </td>
+                  <td class="tbody-member-email">{{ member.email }}</td>
+                  <td class="tbody-member-role">
+                    {{
+                      member.user_id === projectDetails.owner.user_id
+                        ? "Owner"
+                        : "Member"
+                    }}
+                  </td>
+                  <td
+                    style="padding: 0 5px 0 0 !important"
+                    *ngIf="member.user_id !== projectDetails.owner.user_id"
+                  >
+                    <div class="dropdown">
+                      <div
+                        class="tbody-member-opts"
+                        [id]="i"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          role="presentation"
+                        >
+                          <g fill="currentColor" fill-rule="evenodd">
+                            <circle cx="5" cy="12" r="2"></circle>
+                            <circle cx="12" cy="12" r="2"></circle>
+                            <circle cx="19" cy="12" r="2"></circle>
+                          </g>
+                        </svg>
+                      </div>
+                      <ul
+                        class="dropdown-menu dropdown-menu-end"
+                        [attr.aria-labelledby]="i"
+                      >
+                        <li *ngIf="projectDetails.isOwner">
+                          <span
+                            class="dropdown-item delete-member"
+                            (click)="removeMember(member.user_id)"
+                            >Revoke Access
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div
+              *ngIf="
+                (projectDetails.members | projectSearch: searchQuery).length ===
+                0
+              "
+              class="member-list-search-fail"
+            >
+              <div class="member-list-search-fail-img">
+                <img
+                  src="../../assets/search-fail.svg"
+                  alt="No search result"
+                />
+              </div>
+              <div class="member-list-search-fail-text">
+                No members were found that match your search
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,8 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MomentDateAdapter} from '@angular/material-moment-adapter';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatIconModule} from '@angular/material/icon';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -56,7 +59,11 @@ import { IssueSearchPipe } from './issue-search.pipe';
     BrowserAnimationsModule,
     DragDropModule,
     MatDatepickerModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    MatChipsModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

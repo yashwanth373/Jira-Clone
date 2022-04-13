@@ -15,6 +15,10 @@ export class DataService {
     return this.http.get("/authenticate")
   }
 
+  isAuthorize(project_id : any){
+    return this.http.get("/authorize/" + project_id)
+  }
+
   loginGoogle () {
     window.open('/google','_self')
   }
@@ -99,5 +103,23 @@ export class DataService {
   updateSprint(project_id : any, sprint : any){
     console.log("updating sprint",project_id,sprint)
     return this.http.put("/updateSprint/" + project_id, { sprint : sprint})
+  }
+
+  // Specific for Members Component
+  getMembersDetails(project_id : any){
+    return this.http.get("/getMembersDetails/" + project_id)
+  }
+
+  removeMember(project_id : any, user_id : any){
+    return this.http.delete("/removeMember/" + project_id + "/" + user_id)
+  }
+
+  inviteUser(project : any,mails:any){
+    console.log("sending invites to",project,mails)
+    let emailsList: any[] = []
+    mails.forEach((element:any) => {
+      emailsList.push(element.mail)
+    });
+    return this.http.post("/inviteUser", {'mails' : emailsList,'project' : project})
   }
 }
