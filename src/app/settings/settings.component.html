@@ -1,1 +1,158 @@
-<p>settings works!</p>
+<div class="mycontainer">
+  <div class="head">
+    <div class="head-subtitle-left" *ngIf="projectDetails">
+      Projects / {{ projectDetails.project_name }} / Settings
+    </div>
+    <div class="head-title">
+      <div class="head-title-left">Details</div>
+      <div class="head-title-right">
+        <div class="dropdown" *ngIf="projectDetails && projectDetails.isOwner">
+          <div
+            class="project-opts"
+            id="1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
+              <g fill="currentColor" fill-rule="evenodd">
+                <circle cx="5" cy="12" r="2"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+                <circle cx="19" cy="12" r="2"></circle>
+              </g>
+            </svg>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="1">
+            <li>
+              <span
+                class="dropdown-item delete-project"
+                data-bs-toggle="modal"
+                data-bs-target="#removeProjectModal"
+                >Move to Trash
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="removeProjectModal"
+      tabindex="-1"
+      aria-labelledby="removeProjectModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="details-modal-body-head">
+              <div class="details-modal-body-head-title">Remove Project</div>
+              <div class="details-modal-body-head-subtitle">
+                Deleting a project will remove all the data associated with and
+                cannot be recovered.
+              </div>
+            </div>
+            <div class="details-modal-body-footer">
+              <div
+                class="details-modal-body-footer-cancel-button"
+                data-bs-dismiss="modal"
+                #close
+              >
+                Cancel
+              </div>
+              <div
+                class="details-modal-body-footer-delete-button"
+                (click)="deleteProject()"
+              >
+                Delete
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content" *ngIf="projectDetails">
+    <form #ref="ngForm" (ngSubmit)="saveDetails(ref)" class="content-form">
+      <div class="project-logo">
+        <div class="project-logo-icon">
+          <img [src]="editProjectDetails.icon" style="object-fit: cover" />
+        </div>
+        <label class="project-logo-icon-change" for="projectLogo"
+          >Change icon</label
+        >
+        <input
+          type="file"
+          id="projectLogo"
+          style="visibility: hidden"
+          #logo
+          class="form-control"
+          name="project_icon"
+          ngModel
+          accept="image/*"
+          (input)="onChange(logo?.files?.[0])"
+        />
+      </div>
+      <div class="project-details name">
+        <div class="project-details-label">Name</div>
+        <div class="project-details-input">
+          <input
+            type="text"
+            name="project_name"
+            class="project-details-input-field"
+            [ngModel]="projectDetails.project_name"
+          />
+        </div>
+      </div>
+      <div class="project-details key">
+        <div class="project-details-label">Key</div>
+        <div class="project-details-input">
+          <input
+            type="text"
+            name="project_key"
+            class="project-details-input-field"
+            maxlength="3"
+            [ngModel]="projectDetails.project_key"
+          />
+        </div>
+      </div>
+      <div class="project-details createdat">
+        <div class="project-details-label">Created On</div>
+        <div class="project-details-noedit">
+          {{ projectDetails.createdAtHR }}
+        </div>
+      </div>
+      <div class="project-details lead">
+        <div class="project-details-label">Project Lead</div>
+        <div class="project-details-noedit">
+          <div class="project-details-noedit-icon">
+            <img
+              src="{{ projectDetails.owner.img }}"
+              *ngIf="projectDetails.owner.img; else noleadimg"
+            />
+            <ng-template #noleadimg>
+              <div class="project-owner-dummy-logo">
+                {{ projectDetails.owner.dummy_img }}
+              </div>
+            </ng-template>
+          </div>
+          <div class="project-details-noedit-text">
+            {{ projectDetails.owner.name }}
+          </div>
+        </div>
+      </div>
+      <div class="project-details codestatus">
+        <div class="project-details-label">Development</div>
+        <div
+          class="project-details-noedit code-status"
+          *ngIf="projectDetails.code; else notconnected"
+        >
+          Connected
+        </div>
+        <ng-template #notconnected>
+          <div class="project-details-noedit code-status">Not Connected</div>
+        </ng-template>
+      </div>
+      <button type="submit" class="project-details-save">Save</button>
+    </form>
+  </div>
+</div>

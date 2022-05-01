@@ -10,6 +10,10 @@ const ms = require('./mail');
 require("./passport-setup");
 require('dotenv').config()
 
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary")
+const multer = require("multer")
+
 const app = express();
 
 //////////////////////////////////////////// cors specs //////////////////////////////////////////////
@@ -39,6 +43,32 @@ app.use(cookieSession({
 
 app.use(passport.initialize())
 app.use(passport.session())
+
+
+/////////////////////////////////////////// cloudinary //////////////////////////////////////////////
+
+cloudinary.config({
+
+    cloud_name: "dgnzhe33t",
+
+    api_key: "944153474649289",
+
+    api_secret: "M6aLps_uViacnjMCiRMMTj2QBQM",
+
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: async (req, file) => {
+        return {
+            folder: 'jiraclone',
+            public_id: file.fieldname + '-' + req.params.project_id
+        }
+    },
+});
+
+var upload = multer({ storage: storage });
+
 
 ////////////////////////////////////////////////////////////// Authentication && Authorization //////////////////////////////////////////////////////////////
 
@@ -308,7 +338,12 @@ app.get("/getBasicprojectDetails/:project_id", isLoggedIn, async (req, res) => {
     let result = {
         project_id: project.project_id,
         project_name: project.project_name,
+        project_key: project.project_key,
+        owner: project.owner,
+        createdAt: project.createdAt,
         icon: project.icon,
+        code: project.code,
+        isOwner: req.user.id === project.owner.user_id
     }
     res.json({ data: result })
 })
@@ -440,6 +475,26 @@ app.post("/inviteUser", isLoggedIn, async (req, res) => {
     else
         res.json({ status: "failure" })
 })
+
+////////////////////////////////////////////////////////////////// Updating basic project details
+
+app.put("/updateProjectDetails/:project_id", isLoggedIn, upload.single("projectIcon"), async (req, res) => {
+    let projectDetails = JSON.parse(req.body.projectDetails)
+    let projectIcon = req.file.path
+    let project_id = projectDetails.project_id
+    let project_name = projectDetails.project_name
+    let project_key = projectDetails.project_key
+
+    let result = await db.updateProjectDetails(project_id, project_name, project_key, projectIcon)
+
+    if (result.modifiedCount) {
+        res.json({ status: "success" })
+    }
+    else
+        res.json({ status: "failure" })
+})
+
+
 
 ////////////////////////////////////////////////////////////////// Updating an issue of a specific project
 

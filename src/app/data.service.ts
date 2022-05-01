@@ -74,7 +74,7 @@ export class DataService {
     return this.http.get("/getYourWork")
   }
 
-  //Specific for Project Dashboard Component
+  //Specific for Project Dashboard Component as well as part of Settings Component
 
   getBasicprojectDetails(project_id : any){
     return this.http.get("/getBasicprojectDetails/" + project_id)
@@ -121,5 +121,11 @@ export class DataService {
       emailsList.push(element.mail)
     });
     return this.http.post("/inviteUser", {'mails' : emailsList,'project' : project})
+  }
+
+  // Specific for Settings Component
+  updateProjectDetails(project_id : any,project : any){
+    console.log("updating project",project)
+    return this.http.put("/updateProjectDetails/"+project_id, project)
   }
 }

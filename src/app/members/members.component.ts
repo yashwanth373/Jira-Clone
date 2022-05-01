@@ -69,6 +69,9 @@ export class MembersComponent implements OnInit {
     this._dsService.getMembersDetails(this.route.snapshot.paramMap.get('projectId')).subscribe(
       (data : any) => {
         this.projectDetails = data.data;
+      },
+      (err : any) =>{
+        this.projectDetails = this.dummyProjectDetails
       }
     )
   }

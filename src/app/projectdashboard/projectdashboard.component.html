@@ -2,7 +2,11 @@
   <div class="side-nav">
     <div class="side-nav-title" *ngIf="project">
       <div class="side-nav-title-project-icon">
-        <img [src]="project.icon" alt="project icon" />
+        <img
+          [src]="project.icon"
+          alt="project icon"
+          style="object-fit: cover"
+        />
       </div>
       <div class="side-nav-title-project-name">{{ project.project_name }}</div>
     </div>
@@ -58,7 +62,7 @@
           <div
             class="side-nav-content-section-link"
             routerLinkActive="side-nav-content-section-link-active"
-            routerLink="./backlog"
+            routerLink="./issues"
           >
             <div class="side-nav-content-section-link-icon">
               <svg
@@ -81,7 +85,7 @@
                 </g>
               </svg>
             </div>
-            <div class="side-nav-content-section-link-text">Backlog</div>
+            <div class="side-nav-content-section-link-text">Issues</div>
           </div>
         </div>
       </div>
