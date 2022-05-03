@@ -21,13 +21,12 @@ import { ProjectboardComponent } from './projectboard/projectboard.component';
 import { ProjectdashboardComponent } from './projectdashboard/projectdashboard.component';
 import { ProjectSearchPipe } from './project-search.pipe';
 import { PeopleSearchPipe } from './people-search.pipe';
-import { RoadmapComponent } from './roadmap/roadmap.component';
 import { CodeComponent } from './code/code.component';
 import { MembersComponent } from './members/members.component';
 import { SettingsComponent } from './settings/settings.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IssueSearchPipe } from './issue-search.pipe';
-import { IssuesComponent } from './issues/issues.component';
+import { BacklogComponent } from './backlog/backlog.component';
 
 @NgModule({
   declarations: [
@@ -41,12 +40,11 @@ import { IssuesComponent } from './issues/issues.component';
     ProjectdashboardComponent,
     ProjectSearchPipe,
     PeopleSearchPipe,
-    RoadmapComponent,
     CodeComponent,
     MembersComponent,
     SettingsComponent,
     IssueSearchPipe,
-    IssuesComponent,
+    BacklogComponent
   ],
   imports: [
     AppRoutingModule,
