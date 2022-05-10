@@ -62,9 +62,10 @@
 }
 
 .backlog-content {
-    width: 90%;
+    width: 94%;
     height: 90%;
     margin-top: 1%;
+    margin-left: 4%;
     display: flex;
     flex-direction: column;
 }
@@ -118,19 +119,29 @@
     width: 100%;
     height: 92%;
     display: flex;
-    overflow-x: none;
+    flex-direction: column;
+    overflow-x: hidden;
     overflow-y: auto;
 }
 
 .backlog-content-body-sprint {
-    width: 100%;
+    width: 99%;
     height: fit-content;
     border-radius: 6px;
     margin-right: 1%;
     margin-top: 1%;
+    margin-bottom: 1%;
     background: rgba(9, 30, 66, 0.04);
     display: flex;
     flex-direction: column;
+}
+
+.backlog-content-body-backlog{
+    background: #ffffff;
+}
+
+.backlog-content-body-backlog .backlog-content-body-sprint-body{
+    min-height: 25%;
 }
 
 .backlog-content-body-sprint-head {
@@ -166,7 +177,7 @@
 }
 
 .backlog-content-body-sprint-head-right{
-    width: 15%;
+    width: 25%;
     height: 100%;
     display: flex;
     align-items: center;
@@ -176,7 +187,7 @@
 
 .backlog-content-body-sprint-head-right-button-complete{
     width: 120px;
-    height: 30px;
+    height: 27px;
     border: none;
     border-radius: 3px;
     transition: background-color 0.2s ease-in-out 0s,
@@ -202,7 +213,7 @@
 
 .backlog-content-body-sprint-head-right-button-start{
     width: 85px;
-    height: 30px;
+    height: 27px;
     border: none;
     border-radius: 3px;
     transition: background-color 0.2s ease-in-out 0s,
@@ -246,11 +257,299 @@
   background-color: rgba(9, 30, 66, 0.15);
 }
 
+.dropdown-item:hover{
+    cursor: pointer;
+}
+
+.modal-content {
+    height: fit-content;
+    margin-top: 3rem;
+}
+
+.modal-content.new-sprint{
+    height: fit-content;
+    margin-top: 3rem;
+    max-width: unset;
+    width: 600px;
+}
+
+.modal-body {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.modal-body.new-sprint{
+    width: 100%;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+}
+
+.details-modal-body-head {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details-modal-body-head.new-sprint {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details-modal-body-head-title {
+    font-size: 1.4rem;
+    font-weight: 500;
+    font-family: Roboto, sans-serif;
+    margin-bottom: 2%;
+}
+
+.details-modal-body-head-title.new-sprint {
+    font-size: 1.4rem;
+    font-weight: 500;
+    font-family: Roboto, sans-serif;
+    margin-bottom: 1%;
+    height: 49%;
+    display: flex;
+    align-items: center;
+}
+
+.details-modal-body-head-subtitle {
+    font-size: 0.8rem;
+    font-weight: 400;
+    font-family: Roboto, sans-serif;
+    color: #6b778c;
+}
+
+.details-modal-body-head-subtitle.new-sprint {
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: Roboto, sans-serif;
+    margin-top: 1%;
+    height: 49%;
+    color: black;
+}
+
+.new-sprint b{
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.details-modal-body-content{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.details-modal-body-content-left{
+    width:55%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+.details-modal-body-content-left-sprint-name, .details-modal-body-content-left-sprint-startdate, .details-modal-body-content-left-sprint-enddate{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.required {
+  position: relative;
+  right: 2px;
+  color: red;
+  font-size: 0.7rem;
+  bottom: 1.5px;
+}
+
+.details-modal-body-content-left-sprint-label{
+    width: 100%;
+    height: 30%;
+    font-size: 0.8rem;
+    font-family: Roboto, sans-serif;
+    font-weight: 500;
+    color: #6b778c;
+}
+
+.details-modal-body-content-left-sprint-name-input-field {
+  width: 100%;
+  height: 60%;
+  box-shadow: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #dfe1e6;
+  border-radius: 3px;
+  transition: background-color 0.2s ease-in-out 0s,
+    border-color 0.2s ease-in-out 0s;
+}
+
+.date-input{
+    width: 90%;
+    height: 100%;
+    border: unset;
+    background-color: transparent;
+}
+
+.date-input:focus-visible{
+    outline: none;
+}
+
+.details-modal-body-content-left-sprint-name-input-field:focus-visible{
+    outline: none;
+}
+
+.date-input-toggle{
+    width: 10%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.details-modal-body-content-left-sprint-name-input-field:hover {
+  background-color: #ebecf0;
+}
+
+.details-modal-body-content-left-sprint-name-input-field:focus-within {
+  background-color: white;
+  border-color: #4c9aff;
+}
+
+.date-error{
+    font-size: 0.8rem;
+    font-family: Roboto, sans-serif;
+    font-weight: 500;
+    color: #ff0000;
+}
+
+.details-modal-body-content-right{
+    width: 40%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details-modal-body-footer {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.big-footer{
+    height: 35%;
+}
+
+.details-modal-body-footer-cancel-button {
+    width: 70px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    transition: background-color 0.2s ease-in-out 0s,
+        border-color 0.2s ease-in-out 0s;
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: Roboto, sans-serif;
+    background-color: rgba(9, 30, 66, 0.04);
+    text-align: center;
+    color: #42526e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2%;
+}
+
+.details-modal-body-footer-cancel-button:hover {
+    background-color: rgba(9, 30, 66, 0.08);
+    color: #42526e;
+    cursor: pointer;
+}
+
+.details-modal-body-footer-cancel-button:active {
+    background-color: rgba(179, 212, 255, 0.6);
+    color: #0052cc;
+}
+
+.details-modal-body-footer-delete-button {
+    width: 65px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    transition: background-color 0.2s ease-in-out 0s,
+        border-color 0.2s ease-in-out 0s;
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: Roboto, sans-serif;
+    background-color: rgba(9, 30, 66, 0.04);
+    text-align: center;
+    background-color: #de350b;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2%;
+}
+
+.details-modal-body-footer-delete-button:hover {
+    cursor: pointer;
+    background-color: #b32c0a;
+}
+
+.details-modal-body-footer-complete-button {
+    width: 75px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    transition: background-color 0.2s ease-in-out 0s,
+        border-color 0.2s ease-in-out 0s;
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: Roboto, sans-serif;
+    text-align: center;
+    background-color: #0052cc;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2%;
+}
+
+.details-modal-body-footer-complete-button:hover {
+    cursor: pointer;
+    background-color: #0065ff;
+}
+
 .backlog-content-body-sprint-body {
     width: 100%;
     height: fit-content;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.backlog-content-body-sprint-body-no-sprint-text{
+    font-size: 1rem;
+    font-weight: 400;
+    color: #2f2f2f;
+    font-family: Roboto, sans-serif;
+    height: 50px;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -591,7 +890,7 @@
 
 .issue-model-left-subtitle-epic,
 .issue-model-left-subtitle-issue-tag {
-    width: 20%;
+    width: 25%;
     height: 100%;
     display: flex;
     align-items: center;

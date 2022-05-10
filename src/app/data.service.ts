@@ -80,7 +80,7 @@ export class DataService {
     return this.http.get("/getBasicprojectDetails/" + project_id)
   }
 
-  //Specific for Project Board Component
+  //Specific for Project Board Component and Project Backlog Component
   getProjectDetails(project_id : any){
     return this.http.get("/getProjectDetails/" + project_id)
   }
@@ -127,5 +127,11 @@ export class DataService {
   updateProjectDetails(project_id : any,project : any){
     console.log("updating project",project)
     return this.http.put("/updateProjectDetails/"+project_id, project)
+  }
+
+  // Specific for Project Backlog Component
+  updateBacklog(project_id : any, backlog : any){
+    console.log("updating backlog",project_id,backlog)
+    return this.http.put("/updateBacklog/" + project_id, { backlog : backlog})
   }
 }

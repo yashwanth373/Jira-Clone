@@ -242,6 +242,20 @@ app.get("/getDetails", isLoggedIn, async (req, res) => {
     try {
         let result = await db.findUser(req.user.id)
 
+        const ownerNameWords = result.name.split(" ");
+
+        let ownerDummyImg = ''
+
+        for (var i = 0; i < ownerNameWords.length; i++) {
+            ownerNameWords[i] = ownerNameWords[i].charAt(0).toUpperCase() + ownerNameWords[i].slice(1);
+            ownerDummyImg += ownerNameWords[i].charAt(0).toUpperCase()
+        }
+
+        ownerName = ownerNameWords.join(" ")
+
+        result.name = ownerName
+        result.dummy_img = ownerDummyImg
+
         if (result) {
             res.json({ user: result })
         }
@@ -367,10 +381,10 @@ app.get("/getProjectDetails/:project_id", isLoggedIn, async (req, res) => {
             isOwner: req.user.id === project.owner.user_id,
             owner: project.owner,
             members: project.members,
-            sprint: project.Sprint,
-            issues: project.Issues,
-            epics: project.Epics,
+            Sprint: project.Sprint,
+            Issues: project.Issues,
             code: project.code,
+            backlog:project.backlog
         }
         res.json({ data: result })
     }
@@ -432,8 +446,7 @@ app.post("/createProject", isLoggedIn, async (req, res) => {
                 email: userDetails.email
             }
         ],
-        Sprint: [],
-        Epics: [],
+        Sprint: null,
         Issues: [],
         Board: {
             columns: ["to do", "in progress", "done"],
@@ -441,7 +454,8 @@ app.post("/createProject", isLoggedIn, async (req, res) => {
         icon: '../../assets/project-dummy-logo.svg',
         code: {},
         invited: [],
-        modifiedAt: + new Date()
+        modifiedAt: + new Date(),
+        backlog:[]
     }
 
     let result = await db.createProject(project)
@@ -526,6 +540,17 @@ app.put("/updateSprint/:project_id", isLoggedIn, async (req, res) => {
     else
         res.json({ status: "failure" })
 })
+
+///////////////////////////////////////////////////////////////// Updating backlog of a specific project
+
+app.put("/updateBacklog/:project_id", isLoggedIn, async (req, res) => {
+    let result = await db.updateBacklog(req.params.project_id, req.body.backlog)
+    if (result.modifiedCount) {
+        res.json({ status: "success" })
+    }
+    else
+        res.json({ status: "failure" })
+});
 
 ////////////////////////////////////////////////////////////////// Removing a member from a project
 

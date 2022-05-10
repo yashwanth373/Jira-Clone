@@ -35,52 +35,304 @@
           <div class="backlog-content-body-sprint-head-left">
             <div
               class="backlog-content-body-sprint-head-left-title"
-              *ngIf="sprint; else noActiveSprint"
+              *ngIf="
+                this.project.Sprint != null &&
+                this.project.Sprint.issues?.length != 0 &&
+                this.project.Sprint.completed === false &&
+                this.project.Sprint.started === true
+              "
             >
-              {{ sprint.sprint_name }}
+              {{ this.project.Sprint.sprint_name }}
             </div>
-            <ng-template #noActiveSprint>
-              <div class="backlog-content-body-sprint-head-left-title">
-                {{ project.project_key }} Sprint
-              </div>
-            </ng-template>
+            <div
+              class="backlog-content-body-sprint-head-left-title"
+              *ngIf="
+                !this.project.Sprint ||
+                this.project.Sprint.issues?.length === 0 ||
+                this.project.Sprint.completed === true ||
+                this.project.Sprint.started === false
+              "
+            >
+              {{ project.project_key }} Sprint
+            </div>
             <div
               class="backlog-content-body-sprint-head-left-subtitle"
-              *ngIf="sprint && sprint.issues.length > 1; else singleIssue"
+              *ngIf="this.project.Sprint && this.project.Sprint.issues?.length > 1; else singleIssue"
             >
-              ({{ sprint?.issues?.length }} issues)
+              ({{ this.project.Sprint?.issues?.length }} issues)
             </div>
             <ng-template #singleIssue>
               <div
                 class="backlog-content-body-sprint-head-left-subtitle"
-                *ngIf="sprint && sprint.issues.length == 1"
+                *ngIf="this.project.Sprint && this.project.Sprint.issues?.length == 1"
               >
                 (1 issue)
               </div>
             </ng-template>
             <div
               class="backlog-content-body-sprint-head-left-subtitle"
-              *ngIf="sprint && sprint.completed != true"
+              *ngIf="
+                this.project.Sprint &&
+                this.project.Sprint.issues?.length > 0 &&
+                this.project.Sprint.completed !== true &&
+                this.project.Sprint.started === true
+              "
             >
-              {{ sprint?.startDateHR }} - {{ sprint?.endDateHR }}
+              {{ this.project.Sprint?.startDateHR }} - {{ this.project.Sprint?.endDateHR }}
             </div>
           </div>
           <div class="backlog-content-body-sprint-head-right">
             <div
+              class="backlog-content-body-sprint-head-right-button-remaining"
+              *ngIf="
+                this.project.Sprint &&
+                this.project.Sprint.issues?.length > 0 &&
+                this.project.Sprint.completed != true &&
+                this.project.Sprint.started === true
+              "
+            >
+              {{ this.project.Sprint.remainingTime }} day/s remaining
+            </div>
+            <div
               class="backlog-content-body-sprint-head-right-button-complete"
-              *ngIf="sprint && sprint.completed != true"
+              *ngIf="
+                this.project.Sprint &&
+                this.project.Sprint.issues?.length > 0 &&
+                this.project.Sprint.completed != true &&
+                this.project.Sprint.started === true
+              "
+              data-bs-target="#completeSprintModal"
+              data-bs-toggle="modal"
             >
               Complete Sprint
             </div>
             <div
+              class="modal fade"
+              id="completeSprintModal"
+              tabindex="-1"
+              aria-labelledby="completeSprintModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-body">
+                    <div class="details-modal-body-head">
+                      <div class="details-modal-body-head-title">
+                        Complete {{ project.Sprint?.sprint_name }}
+                      </div>
+                      <div class="details-modal-body-head-subtitle">
+                        All the pending issues will be moved to the Backlog
+                      </div>
+                    </div>
+                    <div class="details-modal-body-footer big-footer">
+                      <div
+                        class="details-modal-body-footer-cancel-button"
+                        data-bs-dismiss="modal"
+                        #closeCompleteSprintModal
+                      >
+                        Cancel
+                      </div>
+                      <div
+                        class="details-modal-body-footer-complete-button"
+                        (click)="completeSprint()"
+                      >
+                        Complete
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="backlog-content-body-sprint-head-right-button-start"
-              *ngIf="sprint && sprint.completed == true"
+              *ngIf="this.project.Sprint?.issues?.length > 0 && this.project.Sprint?.started === false"
+              data-bs-target="#startSprintModal"
+              data-bs-toggle="modal"
             >
               Start Sprint
             </div>
             <div
+              class="modal fade"
+              id="startSprintModal"
+              tabindex="-1"
+              aria-labelledby="startSprintModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content new-sprint">
+                  <div class="modal-body new-sprint">
+                    <div class="details-modal-body-head new-sprint">
+                      <div
+                        class="details-modal-body-head-title new-sprint"
+                        *ngIf="!editSprint; else editSprintTitle"
+                      >
+                        Start a New Sprint
+                      </div>
+                      <ng-template #editSprintTitle>
+                        <div class="details-modal-body-head-title new-sprint">
+                          Edit {{ this.project.Sprint.sprint_name }}
+                        </div>
+                      </ng-template>
+                      <div
+                        class="details-modal-body-head-subtitle new-sprint"
+                        *ngIf="
+                          !editSprint && this.project.Sprint?.issues?.length > 1;
+                          else moreSprintIssues
+                        "
+                      >
+                        <b>{{ this.project.Sprint?.issues?.length }}</b> issues included in
+                        this sprint.
+                      </div>
+                      <ng-template #moreSprintIssues>
+                        <div
+                          class="details-modal-body-head-subtitle new-sprint"
+                          *ngIf="!editSprint"
+                        >
+                          <b>{{ this.project.Sprint?.issues?.length }}</b> issue included in
+                          this sprint.
+                        </div>
+                      </ng-template>
+                    </div>
+                    <div class="details-modal-body-content">
+                      <div class="details-modal-body-content-left">
+                        <div
+                          class="details-modal-body-content-left-sprint-name"
+                        >
+                          <label
+                            for="sprint-name"
+                            class="details-modal-body-content-left-sprint-label"
+                            >Sprint Name <span class="required">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            class="details-modal-body-content-left-sprint-name-input-field"
+                            autocomplete="off"
+                            spellcheck="false"
+                            id="sprint-name"
+                            [(ngModel)]="sprintName"
+                          />
+                        </div>
+                        <div
+                          class="details-modal-body-content-left-sprint-startdate"
+                        >
+                          <label
+                            for="sprint-startdate"
+                            class="details-modal-body-content-left-sprint-label"
+                            >Start Date <span class="required">*</span>
+                          </label>
+                          <div
+                            class="details-modal-body-content-left-sprint-name-input-field"
+                          >
+                            <input
+                              matInput
+                              class="date-input"
+                              [matDatepicker]="dp1"
+                              [formControl]="startDate"
+                              (click)="dp1.open()"
+                              name="startDate"
+                              placeholder="MM/DD/YYYY"
+                            />
+                            <mat-datepicker-toggle
+                              class="date-input-toggle"
+                              matSuffix
+                              [for]="dp1"
+                            ></mat-datepicker-toggle>
+                            <mat-datepicker #dp1></mat-datepicker>
+                          </div>
+                        </div>
+                        <div
+                          class="details-modal-body-content-left-sprint-enddate"
+                        >
+                          <label
+                            for="sprint-enddate"
+                            class="details-modal-body-content-left-sprint-label"
+                            >End Date <span class="required">*</span></label
+                          >
+                          <div
+                            class="details-modal-body-content-left-sprint-name-input-field"
+                          >
+                            <input
+                              matInput
+                              class="date-input"
+                              [matDatepicker]="dp2"
+                              [formControl]="endDate"
+                              name="endDate"
+                              (click)="dp2.open()"
+                              placeholder="MM/DD/YYYY"
+                            />
+                            <mat-datepicker-toggle
+                              class="date-input-toggle"
+                              matSuffix
+                              [for]="dp2"
+                            ></mat-datepicker-toggle>
+                            <mat-datepicker #dp2></mat-datepicker>
+                          </div>
+                        </div>
+                        <span style="width: 100%; height: 10%">
+                          <div class="date-error" *ngIf="endDateError">
+                            End Date cannot be before or same as the Start Date
+                          </div>
+                        </span>
+                      </div>
+                      <div class="details-modal-body-content-right">
+                        <img src="../../assets/sprint.svg" alt="" />
+                      </div>
+                    </div>
+                    <div class="details-modal-body-footer">
+                      <div
+                        class="details-modal-body-footer-cancel-button"
+                        data-bs-dismiss="modal"
+                        #closeStartSprintModal
+                      >
+                        Cancel
+                      </div>
+                      <div
+                        *ngIf="!editSprint; else editSprintButton"
+                        class="details-modal-body-footer-complete-button"
+                        (click)="startSprint()"
+                        [attr.aria-disabled]="
+                          startDate.invalid ||
+                          endDate.invalid ||
+                          sprintName.length === 0
+                        "
+                        [ngStyle]="{
+                          cursor:
+                            startDate.invalid ||
+                            endDate.invalid ||
+                            sprintName.length === 0
+                              ? 'not-allowed'
+                              : 'pointer',
+                          'background-color':
+                            startDate.invalid ||
+                            endDate.invalid ||
+                            sprintName.length === 0
+                              ? '#e5e5e5'
+                              : '#0052cc'
+                        }"
+                      >
+                        Start
+                      </div>
+                      <ng-template #editSprintButton>
+                        <div
+                          class="details-modal-body-footer-complete-button"
+                          (click)="saveSprint()"
+                        >
+                          Save
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="backlog-content-body-sprint-head-right-button"
-              *ngIf="sprint && sprint.completed != true"
+              *ngIf="
+                this.project.Sprint &&
+                this.project.Sprint.issues?.length > 0 &&
+                this.project.Sprint.completed != true &&
+                this.project.Sprint.started === true
+              "
             >
               <div class="dropdown">
                 <div
@@ -103,23 +355,205 @@
                   </svg>
                 </div>
                 <ul class="dropdown-menu">
-                  <li>
+                  <li
+                    (click)="setEditSprint()"
+                    data-bs-target="#startSprintModal"
+                    data-bs-toggle="modal"
+                  >
                     <span class="dropdown-item">Edit Sprint </span>
                   </li>
-                  <li *ngIf="project.isOwner">
+                  <li
+                    *ngIf="project.isOwner"
+                    data-bs-target="#deleteSprintModal"
+                    data-bs-toggle="modal"
+                  >
                     <span class="dropdown-item delete-project"
                       >Delete Sprint
                     </span>
                   </li>
                 </ul>
               </div>
+              <div
+                class="modal fade"
+                id="deleteSprintModal"
+                tabindex="-1"
+                aria-labelledby="deleteSprintModalLabel"
+                aria-hidden="true"
+              >
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <div class="details-modal-body-head">
+                        <div class="details-modal-body-head-title">
+                          Delete Sprint
+                        </div>
+                        <div class="details-modal-body-head-subtitle">
+                          Deleting a Sprint will move all the issues to the
+                          Backlog.
+                        </div>
+                      </div>
+                      <div class="details-modal-body-footer big-footer">
+                        <div
+                          class="details-modal-body-footer-cancel-button"
+                          data-bs-dismiss="modal"
+                          #closeDeleteSprintModal
+                        >
+                          Cancel
+                        </div>
+                        <div
+                          class="details-modal-body-footer-delete-button"
+                          (click)="deleteSprint()"
+                        >
+                          Delete
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="backlog-content-body-sprint-body">
+        <div
+          class="backlog-content-body-sprint-body"
+          cdkDropList
+          id="sprint"
+          [cdkDropListData]="this.project.Sprint && this.project.Sprint?.issues"
+          [cdkDropListConnectedTo]="connections"
+          (cdkDropListDropped)="drop($event)"
+        >
           <div
             class="backlog-content-body-sprint-body-issue"
-            *ngFor="let issue of sprint.issues"
+            *ngFor="let issue of this.project.Sprint?.issues | issueSearch: searchQuery"
+            (click)="selectIssue(issue)"
+            cdkDrag
+            data-bs-toggle="modal"
+            data-bs-target="#issueModal"
+          >
+            <div class="backlog-content-body-sprint-body-issue-left">
+              <div class="backlog-content-body-sprint-body-issue-left-icon">
+                <img [src]="issue.type_icon" alt="Icon" />
+              </div>
+              <div class="backlog-content-body-sprint-body-issue-left-tag">
+                {{ issue.tag }}
+              </div>
+              <div class="backlog-content-body-sprint-body-issue-left-name">
+                {{ issue.name }}
+              </div>
+            </div>
+            <div class="backlog-content-body-sprint-body-issue-right">
+              <div
+                class="backlog-content-body-sprint-body-issue-right-priority"
+              >
+                <img [src]="issue.priority_icon" alt="Icon" />
+              </div>
+              <div class="backlog-content-body-sprint-body-issue-right-status">
+                <div
+                  class="backlog-content-body-sprint-body-issue-right-status-todo"
+                  *ngIf="issue.status === 'to do'"
+                >
+                  TO DO
+                </div>
+                <div
+                  class="backlog-content-body-sprint-body-issue-right-status-inprogress"
+                  *ngIf="issue.status === 'in progress'"
+                >
+                  IN PROGRESS
+                </div>
+                <div
+                  class="backlog-content-body-sprint-body-issue-right-status-done"
+                  *ngIf="issue.status === 'done'"
+                >
+                  DONE
+                </div>
+                <div
+                  class="backlog-content-body-sprint-body-issue-right-status-inprogress"
+                  *ngIf="
+                    issue.status !== 'done' &&
+                    issue.status !== 'in progress' &&
+                    issue.status !== 'to do'
+                  "
+                >
+                  {{ issue.status.toUpperCase() }}
+                </div>
+              </div>
+              <div
+                class="backlog-content-body-sprint-body-issue-right-assignee"
+              >
+                <div *ngIf="issue.assignee.img; else noAssigneeImg">
+                  <img [src]="issue.assignee.img" alt="" />
+                </div>
+                <ng-template #noAssigneeImg>
+                  <div class="issue-assignee-no-img">
+                    {{ issue.assignee.dummy_img }}
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+          <div
+            class="backlog-content-body-sprint-body-no-sprint-text extra-height"
+            *ngIf="this.project.Sprint.issues?.length === 0"
+          >
+            Drag issues from the Backlog or create new ones to plan your sprint.
+            Select &nbsp; <b>Start Sprint</b> &nbsp; when ready.
+          </div>
+        </div>
+        <div class="backlog-content-body-sprint-footer">
+          <div
+            class="backlog-content-body-sprint-footer-button"
+            (click)="prepareNewIssue('sprint')"
+            data-bs-toggle="modal"
+            data-bs-target="#createIssueModal"
+          >
+            <svg width="24" height="24" viewBox="0 0 28 28" role="presentation">
+              <path
+                d="M13 11V3.993A.997.997 0 0012 3c-.556 0-1 .445-1 .993V11H3.993A.997.997 0 003 12c0 .557.445 1 .993 1H11v7.007c0 .548.448.993 1 .993.556 0 1-.445 1-.993V13h7.007A.997.997 0 0021 12c0-.556-.445-1-.993-1H13z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              ></path>
+            </svg>
+            Create Issue
+          </div>
+        </div>
+      </div>
+      <div class="backlog-content-body-sprint backlog-content-body-backlog">
+        <div class="backlog-content-body-sprint-head">
+          <div class="backlog-content-body-sprint-head-left">
+            <div class="backlog-content-body-sprint-head-left-title">
+              Backlog
+            </div>
+            <div
+              class="backlog-content-body-sprint-head-left-subtitle"
+              *ngIf="project && project.backlog?.length > 1; else singleIssue"
+            >
+              ({{ project?.backlog?.length }} issues)
+            </div>
+            <ng-template #singleIssue>
+              <div
+                class="backlog-content-body-sprint-head-left-subtitle"
+                *ngIf="project && project.backlog?.length == 1"
+              >
+                (1 issue)
+              </div>
+            </ng-template>
+          </div>
+        </div>
+        <div
+          class="backlog-content-body-sprint-body"
+          cdkDropList
+          id="backlog"
+          [cdkDropListData]="project && project.backlog"
+          [cdkDropListConnectedTo]="connections"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div
+            class="backlog-content-body-sprint-body-issue"
+            *ngFor="let issue of project.backlog | issueSearch: searchQuery"
+            (click)="selectIssue(issue)"
+            cdkDrag
+            data-bs-toggle="modal"
+            data-bs-target="#issueModal"
           >
             <div class="backlog-content-body-sprint-body-issue-left">
               <div class="backlog-content-body-sprint-body-issue-left-icon">
@@ -184,7 +618,12 @@
           </div>
         </div>
         <div class="backlog-content-body-sprint-footer">
-          <div class="backlog-content-body-sprint-footer-button">
+          <div
+            class="backlog-content-body-sprint-footer-button"
+            (click)="prepareNewIssue('backlog')"
+            data-bs-toggle="modal"
+            data-bs-target="#createIssueModal"
+          >
             <svg width="24" height="24" viewBox="0 0 28 28" role="presentation">
               <path
                 d="M13 11V3.993A.997.997 0 0012 3c-.556 0-1 .445-1 .993V11H3.993A.997.997 0 003 12c0 .557.445 1 .993 1H11v7.007c0 .548.448.993 1 .993.556 0 1-.445 1-.993V13h7.007A.997.997 0 0021 12c0-.556-.445-1-.993-1H13z"
@@ -196,15 +635,8 @@
           </div>
         </div>
       </div>
-      <div class="backlog-content-body-backlog">
-        <div class="backlog-content-body-backlog-head">
-          <div class="backlog-content-body-backlog-head-left"></div>
-        </div>
-        <div class="backlog-content-body-sprint-body"></div>
-        <div class="backlog-content-body-sprint-footer"></div>
-      </div>
     </div>
-    <!-- <div
+    <div
       class="modal fade issueModal"
       id="issueModal"
       tabindex="-1"
@@ -346,7 +778,9 @@
                       </ul>
                     </div>
                   </ng-template>
-                  {{ selectedIssue?.tag }}
+                  <span style="width: 72%; margin-left: 3%">
+                    {{ selectedIssue?.tag }}
+                  </span>
                 </div>
               </div>
               <div
@@ -381,7 +815,7 @@
                   </svg>
                   &nbsp; Attach
                 </div> -->
-    <!-- <div
+                <div
                   class="issue-modal-left-buttons-edit"
                   (click)="editIssueOption()"
                   *ngIf="!editIssue"
@@ -422,8 +856,8 @@
                     ></textarea>
                   </div>
                 </ng-template>
-              </div> -->
-    <!-- <div class="issue-modal-left-attachments">
+              </div>
+              <!-- <div class="issue-modal-left-attachments">
                 <div class="issue-modal-left-attachments-title">
                   Attachments
                 </div>
@@ -431,7 +865,7 @@
                   All issue attachments will be previewed here.
                 </div>
               </div> -->
-    <!-- </div>
+            </div>
             <div class="issue-modal-right">
               <div class="issue-modal-right-top">
                 <div class="issue-modal-right-top-options">
@@ -719,9 +1153,17 @@
                   <div class="issue-modal-right-details-subtitle-left">
                     Sprint
                   </div>
-                  <div class="issue-modal-right-details-subtitle-right">
+                  <div
+                    class="issue-modal-right-details-subtitle-right"
+                    *ngIf="selectedIssue?.sprint; else noSprint"
+                  >
                     {{ selectedIssue?.sprint.sprint_name }}
                   </div>
+                  <ng-template #noSprint>
+                    <div class="issue-modal-right-details-subtitle-right">
+                      Not in a sprint
+                    </div>
+                  </ng-template>
                 </div>
                 <div class="issue-modal-right-details-subtitle">
                   <div class="issue-modal-right-details-subtitle-left">
@@ -786,6 +1228,435 @@
           </div>
         </div>
       </div>
-    </div> -->
+    </div>
+    <div
+      class="modal fade issueModal"
+      id="createIssueModal"
+      tabindex="-1"
+      aria-labelledby="createIssueModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="issue-modal-left">
+              <div class="issue-modal-left-subtitle">
+                <div
+                  class="issue-model-left-subtitle-issue-tag"
+                  [ngClass]="{ issueTypeEditing: editIssue }"
+                >
+                  <div class="dropdown">
+                    <div
+                      class="issue-modal-left-subtitle-issuetype-dropdown-button"
+                      id="1"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <img
+                        [src]="createIssueTemplate?.type_icon"
+                        alt="issueIcon"
+                      />
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        role="presentation"
+                      >
+                        <path
+                          d="M8.292 10.293a1.009 1.009 0 000 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 000-1.419.987.987 0 00-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 00-1.406 0z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </div>
+                    <ul class="dropdown-menu" aria-labelledby="1">
+                      <li>
+                        <span
+                          class="dropdown-item"
+                          (click)="updateCreateIssueTemplateType('story')"
+                        >
+                          <img
+                            src="../../assets/issue-type-story.svg"
+                            alt="Issue Type Logo"
+                          />
+                          Story
+                        </span>
+                      </li>
+                      <li>
+                        <span
+                          class="dropdown-item"
+                          (click)="updateCreateIssueTemplateType('task')"
+                        >
+                          <img
+                            src="../../assets/issue-type-task.svg"
+                            alt="Issue Type Logo"
+                          />
+                          Task
+                        </span>
+                      </li>
+                      <li>
+                        <span
+                          class="dropdown-item"
+                          (click)="updateCreateIssueTemplateType('bug')"
+                        >
+                          <img
+                            src="../../assets/issue-type-bug.svg"
+                            alt="Issue Type Logo"
+                          />
+                          Bug
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                  <span style="width: 72%; margin-left: 3%">
+                    {{ createIssueTemplate?.tag }}
+                  </span>
+                </div>
+              </div>
+              <div class="issue-modal-left-title">
+                <input
+                  class="issue-modal-left-title-input-field"
+                  autocomplete="off"
+                  placeholder="Issue Title"
+                  spellcheck="false"
+                  [ngModel]="createIssueTemplate?.name" (ngModelChange)="createIssueTemplate.name=$event"
+                />
+              </div>
+              <div class="issue-modal-left-buttons">
+                <!-- <div class="issue-modal-left-buttons-attach">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    role="presentation"
+                  >
+                    <path
+                      d="M11.643 17.965c-1.53 1.495-4.016 1.496-5.542.004a3.773 3.773 0 01.002-5.412l7.147-6.985a2.316 2.316 0 013.233-.003c.893.873.895 2.282.004 3.153l-6.703 6.55a.653.653 0 01-.914-.008.62.62 0 010-.902l6.229-6.087a.941.941 0 000-1.353.995.995 0 00-1.384 0l-6.23 6.087a2.502 2.502 0 000 3.607 2.643 2.643 0 003.683.009l6.703-6.55a4.074 4.074 0 00-.003-5.859 4.306 4.306 0 00-6.002.003l-7.148 6.985a5.655 5.655 0 00-.001 8.118c2.29 2.239 6.015 2.238 8.31-.005l6.686-6.533a.941.941 0 000-1.353.995.995 0 00-1.384 0l-6.686 6.534z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    ></path>
+                  </svg>
+                  &nbsp; Attach
+                </div> -->
+              </div>
+              <div class="issue-modal-left-description">
+                <div class="issue-modal-left-description-title">
+                  Description
+                </div>
+                <div class="issue-modal-left-description-content editing">
+                  <textarea
+                    class="issue-modal-left-description-content-input-field"
+                    autocomplete="off"
+                    placeholder="Describe your issue here..."
+                    spellcheck="false"
+                    [ngModel]="createIssueTemplate?.description" (ngModelChange)="createIssueTemplate.description=$event"
+                  ></textarea>
+                </div>
+              </div>
+              <!-- <div class="issue-modal-left-attachments">
+                <div class="issue-modal-left-attachments-title">
+                  Attachments
+                </div>
+                <div class="issue-modal-left-attachments-area">
+                  All issue attachments will be previewed here.
+                </div>
+              </div> -->
+            </div>
+            <div class="issue-modal-right">
+              <div class="issue-modal-right-top">
+                <div
+                  class="issue-modal-right-top-close"
+                  data-bs-dismiss="modal"
+                  #closeCreateIssueModal
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    role="presentation"
+                  >
+                    <path
+                      d="M12 10.586L6.707 5.293a1 1 0 00-1.414 1.414L10.586 12l-5.293 5.293a1 1 0 001.414 1.414L12 13.414l5.293 5.293a1 1 0 001.414-1.414L13.414 12l5.293-5.293a1 1 0 10-1.414-1.414L12 10.586z"
+                      fill="currentColor"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+              <div class="issue-modal-right-status-dropdown">
+                <div class="dropdown">
+                  <div
+                    class="issue-modal-right-status-dropdown-button"
+                    id="1"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {{ createIssueTemplate?.status.toUpperCase() }}
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      role="presentation"
+                    >
+                      <path
+                        d="M8.292 10.293a1.009 1.009 0 000 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 000-1.419.987.987 0 00-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 00-1.406 0z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <ul class="dropdown-menu" aria-labelledby="1">
+                    <li *ngFor="let section of myFilter(project.board)">
+                      <span
+                        class="dropdown-item"
+                        (click)="changeCreateIssueTemplateStatus(section)"
+                      >
+                        {{ section.toUpperCase() }}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="issue-modal-right-details-section">
+                <div class="issue-modal-right-details-title">Details</div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Priority
+                  </div>
+                  <div class="issue-modal-right-details-subtitle-right">
+                    <div class="dropdown">
+                      <div
+                        class="issue-modal-right-details-subtitle-right-dropdown-button"
+                        id="1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <div
+                          class="issue-modal-right-details-subtitle-right right-editing"
+                          style="margin-left: 0"
+                        >
+                          <img
+                            [src]="createIssueTemplate?.priority_icon"
+                            alt=""
+                          />
+                          {{ createIssueTemplate?.priority }}
+                        </div>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          role="presentation"
+                        >
+                          <path
+                            d="M8.292 10.293a1.009 1.009 0 000 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 000-1.419.987.987 0 00-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 00-1.406 0z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                      <ul class="dropdown-menu" aria-labelledby="1">
+                        <li>
+                          <span
+                            class="dropdown-item"
+                            (click)="updateCreateIssueTemplatePriority('Low')"
+                          >
+                            <img src="../../assets/issue-priority-low.svg" />
+                            Low
+                          </span>
+                        </li>
+                        <li>
+                          <span
+                            class="dropdown-item delete-project"
+                            (click)="
+                              updateCreateIssueTemplatePriority('Medium')
+                            "
+                          >
+                            <img src="../../assets/issue-priority-medium.svg" />
+                            Medium
+                          </span>
+                        </li>
+                        <li>
+                          <span
+                            class="dropdown-item delete-project"
+                            (click)="updateCreateIssueTemplatePriority('High')"
+                          >
+                            <img src="../../assets/issue-priority-high.svg" />
+                            High
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Due Date
+                  </div>
+                  <div
+                    class="issue-modal-right-details-subtitle-right date-editing"
+                  >
+                    <input
+                      matInput
+                      class="issue-modal-right-details-subtitle-right-date-input"
+                      [matDatepicker]="newdp"
+                      [formControl]="createIssueTemplateDueDate"
+                      (click)="newdp.open()"
+                      placeholder="MM/DD/YYYY"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="newdp"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #newdp></mat-datepicker>
+                  </div>
+                </div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Assignee
+                  </div>
+                  <div class="issue-modal-right-details-subtitle-right">
+                    <div class="dropdown">
+                      <div
+                        class="issue-modal-right-details-subtitle-right-dropdown-button"
+                        id="1"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <div
+                          class="issue-modal-right-details-subtitle-right right-editing"
+                        >
+                          <img
+                            [src]="createIssueTemplate?.assignee.img"
+                            alt=""
+                            *ngIf="
+                              createIssueTemplate?.assignee.img;
+                              else noImgIcon
+                            "
+                          />
+                          <ng-template #noImgIcon>
+                            <div class="issue-assignee-no-img">
+                              {{ createIssueTemplate?.assignee.dummy_img }}
+                            </div>
+                          </ng-template>
+                          {{ createIssueTemplate?.assignee.name }}
+                        </div>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          role="presentation"
+                        >
+                          <path
+                            d="M8.292 10.293a1.009 1.009 0 000 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 000-1.419.987.987 0 00-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 00-1.406 0z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                      <ul class="dropdown-menu" aria-labelledby="1">
+                        <li *ngFor="let assignee of project.members">
+                          <span
+                            class="dropdown-item"
+                            (click)="updateCreateIssueTemplateAssignee(assignee)"
+                          >
+                            <img
+                              [src]="assignee.img"
+                              alt=""
+                              *ngIf="assignee.img; else noImgIcon"
+                            />
+                            <ng-template #noImgIcon>
+                              <div class="issue-assignee-no-img">
+                                {{ assignee.dummy_img }}
+                              </div>
+                            </ng-template>
+                            {{ assignee.name }}
+                          </span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Sprint
+                  </div>
+                  <div
+                    class="issue-modal-right-details-subtitle-right"
+                    *ngIf="createIssueTemplate?.sprint; else noSprint"
+                  >
+                    {{ createIssueTemplate?.sprint.sprint_name }}
+                  </div>
+                  <ng-template #noSprint>
+                    <div class="issue-modal-right-details-subtitle-right">
+                      Not in a sprint
+                    </div>
+                  </ng-template>
+                </div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Development
+                  </div>
+                  <div
+                    class="issue-modal-right-details-subtitle-right"
+                    *ngIf="createIssueTemplate?.development; else nodev"
+                  >
+                    Branch : {{ createIssueTemplate?.development.branch_name }}
+                  </div>
+                  <ng-template #nodev>
+                    <div class="issue-modal-right-details-subtitle-right">
+                      Not linked
+                    </div>
+                  </ng-template>
+                </div>
+                <div class="issue-modal-right-details-subtitle">
+                  <div class="issue-modal-right-details-subtitle-left">
+                    Reporter
+                  </div>
+                  <div class="issue-modal-right-details-subtitle-right">
+                    <img
+                      [src]="createIssueTemplate?.reporter.img"
+                      alt=""
+                      *ngIf="createIssueTemplate?.reporter.img; else noImgIcon"
+                    />
+                    <ng-template #noImgIcon>
+                      <div class="issue-assignee-no-img">
+                        {{ createIssueTemplate?.reporter.dummy_img }}
+                      </div>
+                    </ng-template>
+                    {{ createIssueTemplate?.reporter.name }}
+                  </div>
+                </div>
+              </div>
+              <div class="issue-model-right-buttons">
+                <div
+                  class="issue-modal-right-button-cancel"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="issue-modal-right-button-save"
+                  (click)="createIssue()"
+                  [attr.aria-disabled]="
+                          createIssueTemplate?.name.length === 0
+                        "
+                        [ngStyle]="{
+                          cursor:
+                            createIssueTemplate?.name.length === 0
+                              ? 'not-allowed'
+                              : 'pointer',
+                          'background-color':
+                            createIssueTemplate?.name.length === 0
+                              ? '#e5e5e5'
+                              : '#0052cc'
+                        }"
+                >
+                  Create
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

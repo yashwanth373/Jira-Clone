@@ -357,62 +357,6 @@
             <div class="issue-modal-left">
               <div class="issue-modal-left-subtitle">
                 <div
-                  class="issue-model-left-subtitle-epic"
-                  *ngIf="selectedIssue?.epic"
-                  [ngClass]="{ epicEditing: editIssue }"
-                >
-                  <div
-                    *ngIf="!editIssue; else epicInput"
-                    class="issue-modal-left-subtitle-epic-button"
-                  >
-                    <img src="../../assets/epic.svg" alt="epicIcon" />
-                    {{ selectedIssue?.epic.name }} /
-                  </div>
-                  <ng-template #epicInput>
-                    <div class="issue-modal-left-subtitle-epic-button">
-                      <div class="dropdown">
-                        <div
-                          class="issue-modal-left-subtitle-epic-dropdown-button"
-                          id="1"
-                          data-bs-toggle="dropdown"
-                          aria-expanded="false"
-                        >
-                          <div class="issue-modal-left-subtitle-epic-button">
-                            <img src="../../assets/epic.svg" alt="epicIcon" />
-                            {{ updatedSelectedIssue?.epic.name }}
-                          </div>
-                          <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            role="presentation"
-                          >
-                            <path
-                              d="M8.292 10.293a1.009 1.009 0 000 1.419l2.939 2.965c.218.215.5.322.779.322s.556-.107.769-.322l2.93-2.955a1.01 1.01 0 000-1.419.987.987 0 00-1.406 0l-2.298 2.317-2.307-2.327a.99.99 0 00-1.406 0z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            ></path>
-                          </svg>
-                        </div>
-                        <ul class="dropdown-menu" aria-labelledby="1">
-                          <li *ngFor="let epic of project.epics">
-                            <span
-                              class="dropdown-item"
-                              (click)="updateSelectedIssueEpic(epic)"
-                            >
-                              <img
-                                src="../../assets/epic.svg"
-                                alt="Epic Logo"
-                              />
-                              {{ epic.name }}
-                            </span>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </ng-template>
-                </div>
-                <div
                   class="issue-model-left-subtitle-issue-tag"
                   [ngClass]="{ issueTypeEditing: editIssue }"
                 >

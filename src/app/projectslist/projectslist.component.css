@@ -188,6 +188,7 @@ th {
   width: 25px;
   height: 25px;
   border-radius: 3px;
+  object-fit: cover;
 }
 
 .tbody-project-lead .lead {

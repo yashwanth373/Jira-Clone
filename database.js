@@ -65,7 +65,11 @@ function updateBoard(project_id, board) {
 }
 
 function updateSprint(project_id, sprint) {
-    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id, 'Sprint.sprint_id': sprint.sprint_id }, { $set: { 'Sprint.$': sprint } })
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $set: { 'Sprint': sprint } })
+}
+
+function updateBacklog(project_id, backlog) {
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $set: { 'backlog': backlog } })
 }
 
 function deleteIssueFromProject(project_id, issue_id) {
@@ -101,6 +105,7 @@ module.exports = {
     deleteIssueFromSprint,
     updateBoard,
     updateSprint,
+    updateBacklog,
     removeMemberFromProject,
     removeProjectFromUser,
     inviteUser,
