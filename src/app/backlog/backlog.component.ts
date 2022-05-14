@@ -453,7 +453,7 @@ export class BacklogComponent implements OnInit {
     this._dsService.getProjectDetails(projectId).subscribe((data : any) => {
       this.project = data.data
       this.prepareSprint();
-      this.prepareBacklog();
+      
       console.log(this.project)
       let now = new Date();
       let startOfDay: any = new Date(
@@ -465,6 +465,14 @@ export class BacklogComponent implements OnInit {
       if (this.project.Sprint.endDate <= timestamp) {
         this.completeSprint();
       }
+      // let sprintIssues = this.project.Sprint.issues;
+      // this.project.Sprint.issues = []
+      // this.project.Issues.forEach((issue : any) => {
+      //   if (sprintIssues.indexOf(issue.issue_id) !== -1) {
+      //     this.project.Sprint.issues.push(issue);
+      //   }
+      // })
+      // this.backendUpdateIssues()
     })
   }
 
@@ -478,12 +486,12 @@ export class BacklogComponent implements OnInit {
         now.getMonth(),
         now.getDate()
       );
-      let timestamp = startOfDay / 1;
-      this.project.Sprint.remainingTime =
-        (this.project.Sprint.endDate - timestamp) / (1000 * 60 * 60 * 24);
-      this.project.Sprint.remainingTime = Math.round(this.project.Sprint.remainingTime);
-      console.log(this.project.Sprint.remainingTime);
-      if (this.project.Sprint.completed == false) {
+      if (this.project.Sprint.sprint_name && this.project.Sprint.sprint_name !== "") {
+        let timestamp = startOfDay / 1;
+        this.project.Sprint.remainingTime =
+          (this.project.Sprint.endDate - timestamp) / (1000 * 60 * 60 * 24);
+        this.project.Sprint.remainingTime = Math.round(this.project.Sprint.remainingTime);
+        console.log(this.project.Sprint.remainingTime);
         this.project.Sprint.startDateHR = this.HRDateFormat(
           this.project.Sprint.startDate,
           'sprintDate'
@@ -493,13 +501,6 @@ export class BacklogComponent implements OnInit {
           'sprintDate'
         );
       }
-      let issues = this.project.Sprint.issues;
-      this.project.Sprint.issues = [];
-      for (var i = 0; i < this.project.Issues.length; i++) {
-        if (issues.includes(this.project.Issues[i].issue_id)) {
-          this.project.Sprint.issues.push(this.project.Issues[i]);
-        }
-      }
     } else {
       this.project.Sprint = {
         started: false,
@@ -508,18 +509,6 @@ export class BacklogComponent implements OnInit {
         sprint_id: 'sprint' + Date.now(),
       };
     }
-  }
-
-  prepareBacklog() {
-    // if (this.project.backlog != null || this.project.backlog != []) {
-    //   let issues = this.project.backlog;
-    //   this.project.backlog = [];
-    //   for (var i = 0; i < this.project.Issues.length; i++) {
-    //     if (issues.includes(this.project.Issues[i].issue_id)) {
-    //       this.project.backlog.push(this.project.Issues[i]);
-    //     }
-    //   }
-    // }
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -544,21 +533,45 @@ export class BacklogComponent implements OnInit {
   updateSprintAndBacklog() {
     console.log('updateSprintAndBacklog');
     //get issue index from issue objects
-    let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
-    let backlogIssues = this.project.backlog.map(
-      (issue: any) => issue.issue_id
-    );
+    // let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
+    // let backlogIssues = this.project.backlog.map(
+    //   (issue: any) => issue.issue_id
+    // );
 
-    //update sprint and backlog
-    this.project.Sprint.issues = [];
-    this.project.backlog = [];
-    this.project.Sprint.issues = [...sprintIssues];
-    this.project.backlog = [...backlogIssues];
+    // //update sprint and backlog
+    // this.project.Sprint.issues = [];
+    // this.project.backlog = [];
+    // this.project.Sprint.issues = [...sprintIssues];
+    // this.project.backlog = [...backlogIssues];
 
-    this.prepareSprint();
-    this.prepareBacklog();
+    
+    this.project.backlog = this.project.backlog.map((issue : any)=>{
+      issue.sprint = null
+      return issue
+    })
+    
+    this.project.Sprint.issues = this.project.Sprint.issues.map((issue : any)=>{
+      issue.sprint = {}
+      issue.sprint.sprint_id = this.project.Sprint.sprint_id
+      issue.sprint.sprint_name = this.project.Sprint.sprint_name
+      return issue
+    })
+    let backlogIssues = this.project.backlog.map((issue : any)=>issue.issue_id)
+    let sprintIssues = this.project.Sprint.issues.map((issue : any)=>issue.issue_id)
 
+    this.project.Issues = this.project.Issues.map((issue : any)=>{
+      if(backlogIssues.includes(issue.issue_id)){
+        issue.sprint = null
+      }
+      if(sprintIssues.includes(issue.issue_id)){
+        issue.sprint = {}
+        issue.sprint.sprint_id = this.project.Sprint.sprint_id
+        issue.sprint.sprint_name = this.project.Sprint.sprint_name
+      }
+      return issue
+    })
     // make backend call to put these sprintIssues and backlogIssues array indexes
+    this.backendUpdateIssues()
   }
 
   selectIssue(issue: any) {
@@ -654,43 +667,11 @@ export class BacklogComponent implements OnInit {
       this.selectedIssue.modifiedAt,
       'issueDate'
     );
-    let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
-    let backlogIssues = this.project.backlog.map(
-      (issue: any) => issue.issue_id
-    );
-    this.project.Issues.forEach((issue: any) => {
-      if (issue.issue_id === this.selectedIssue.issue_id) {
-        issue.status = this.selectedIssue.status;
-        issue.modifiedAt = this.selectedIssue.modifiedAt;
-        issue.modifiedAtHR = this.selectedIssue.modifiedAtHR;
-      }
-    });
-    this.project.Sprint.issues = [];
-    this.project.Sprint.issues = [...sprintIssues];
-    this.project.backlog = [];
-    this.project.backlog = [...backlogIssues];
-
-    this.prepareSprint();
-    this.prepareBacklog();
-
-    //update in backend
-    // this._dsService.updateIssue(this.project.project_id,this.selectedIssue).subscribe((data : any) => {
-    //         console.log("issue updated")
-    //   })
-    // this.seperateIssues()
+    
+    this.backendUpdateIssue()
   }
 
   deleteIssue() {
-    //delete from backend
-    // this._dsService
-    //   .deleteIssue(
-    //     this.project.project_id,
-    //     this.selectedIssue.issue_id,
-    //     this.selectedIssue.sprint.sprint_id
-    //   )
-    //   .subscribe((data: any) => {
-    //     console.log('issue deleted');
-    //   });
     //delete it from project issues using filter function
     this.closeIssueModalbtn?.nativeElement.click();
     //delete from active sprint issues
@@ -711,10 +692,9 @@ export class BacklogComponent implements OnInit {
     this.project.Issues = this.project.Issues.filter(
       (issue: any) => issue.issue_id !== this.selectedIssue.issue_id
     );
-    this.project.Sprint.issues = [...sprintIssues];
-    this.project.backlog = [...backlogIssues];
-    this.prepareSprint();
-    this.prepareBacklog();
+    this.backendUpdateIssues();
+    // this.prepareSprint();
+    
     this.selectedIssue = null;
     // this.seperateIssues();
   }
@@ -788,48 +768,8 @@ export class BacklogComponent implements OnInit {
         'issueDate'
       );
       this.selectedIssue = { ...this.updatedSelectedIssue };
-      this.project.Issues = this.project.Issues.map((issue: any) => {
-        if (issue.issue_id === this.selectedIssue.issue_id) {
-          issue = { ...this.selectedIssue };
-        }
-        return issue;
-      });
-      console.log(this.project.Issues);
-
-      let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
-      let backlogIssues = this.project.backlog.map(
-        (issue: any) => issue.issue_id
-      );
-      this.project.Sprint.issues = [];
-      this.project.Sprint.issues = [...sprintIssues];
-      this.project.backlog = [];
-      this.project.backlog = [...backlogIssues];
-      this.prepareSprint();
-      this.prepareBacklog();
-      // if (sprintIssues.includes(this.selectedIssue.issue_id)) {
-      //   let foundIndex = this.project.Sprint.issues.findIndex(
-      //     (issue: any) => issue.issue_id === this.selectedIssue.issue_id
-      //   );
-      //   this.project.Sprint.issues.splice(foundIndex, 1, {
-      //     ...this.selectedIssue,
-      //   });
-      //   let id = this.project.Issues.findIndex(
-      //     (issue: any) => issue.issue_id === this.selectedIssue.issue_id
-      //   );
-      //   this.project.Issues.splice(id, 1,{...this.selectedIssue});
-      // }
-      // if (backlogIssues.includes(this.selectedIssue.issue_id)) {
-      //   let foundIndex2 = this.project.backlog.findIndex(
-      //     (issue: any) => issue.issue_id === this.selectedIssue.issue_id
-      //   );
-      //   this.project.backlog.splice(foundIndex2, 1, { ...this.selectedIssue });
-      // }
-      // this._dsService
-      //   .updateIssue(this.project.project_id, this.selectedIssue)
-      //   .subscribe((data: any) => {
-      //     console.log(data);
-      //   });
     }
+    this.backendUpdateIssue();
   }
 
   completeSprint() {
@@ -847,48 +787,43 @@ export class BacklogComponent implements OnInit {
       (issue: any) => issue.status !== 'done'
     );
 
+    this.project.Sprint.issues.forEach((issue: any) => {
+      this.project.backlog.push({...issue,sprint:null})
+    });
+
     let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
-    let backlogIssues = this.project.backlog.map(
-      (issue: any) => issue.issue_id
-    );
+    this.project.Issues = this.project.Issues.map((issue: any) => {
+      if (sprintIssues.includes(issue.issue_id)) {
+        issue.sprint = null;
+      }
+      return issue;
+    });
 
-    backlogIssues.push(...sprintIssues);
+    this.project.Sprint = null;
+    this.prepareSprint();
 
-    this.project.backlog = [];
-    this.project.Sprint.issues = [];
-    this.project.Sprint.issues = [];
-    this.project.backlog = [...backlogIssues];
-
-    this.prepareBacklog();
+    this.backendUpdateIssues()
 
     this.closeCompleteSprintModalbtn?.nativeElement.click();
-
-    // update backend
-    // this._dsService
-    //   .updateSprint(this.project.project_id, this.activeSprint)
-    //   .subscribe((data: any) => {
-    //     console.log(data);
-    //   });
   }
 
   deleteSprint() {
+    this.project.Sprint.issues.forEach((issue: any) => {
+      this.project.backlog.push({...issue,sprint:null})
+    })
     let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
-    let backlogIssues = this.project.backlog.map(
-      (issue: any) => issue.issue_id
-    );
-
-    backlogIssues.push(...sprintIssues);
-
-    this.project.backlog = [];
-    this.project.Sprint.issues = [];
-    this.project.Sprint.issues = [];
-    this.project.Sprint.completed = false;
-    this.project.Sprint.started = false;
-    this.project.Sprint.started = false;
-    this.project.backlog = [...backlogIssues];
+    this.project.Issues = this.project.Issues.map((issue: any) => {
+      if (sprintIssues.includes(issue.issue_id)) {
+        issue.sprint = null;
+      }
+      return issue;
+    });
+    this.project.Sprint = null;
     this.prepareSprint();
-    this.prepareBacklog();
+    
     this.closeDeleteSprintModalbtn?.nativeElement.click();
+
+    this.backendUpdateIssues()
   }
 
   startSprint() {
@@ -909,45 +844,41 @@ export class BacklogComponent implements OnInit {
     this.project.Sprint.started = true;
     this.project.Sprint.completed = false;
     this.project.Sprint.sprint_name = this.sprintName;
-    this.project.Sprint.sprint_id = 'sprint' + Date.now();
+    // this.project.Sprint.sprint_id = 'sprint' + Date.now();
     this.project.Sprint.startDate = this.startDate?.value.valueOf();
-    this.project.Sprint.startDateHR = this.HRDateFormat(
-      this.project.Sprint.startDate,
-      'sprintDate'
-    );
     this.project.Sprint.endDate = this.endDate?.value.valueOf();
-    this.project.Sprint.endDateHR = this.HRDateFormat(
-      this.project.Sprint.endDate,
-      'sprintDate'
-    );
     let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
-    let backlogIssues = this.project.backlog.map(
-      (issue: any) => issue.issue_id
-    );
-    this.project.Sprint.issues = [];
-    this.project.Sprint.issues = [...sprintIssues];
-    this.project.backlog = [];
-    this.project.backlog = [...backlogIssues];
+    // let backlogIssues = this.project.backlog.map(
+    //   (issue: any) => issue.issue_id
+    // );
+    // this.project.Sprint.issues = [];
+    // this.project.Sprint.issues = [...sprintIssues];
+    // this.project.backlog = [];
+    // this.project.backlog = [...backlogIssues];
+    this.project.Issues = this.project.Issues.map((issue: any) => {
+      if (sprintIssues.includes(issue.issue_id)) {
+        issue.sprint.sprint_id = this.project.Sprint.sprint_id;
+        issue.sprint.sprint_name = this.project.Sprint.sprint_name;
+      }
+      return issue;
+    });
+    this.project.Sprint.issues = this.project.Sprint.issues.map((issue: any) => {
+      issue.sprint.sprint_id = this.project.Sprint.sprint_id;
+      issue.sprint.sprint_name = this.project.Sprint.sprint_name;
+      return issue;
+    });
     console.log(this.project.Sprint);
     console.log(this.project);
-    this.project.Sprint = { ...this.project.Sprint };
+    // this.project.Sprint = { ...this.project.Sprint };
     this.prepareSprint();
-    this.prepareBacklog();
+    
     this.closeStartSprintModalbtn?.nativeElement.click();
     this.endDateError = false;
     this.sprintName = '';
     this.startDate = new FormControl(moment());
     this.endDate = new FormControl(moment().add(7, 'days'));
 
-    this._dsService
-      .updateSprint(this.project.project_id, this.project.Sprint)
-      .subscribe((data: any) => {
-        console.log(data);
-      });
-
-    this._dsService.updateBacklog(this.project.project_id,this.project.backlog).subscribe((data: any) => {
-      console.log(data);
-    });
+    this.backendUpdateIssues()
 
   }
 
@@ -985,18 +916,22 @@ export class BacklogComponent implements OnInit {
       issue.sprint.sprint_name = this.project.Sprint.sprint_name;
       return issue
     })
+
     let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
-    let backlogIssues = this.project.backlog.map(
-      (issue: any) => issue.issue_id
-    );
-    this.project.Sprint.issues = [];
-    this.project.Sprint.issues = [...sprintIssues];
-    this.project.backlog = [];
-    this.project.backlog = [...backlogIssues];
-    console.log(this.project.Sprint);
-    this.project.Sprint = { ...this.project.Sprint };
+
+    this.project.Issues = this.project.Issues.map((issue: any) => {
+      if (sprintIssues.includes(issue.issue_id)) {
+        issue.sprint = {}
+        issue.sprint.sprint_id = this.project.Sprint.sprint_id;
+        issue.sprint.sprint_name = this.project.Sprint.sprint_name;
+      }
+      return issue
+    })
+
+
+
     this.prepareSprint();
-    this.prepareBacklog();
+    
     this.closeStartSprintModalbtn?.nativeElement.click();
     this.editSprint = false;
     this.endDateError = false;
@@ -1119,16 +1054,58 @@ export class BacklogComponent implements OnInit {
     this.createIssueTemplate.dueDate =
       this.createIssueTemplateDueDate.value.valueOf();
     this.project.Issues.push(this.createIssueTemplate);
+    console.log("Project Before Updation",this.project)
     if (this.createIssueTemplate.sprint) {
       this.project.Sprint.issues.push(this.createIssueTemplate);
     } else {
       this.project.backlog.push(this.createIssueTemplate);
     }
-    this._dsService.updateBacklog(this.project.project_id, this.project.backlog).subscribe((data: any) => {
-      console.log(data);
-    })
+    this.backendUpdateIssues()
+  }
+
+  backendUpdateIssue(){
+
+    this.project.Issues = this.project.Issues.map((issue: any) => {
+        if (issue.issue_id === this.selectedIssue.issue_id) {
+          issue = { ...this.selectedIssue };
+        }
+        return issue;
+      });
+
+      let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
+      let backlogIssues = this.project.backlog.map(
+        (issue: any) => issue.issue_id
+      );
+
+      // this.prepareSprint();
+      
+      if (sprintIssues.includes(this.selectedIssue.issue_id)) {
+        let foundIndex = this.project.Sprint.issues.findIndex(
+          (issue: any) => issue.issue_id === this.selectedIssue.issue_id
+        );
+        this.project.Sprint.issues.splice(foundIndex, 1, {
+          ...this.selectedIssue,
+        });
+      }
+      if (backlogIssues.includes(this.selectedIssue.issue_id)) {
+        let foundIndex2 = this.project.backlog.findIndex(
+          (issue: any) => issue.issue_id === this.selectedIssue.issue_id
+        );
+        this.project.backlog.splice(foundIndex2, 1, { ...this.selectedIssue });
+      }
+      this.backendUpdateIssues();
+    
+  }
+
+  backendUpdateIssues(){
     this._dsService.updateSprint(this.project.project_id, this.project.Sprint).subscribe((data: any) => {
+        console.log(data);
+      })
+    this._dsService.updateBacklog(this.project.project_id, this.project.backlog).subscribe((data: any) => {
+        console.log(data);
+      })
+    this._dsService.updateIssues(this.project.project_id, this.project.Issues).subscribe((data: any) => {
       console.log(data);
-    })
+    });
   }
 }

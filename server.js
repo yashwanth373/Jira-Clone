@@ -552,6 +552,17 @@ app.put("/updateBacklog/:project_id", isLoggedIn, async (req, res) => {
         res.json({ status: "failure" })
 });
 
+///////////////////////////////////////////////////////////////// Updating Issues of a specific project
+
+app.put("/updateIssues/:project_id", isLoggedIn, async (req, res) => {
+    let result = await db.updateIssues(req.params.project_id, req.body.Issues)
+    if (result.modifiedCount) {
+        res.json({ status: "success" })
+    }
+    else
+        res.json({ status: "failure" })
+})
+
 ////////////////////////////////////////////////////////////////// Removing a member from a project
 
 app.delete("/removeMember/:project_id/:user_id", isLoggedIn, async (req, res) => {

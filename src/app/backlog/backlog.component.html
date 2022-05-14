@@ -37,7 +37,6 @@
               class="backlog-content-body-sprint-head-left-title"
               *ngIf="
                 this.project.Sprint != null &&
-                this.project.Sprint.issues?.length != 0 &&
                 this.project.Sprint.completed === false &&
                 this.project.Sprint.started === true
               "
@@ -48,7 +47,6 @@
               class="backlog-content-body-sprint-head-left-title"
               *ngIf="
                 !this.project.Sprint ||
-                this.project.Sprint.issues?.length === 0 ||
                 this.project.Sprint.completed === true ||
                 this.project.Sprint.started === false
               "
@@ -73,7 +71,6 @@
               class="backlog-content-body-sprint-head-left-subtitle"
               *ngIf="
                 this.project.Sprint &&
-                this.project.Sprint.issues?.length > 0 &&
                 this.project.Sprint.completed !== true &&
                 this.project.Sprint.started === true
               "
@@ -86,7 +83,6 @@
               class="backlog-content-body-sprint-head-right-button-remaining"
               *ngIf="
                 this.project.Sprint &&
-                this.project.Sprint.issues?.length > 0 &&
                 this.project.Sprint.completed != true &&
                 this.project.Sprint.started === true
               "
@@ -97,7 +93,6 @@
               class="backlog-content-body-sprint-head-right-button-complete"
               *ngIf="
                 this.project.Sprint &&
-                this.project.Sprint.issues?.length > 0 &&
                 this.project.Sprint.completed != true &&
                 this.project.Sprint.started === true
               "
@@ -329,7 +324,6 @@
               class="backlog-content-body-sprint-head-right-button"
               *ngIf="
                 this.project.Sprint &&
-                this.project.Sprint.issues?.length > 0 &&
                 this.project.Sprint.completed != true &&
                 this.project.Sprint.started === true
               "
@@ -493,10 +487,16 @@
           </div>
           <div
             class="backlog-content-body-sprint-body-no-sprint-text extra-height"
-            *ngIf="this.project.Sprint.issues?.length === 0"
+            *ngIf="this.project.Sprint.issues?.length === 0 && this.project.Sprint.started === false"
           >
             Drag issues from the Backlog or create new ones to plan your sprint.
             Select &nbsp; <b>Start Sprint</b> &nbsp; when ready.
+          </div>
+          <div
+            class="backlog-content-body-sprint-body-no-sprint-text extra-height"
+            *ngIf="this.project.Sprint.issues?.length === 0 && this.project.Sprint.started === true"
+          >
+            Drag issues from the Backlog or create new ones into the sprint.
           </div>
         </div>
         <div class="backlog-content-body-sprint-footer">
@@ -534,7 +534,7 @@
                 class="backlog-content-body-sprint-head-left-subtitle"
                 *ngIf="project && project.backlog?.length == 1"
               >
-                (1 issue)
+                (1 issue) 
               </div>
             </ng-template>
           </div>
@@ -1157,7 +1157,7 @@
                     class="issue-modal-right-details-subtitle-right"
                     *ngIf="selectedIssue?.sprint; else noSprint"
                   >
-                    {{ selectedIssue?.sprint.sprint_name }}
+                    {{ selectedIssue?.sprint.sprint_name ? selectedIssue?.sprint.sprint_name :  "No Active Sprint" }}
                   </div>
                   <ng-template #noSprint>
                     <div class="issue-modal-right-details-subtitle-right">
@@ -1583,7 +1583,7 @@
                     class="issue-modal-right-details-subtitle-right"
                     *ngIf="createIssueTemplate?.sprint; else noSprint"
                   >
-                    {{ createIssueTemplate?.sprint.sprint_name }}
+                    {{ createIssueTemplate?.sprint.sprint_name ? createIssueTemplate?.sprint.sprint_name : 'No Active Sprint' }}
                   </div>
                   <ng-template #noSprint>
                     <div class="issue-modal-right-details-subtitle-right">

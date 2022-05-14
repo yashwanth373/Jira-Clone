@@ -72,6 +72,10 @@ function updateBacklog(project_id, backlog) {
     return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $set: { 'backlog': backlog } })
 }
 
+function updateIssues(project_id,Issues){
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $set: { 'Issues': Issues } })
+}
+
 function deleteIssueFromProject(project_id, issue_id) {
     return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $pull: { 'Issues': { issue_id: issue_id } } })
 }
@@ -109,5 +113,6 @@ module.exports = {
     removeMemberFromProject,
     removeProjectFromUser,
     inviteUser,
-    updateProjectDetails
+    updateProjectDetails,
+    updateIssues,
 }

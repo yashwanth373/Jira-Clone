@@ -134,4 +134,9 @@ export class DataService {
     console.log("updating backlog",project_id,backlog)
     return this.http.put("/updateBacklog/" + project_id, { backlog : backlog})
   }
+
+  updateIssues(project_id : any,issues : any){
+    console.log("updating issues",project_id,issues)
+    return this.http.put("/updateIssues/" + project_id, { Issues : issues})
+  }
 }

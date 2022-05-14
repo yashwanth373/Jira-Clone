@@ -14,6 +14,7 @@ import { MembersComponent } from './members/members.component';
 import { SettingsComponent } from './settings/settings.component';
 import { AccessGuard } from './access.guard';
 import { BacklogComponent } from './backlog/backlog.component';
+import { IssuesComponent } from './issues/issues.component';
 
 export const routingConfiguration: ExtraOptions = {
   paramsInheritanceStrategy: 'always'
@@ -34,6 +35,7 @@ const routes: Routes = [
           { path: '', redirectTo: 'board', pathMatch: 'full' },
           {path: 'board', component: ProjectboardComponent, canActivate: [AuthGuard,AccessGuard]},
           {path: 'backlog', component: BacklogComponent, canActivate: [AuthGuard,AccessGuard]},
+          {path: 'issues', component: IssuesComponent, canActivate: [AuthGuard,AccessGuard]},
           {path: 'code', component: CodeComponent, canActivate: [AuthGuard,AccessGuard]},
           {path: 'members', component: MembersComponent, canActivate: [AuthGuard,AccessGuard]},
           {path: 'settings', component: SettingsComponent, canActivate: [AuthGuard,AccessGuard]},
