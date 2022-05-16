@@ -468,30 +468,32 @@ export class ProjectboardComponent implements OnInit {
 
   ngOnInit(): void {
     let projectId = this.route.snapshot.paramMap.get('projectId');
-    console.log('board project id', this.route);
     this._dsService.getProjectDetails(projectId).subscribe((data: any) => {
       console.log('board api call', data);
       this.project = data.data;
       if (this.project.Sprint != null) {
         this.prepareActiveSprint();
-        console.log('board active sprint', this.activeSprint);
 
         for (var i = 0; i < this.project.board.length; i++) {
           this.connections.push('section' + i);
           this.stagingArea.push(this.project.board[i]);
         }
       }
-      // else{
-      //   this.router.navigate(['../ProjectsList']);
-      // }
+      else{
+        this.activeSprint = {
+          started: false,
+          completed: false,
+          issues: [],
+          sprint_id: 'sprint' + Date.now(),
+        };
+      }
     });
   }
 
   prepareActiveSprint() {
-    // Selecting Active Sprint from all sprints
     if (
-      this.project.Sprint.started == true &&
-      this.project.Sprint.completed == false
+      this.project.Sprint.sprint_name &&
+      this.project.Sprint.sprint_name !== ''
     ) {
       this.activeSprint = this.project.Sprint;
       let now = new Date();
@@ -503,7 +505,9 @@ export class ProjectboardComponent implements OnInit {
       let timestamp = startOfDay / 1;
       this.activeSprint.remainingTime =
         (this.activeSprint.endDate - timestamp) / (1000 * 60 * 60 * 24);
-
+      this.activeSprint.remainingTime = Math.round(
+        this.activeSprint.remainingTime
+      );
       this.seperateIssues();
       this.groupBy('None');
     }
@@ -518,9 +522,7 @@ export class ProjectboardComponent implements OnInit {
     if (this.activeSprint.issues != null) {
       // Arranging issues in the active sprint according to their statuses
       for (var i = 0; i < this.activeSprint.issues.length; i++) {
-        let issue = this.project.Issues.filter(
-          (issue: any) => issue.issue_id === this.activeSprint.issues[i]
-        )[0];
+        let issue = this.activeSprint.issues[i];
         this.activeSprint[issue.status].push(issue);
       }
     }
@@ -878,28 +880,28 @@ export class ProjectboardComponent implements OnInit {
     }
   }
 
-  completeSprint() {
-    this.activeSprint.completed = true;
-    this.activeSprint.completedAt = Date.now();
-    this.activeSprint.completedAtHR = this.HRDateFormat(
-      this.activeSprint.completedAt,
-      false
-    );
-    this._dsService
-      .updateSprint(this.project.project_id, this.activeSprint)
-      .subscribe((data: any) => {
-        console.log(data);
-      });
-    this.activeSprint = null;
-    //update sprint status in this.project.Sprint
-    this.project.Sprint = this.project.Sprint.map((sprint: any) => {
-      if (sprint.sprint_id === this.activeSprint.sprint_id) {
-        sprint.completed = true;
-        sprint.completedAt = Date.now();
-        sprint.completedAtHR = this.HRDateFormat(sprint.completedAt, false);
-      }
-      return sprint;
-    });
-    this.prepareActiveSprint();
-  }
+  // completeSprint() {
+  //   this.activeSprint.completed = true;
+  //   this.activeSprint.completedAt = Date.now();
+  //   this.activeSprint.completedAtHR = this.HRDateFormat(
+  //     this.activeSprint.completedAt,
+  //     false
+  //   );
+  //   this._dsService
+  //     .updateSprint(this.project.project_id, this.activeSprint)
+  //     .subscribe((data: any) => {
+  //       console.log(data);
+  //     });
+  //   this.activeSprint = null;
+  //   //update sprint status in this.project.Sprint
+  //   this.project.Sprint = this.project.Sprint.map((sprint: any) => {
+  //     if (sprint.sprint_id === this.activeSprint.sprint_id) {
+  //       sprint.completed = true;
+  //       sprint.completedAt = Date.now();
+  //       sprint.completedAtHR = this.HRDateFormat(sprint.completedAt, false);
+  //     }
+  //     return sprint;
+  //   });
+  //   this.prepareActiveSprint();
+  // }
 }

@@ -514,3 +514,121 @@ th {
 .create-project-create-button:active {
   background-color: #0747a6;
 }
+
+#deleteProjectModal .modal-dialog{
+  max-width: 500px;
+  
+}
+
+.modal-content-delete {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.2);
+    border-radius: 0.3rem;
+    outline: 0;
+    margin-top: 3rem;
+    height: fit-content;
+}
+
+.modal-body-delete {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 1rem;
+}
+
+.details-modal-body-head {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details-modal-body-head-title {
+    font-size: 1.4rem;
+    font-weight: 500;
+    font-family: Roboto, sans-serif;
+    margin-bottom: 2%;
+}
+
+.details-modal-body-head-subtitle {
+    font-size: 0.8rem;
+    font-weight: 400;
+    font-family: Roboto, sans-serif;
+    color: #6b778c;
+}
+
+.details-modal-body-footer {
+    width: 100%;
+    height: 15%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.big-footer{
+    height: 35%;
+}
+
+.details-modal-body-footer-cancel-button {
+    width: 70px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    transition: background-color 0.2s ease-in-out 0s,
+        border-color 0.2s ease-in-out 0s;
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: Roboto, sans-serif;
+    background-color: rgba(9, 30, 66, 0.04);
+    text-align: center;
+    color: #42526e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2%;
+}
+
+.details-modal-body-footer-cancel-button:hover {
+    background-color: rgba(9, 30, 66, 0.08);
+    color: #42526e;
+    cursor: pointer;
+}
+
+.details-modal-body-footer-cancel-button:active {
+    background-color: rgba(179, 212, 255, 0.6);
+    color: #0052cc;
+}
+
+.details-modal-body-footer-delete-button {
+    width: 65px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    transition: background-color 0.2s ease-in-out 0s,
+        border-color 0.2s ease-in-out 0s;
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: Roboto, sans-serif;
+    background-color: rgba(9, 30, 66, 0.04);
+    text-align: center;
+    background-color: #de350b;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2%;
+}
+
+.details-modal-body-footer-delete-button:hover {
+    cursor: pointer;
+    background-color: #b32c0a;
+}

@@ -240,11 +240,53 @@
                           <li *ngIf="project.isOwner">
                             <span
                               class="dropdown-item delete-project"
-                              (click)="deleteProject(project.id)"
+                              data-bs-target="#deleteProjectModal"
+                              data-bs-toggle="modal"
                               >Move to Trash
                             </span>
                           </li>
                         </ul>
+                      </div>
+                      <div
+                        class="modal fade"
+                        id="deleteProjectModal"
+                        tabindex="-1"
+                        aria-labelledby="deleteProjectModalLabel"
+                        aria-hidden="true"
+                      >
+                        <div class="modal-dialog">
+                          <div class="modal-content-delete">
+                            <div class="modal-body-delete">
+                              <div class="details-modal-body-head">
+                                <div class="details-modal-body-head-title">
+                                  Delete Project
+                                </div>
+                                <div
+                                  class="details-modal-body-head-subtitle"
+                                >
+                                  Deleting a project is not reversible.
+                                </div>
+                              </div>
+                              <div
+                                class="details-modal-body-footer big-footer"
+                              >
+                                <div
+                                  class="details-modal-body-footer-cancel-button"
+                                  data-bs-dismiss="modal"
+                                  #closeDeleteProjectModal
+                                >
+                                  Cancel
+                                </div>
+                                <div
+                                  class="details-modal-body-footer-delete-button"
+                                  (click)="deleteProject(project.id)"
+                                >
+                                  Delete
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </td>
                   </ng-template>

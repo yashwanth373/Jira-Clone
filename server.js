@@ -99,18 +99,25 @@ app.get("/authenticate", (req, res) => {
 ////////////////////////////////// authorize user
 
 app.get("/authorize/:project_id", isLoggedIn, async (req, res) => {
-    let { members } = await db.getProjectDetails(req.params.project_id)
+    let result = await db.getProjectDetails(req.params.project_id)
 
-    let userId = req.user.id
-
-    let isMember = members.findIndex(member => member.user_id === userId) >= 0 ? true : false
-
-    if (isMember) {
-        res.json({ authorize: true })
+    if(result !== null){
+        let members = result.members
+        let userId = req.user.id
+    
+        let isMember = members.findIndex(member => member.user_id === userId) >= 0 ? true : false
+    
+        if (isMember) {
+            res.json({ authorize: true })
+        }
+        else {
+            res.json({ authorize: false })
+        }
     }
-    else {
+    else{
         res.json({ authorize: false })
     }
+
 })
 
 
@@ -514,6 +521,7 @@ app.put("/updateProjectDetails/:project_id", isLoggedIn, upload.single("projectI
 
 app.put("/updateIssue/:project_id", isLoggedIn, async (req, res) => {
     let result = await db.replaceIssue(req.params.project_id, req.body.issue)
+    let result2 = await db.replaceIssueInSprint(req.params.project_id,req.body.issue)
     if (result.modifiedCount) {
         res.json({ status: "success" })
     }

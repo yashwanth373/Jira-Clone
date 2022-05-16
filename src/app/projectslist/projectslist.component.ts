@@ -5,148 +5,149 @@ import { DataService } from '../data.service';
 @Component({
   selector: 'app-projectslist',
   templateUrl: './projectslist.component.html',
-  styleUrls: ['./projectslist.component.css']
+  styleUrls: ['./projectslist.component.css'],
 })
 export class ProjectslistComponent implements OnInit {
+  constructor(private _dataService: DataService, private router: Router) {
+    console.log('ProjectsList constructor');
+  }
 
-  constructor(private _dataService : DataService, private router : Router) {
-    console.log("ProjectsList constructor")
-   }
+  projectList: any = null;
 
-  projectList : any = null;
+  searchQuery: any = null;
 
-  searchQuery : any = null;
+  newProjectName: any = null;
 
-  newProjectName : any = null;
+  newProjectKey: any = null;
 
-  newProjectKey : any = null;
+  showEmptyNameError: boolean = false;
 
-  showEmptyNameError : boolean = false;
+  showNameTakenError: boolean = false;
 
-  showNameTakenError : boolean = false;
-
-  showEmptyKeyError : boolean = false;
+  showEmptyKeyError: boolean = false;
 
   @ViewChild('close') closebtn: ElementRef | undefined;
 
-  NameSubtitle : any = "Project Name should be unique among all your projects.";
+  @ViewChild('closeDeleteProjectModal') closeDeleteProjectModalbtn: ElementRef | undefined;
 
-  KeySubtitle : any = "Project key will be used as a prefix for all issues/tasks.";
+  NameSubtitle: any = 'Project Name should be unique among all your projects.';
+
+  KeySubtitle: any =
+    'Project key will be used as a prefix for all issues/tasks.';
 
   ngOnInit(): void {
-    this.getProjectsList()
+    this.getProjectsList();
   }
 
-  getProjectsList(){
-    this._dataService.getProjectsList().subscribe((data : any) => {
+  getProjectsList() {
+    this._dataService.getProjectsList().subscribe((data: any) => {
       this.projectList = data.data;
-      this.projectList.forEach((project : any) => {
-        if(project.owner_img === null)
-          project.dummy_img = this.createDummyImage(project.owner_name)
+      this.projectList.forEach((project: any) => {
+        if (project.owner_img === null)
+          project.dummy_img = this.createDummyImage(project.owner_name);
       });
-      console.log("ProjectsList ", this.projectList)
-    })
+      console.log('ProjectsList ', this.projectList);
+    });
   }
 
-  getInitialKey(){
-    if(this.newProjectName.length > 2) 
-      this.newProjectKey = this.newProjectName.substring(0,3).toUpperCase()
-    if(this.newProjectName === "")
-      this.newProjectKey = ""
-    if(this.newProjectName === null)
-      this.newProjectKey = null
+  getInitialKey() {
+    if (this.newProjectName.length > 2)
+      this.newProjectKey = this.newProjectName.substring(0, 3).toUpperCase();
+    if (this.newProjectName === '') this.newProjectKey = '';
+    if (this.newProjectName === null) this.newProjectKey = null;
   }
 
-  refresh(){
+  refresh() {
     this.newProjectName = null;
     this.newProjectKey = null;
     this.showEmptyNameError = false;
     this.showNameTakenError = false;
   }
 
-  updateNameSubtitle(){
-    if(this.showEmptyNameError)
-      this.NameSubtitle = "Please enter a valid project name."
-    if(this.showNameTakenError)
-      this.NameSubtitle =  "Project name is already taken."
+  updateNameSubtitle() {
+    if (this.showEmptyNameError)
+      this.NameSubtitle = 'Please enter a valid project name.';
+    if (this.showNameTakenError)
+      this.NameSubtitle = 'Project name is already taken.';
   }
 
-  updateKeySubtitle(){
-    if(this.showEmptyKeyError)
-      this.KeySubtitle = "Please enter a valid project key."
+  updateKeySubtitle() {
+    if (this.showEmptyKeyError)
+      this.KeySubtitle = 'Please enter a valid project key.';
   }
 
-  createDummyImage(name : string){
-    let words = name.split(" ")
-    let initials = ""
-    for(var i = 0;i<words.length;i++){
-      initials.concat(words[i].charAt(0).toUpperCase())
+  createDummyImage(name: string) {
+    let words = name.split(' ');
+    let initials = '';
+    for (var i = 0; i < words.length; i++) {
+      initials.concat(words[i].charAt(0).toUpperCase());
     }
-    return initials
+    return initials;
   }
 
-  createProject(){
-    if(this.newProjectName === null || this.newProjectName.length === 0){
-      this.showEmptyNameError = true
-      this.updateNameSubtitle()
-    }
-    else{
-      this.showEmptyNameError = false
+  createProject() {
+    if (this.newProjectName === null || this.newProjectName.length === 0) {
+      this.showEmptyNameError = true;
+      this.updateNameSubtitle();
+    } else {
+      this.showEmptyNameError = false;
       let NameExists = this.checkNameExists();
 
-      if(NameExists){
-        this.showNameTakenError = true
-        this.updateNameSubtitle()
+      if (NameExists) {
+        this.showNameTakenError = true;
+        this.updateNameSubtitle();
+      } else {
+        this.showNameTakenError = false;
       }
-      else{
-        this.showNameTakenError = false
-      }
-
     }
-    if(this.newProjectKey === null || this.newProjectKey.length === 0){
-      this.showEmptyKeyError = true
-      this.updateKeySubtitle()
+    if (this.newProjectKey === null || this.newProjectKey.length === 0) {
+      this.showEmptyKeyError = true;
+      this.updateKeySubtitle();
     }
-    if(!this.showEmptyKeyError && !this.showEmptyNameError && !this.showNameTakenError){
-      
-
-      this._dataService.createProject(this.newProjectName, this.newProjectKey.toUpperCase()).subscribe((data : any) => {
-        if(data.status === "success"){
-          this.closebtn?.nativeElement.click();
-          this.getProjectsList()
-        } 
-      })
-      
+    if (
+      !this.showEmptyKeyError &&
+      !this.showEmptyNameError &&
+      !this.showNameTakenError
+    ) {
+      this._dataService
+        .createProject(this.newProjectName, this.newProjectKey.toUpperCase())
+        .subscribe((data: any) => {
+          if (data.status === 'success') {
+            this.closebtn?.nativeElement.click();
+            this.getProjectsList();
+          }
+        });
     }
   }
 
-  checkNameExists(){
-    console.log(this.projectList)
-    for(var i=0;i<this.projectList.length;i++){
-      if(this.projectList[i].name === this.newProjectName){
-        return true
+  checkNameExists() {
+    console.log(this.projectList);
+    for (var i = 0; i < this.projectList.length; i++) {
+      if (this.projectList[i].name === this.newProjectName) {
+        return true;
       }
     }
-    return false
+    return false;
   }
 
-  deleteProject(i : any){
-    var removeIndex = this.projectList.map((item : any) => item.id).indexOf(i);
+  deleteProject(i: any) {
+    var removeIndex = this.projectList.map((item: any) => item.id).indexOf(i);
 
-    this._dataService.deleteProject(i).subscribe((data : any) => {
-      if(data.status === "success"){
+    this.closeDeleteProjectModalbtn?.nativeElement.click();
+
+    this._dataService.deleteProject(i).subscribe((data: any) => {
+      if (data.status === 'success') {
         this.projectList.splice(removeIndex, 1);
       }
-    })
+    });
   }
 
-  gotoProject(i : any){
-    this.router.navigate(['/Projects/' + i])
+  gotoProject(i: any) {
+    this.router.navigate(['/Projects/' + i]);
   }
 
-  gotoSettings(i :any){
+  gotoSettings(i: any) {
     // this.router.navigate(['/Settings/' + i])
-    console.log("Settings routing")
+    console.log('Settings routing');
   }
-
 }

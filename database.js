@@ -56,6 +56,10 @@ function replaceIssue(project_id, issue) {
     return client.db('JIRAClone').collection('projects').findOneAndUpdate({ project_id: project_id, 'Issues.issue_id': issue.issue_id }, { $set: { 'Issues.$': issue } })
 }
 
+function replaceIssueInSprint(project_id,issue){
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id, 'Sprint.issues.issue_id' : issue.issue_id }, { $set: { 'Sprint.issues.$': issue } })
+}
+
 function updateProjectDetails(project_id, project_name, project_key, projectIcon) {
     return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $set: { project_name: project_name, project_key: project_key, icon: projectIcon } })
 }
@@ -105,6 +109,7 @@ module.exports = {
     createProject,
     updateUserProjects,
     replaceIssue,
+    replaceIssueInSprint,
     deleteIssueFromProject,
     deleteIssueFromSprint,
     updateBoard,
