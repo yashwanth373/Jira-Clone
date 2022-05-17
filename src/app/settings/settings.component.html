@@ -144,7 +144,7 @@
         <div class="project-details-label">Development</div>
         <div
           class="project-details-noedit code-status"
-          *ngIf="projectDetails.code; else notconnected"
+          *ngIf="projectDetails.code.repo; else notconnected"
         >
           Connected
         </div>

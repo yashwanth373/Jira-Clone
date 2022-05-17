@@ -473,11 +473,6 @@ export class ProjectboardComponent implements OnInit {
       this.project = data.data;
       if (this.project.Sprint != null) {
         this.prepareActiveSprint();
-
-        for (var i = 0; i < this.project.board.length; i++) {
-          this.connections.push('section' + i);
-          this.stagingArea.push(this.project.board[i]);
-        }
       }
       else{
         this.activeSprint = {
@@ -486,6 +481,10 @@ export class ProjectboardComponent implements OnInit {
           issues: [],
           sprint_id: 'sprint' + Date.now(),
         };
+      }
+      for (var i = 0; i < this.project.board.length; i++) {
+        this.connections.push('section' + i);
+        this.stagingArea.push(this.project.board[i]);
       }
     });
   }

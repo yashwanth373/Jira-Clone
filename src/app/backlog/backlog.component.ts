@@ -846,7 +846,7 @@ export class BacklogComponent implements OnInit {
     this.project.Sprint.sprint_name = this.sprintName;
     // this.project.Sprint.sprint_id = 'sprint' + Date.now();
     this.project.Sprint.startDate = this.startDate?.value.valueOf();
-    this.project.Sprint.endDate = this.endDate?.value.valueOf();
+    this.project.Sprint.endDate = this.endDate?.value.valueOf() + 86399000;
     let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
     // let backlogIssues = this.project.backlog.map(
     //   (issue: any) => issue.issue_id

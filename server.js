@@ -123,9 +123,14 @@ app.get("/authorize/:project_id", isLoggedIn, async (req, res) => {
 
 ////////////////////////////////////////////////////////////// OAUTH ///////////////////////////////////////////////////////////////////////
 
+const redirectURL = (req,res,next) => {
+    req.session.redirectTo = req.params.redirectTo
+    next()
+}
+
 //////////////////////////////////////////////////////// OAuth using google
 
-app.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/googleauth/:redirectTo', redirectURL,passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 app.get('/google/callback', passport.authenticate('google', { failureRedirect: '/' }),
     async function (req, res) {
@@ -133,8 +138,7 @@ app.get('/google/callback', passport.authenticate('google', { failureRedirect: '
 
         let result = await db.findUser(req.user.id)
         if (result) {
-            console.log("exists", result)
-            res.redirect('/Projects');
+            res.redirect(req.session.redirectTo);
         }
         else {
             let userDocument = {
@@ -222,22 +226,6 @@ app.get("/logout", (req, res) => {
     req.session = null;
     req.logout();
     res.redirect('/');
-})
-
-////////////////////////////////////////////////////////// Mailing APIs //////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////// Sending invite for a project
-
-app.post("/sendInvite", isLoggedIn, async (req, res) => {
-
-})
-
-app.post("/revokeAccess", isLoggedIn, async (req, res) => {
-
-})
-
-app.post("/alert", async (req, res) => {
-
 })
 
 ////////////////////////////////////////////////////////// DB operations ///////////////////////////////////////////////////////////

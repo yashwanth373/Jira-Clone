@@ -19,8 +19,8 @@ export class DataService {
     return this.http.get("/authorize/" + project_id)
   }
 
-  loginGoogle () {
-    window.open('/google','_self')
+  loginGoogle (redirectUrl : any) {
+    window.open('/googleauth/'+encodeURIComponent(redirectUrl), '_self');
   }
 
   loginMicrosoft (){

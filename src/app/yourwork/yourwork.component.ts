@@ -81,8 +81,8 @@ export class YourworkComponent implements OnInit {
         this.router.navigate(['/Projects/' + id])
         console.log('gotoProject ',id)
         break;
-      case 'roadmap' :
-        this.router.navigate(['/Projects/' + id+'/roadmap'])
+      case 'backlog' :
+        this.router.navigate(['/Projects/' + id+'/backlog'])
         console.log("roadmap");
         break;
       case 'code' :

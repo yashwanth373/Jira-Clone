@@ -28,6 +28,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IssueSearchPipe } from './issue-search.pipe';
 import { BacklogComponent } from './backlog/backlog.component';
 import { IssuesComponent } from './issues/issues.component';
+import { InvitationComponent } from './invitation/invitation.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { IssuesComponent } from './issues/issues.component';
     SettingsComponent,
     IssueSearchPipe,
     BacklogComponent,
-    IssuesComponent
+    IssuesComponent,
+    InvitationComponent
   ],
   imports: [
     AppRoutingModule,
