@@ -471,10 +471,19 @@ export class ProjectboardComponent implements OnInit {
     this._dsService.getProjectDetails(projectId).subscribe((data: any) => {
       console.log('board api call', data);
       this.project = data.data;
-      if (this.project.Sprint != null) {
+      let now = new Date();
+      let startOfDay: any = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+      );
+      let timestamp = startOfDay / 1;
+      if (
+        this.project.Sprint != null &&
+        this.project.Sprint.endDate >= timestamp
+      ) {
         this.prepareActiveSprint();
-      }
-      else{
+      } else {
         this.activeSprint = {
           started: false,
           completed: false,

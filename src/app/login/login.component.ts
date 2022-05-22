@@ -12,19 +12,34 @@ export class LoginComponent implements OnInit {
   constructor(private _dataService : DataService,private route : ActivatedRoute) { }
 
   ngOnInit(): void {
-    console.log(this.route.snapshot.queryParams);
+    console.log("login component returnUrl",this.route.snapshot.queryParams);
   }
 
   loginGoogle(){
-    this._dataService.loginGoogle(this.route.snapshot.queryParams['returnUrl']);
+    if(this.route.snapshot.queryParams['returnUrl'] != null){
+      this._dataService.loginGoogle(this.route.snapshot.queryParams['returnUrl']);
+    }
+    else{
+      this._dataService.loginGoogle(' ');
+    }
   }
 
   loginMicrosoft(){
-    this._dataService.loginMicrosoft();
+    if(this.route.snapshot.queryParams['returnUrl'] != null){
+      this._dataService.loginMicrosoft(this.route.snapshot.queryParams['returnUrl']);
+    }
+    else{
+      this._dataService.loginMicrosoft(' ');
+    }
   }
 
   loginGithub(){
-    this._dataService.loginGithub();
+    if(this.route.snapshot.queryParams['returnUrl'] != null){
+      this._dataService.loginGithub(this.route.snapshot.queryParams['returnUrl']);
+    }
+    else{
+      this._dataService.loginGithub(' ');
+    }
   }
 
 }

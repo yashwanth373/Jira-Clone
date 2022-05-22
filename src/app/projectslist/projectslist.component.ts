@@ -147,7 +147,7 @@ export class ProjectslistComponent implements OnInit {
   }
 
   gotoSettings(i: any) {
-    // this.router.navigate(['/Settings/' + i])
+    this.router.navigate(['/Projects/' + i + '/settings']);
     console.log('Settings routing');
   }
 }

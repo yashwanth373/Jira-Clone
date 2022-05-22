@@ -97,7 +97,19 @@ function removeProjectFromUser(user_id, project_id) {
 }
 
 function inviteUser(project_id, mails) {
-    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $push: { 'invited': { $each: mails } } })
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $addToSet: { 'invited': { $each: mails } } })
+}
+
+function addMember(project_id, user) {
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $addToSet: { 'members': user } })
+}
+
+function addProject(user_id,project_id){
+    return client.db('JIRAClone').collection('users').updateOne({ user_id: user_id }, { $addToSet: { projects: project_id } })
+}
+
+function removeInvitedUser(project_id, email) {
+    return client.db('JIRAClone').collection('projects').updateOne({ project_id: project_id }, { $pull: { 'invited': email } })
 }
 
 module.exports = {
@@ -118,6 +130,9 @@ module.exports = {
     removeMemberFromProject,
     removeProjectFromUser,
     inviteUser,
+    addMember,
+    addProject,
+    removeInvitedUser,
     updateProjectDetails,
     updateIssues,
 }

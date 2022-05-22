@@ -124,6 +124,7 @@ app.get("/authorize/:project_id", isLoggedIn, async (req, res) => {
 ////////////////////////////////////////////////////////////// OAUTH ///////////////////////////////////////////////////////////////////////
 
 const redirectURL = (req,res,next) => {
+    console.log("Params",req.params)
     req.session.redirectTo = req.params.redirectTo
     next()
 }
@@ -160,7 +161,7 @@ app.get('/google/callback', passport.authenticate('google', { failureRedirect: '
 
 /////////////////////////////////////////////////////////////// OAuth using Microsoft
 
-app.get('/microsoft', passport.authenticate('microsoft'));
+app.get('/microsoftauth/:redirectTo', redirectURL, passport.authenticate('microsoft'));
 
 app.get('/microsoft/callback', passport.authenticate('microsoft', { failureRedirect: '/' }),
     async function (req, res) {
@@ -168,7 +169,7 @@ app.get('/microsoft/callback', passport.authenticate('microsoft', { failureRedir
         let result = await db.findUser(req.user.id)
         if (result) {
             console.log("exists", result)
-            res.redirect('/Projects');
+            res.redirect(req.session.redirectTo);
         }
         else {
             let userDocument = {
@@ -191,7 +192,7 @@ app.get('/microsoft/callback', passport.authenticate('microsoft', { failureRedir
 
 //////////////////////////////////////////////////////////////////////// OAUTH using Github
 
-app.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+app.get('/githubauth/:redirectTo', redirectURL, passport.authenticate('github', { scope: ['user:email'] }));
 
 app.get('/github/callback', passport.authenticate('github', { failureRedirect: '/' }),
     async function (req, res) {
@@ -199,7 +200,7 @@ app.get('/github/callback', passport.authenticate('github', { failureRedirect: '
         let result = await db.findUser(req.user.id)
         if (result) {
             console.log("exists", result)
-            res.redirect('/Projects');
+            res.redirect(req.session.redirectTo);
         }
         else {
             let userDocument = {
@@ -320,15 +321,17 @@ app.get("/getProjectsMembers", isLoggedIn, async (req, res) => {
 
 app.get("/getYourWork", isLoggedIn, async (req, res) => {
     const { projects } = await db.findUser(req.user.id)
+    console.log(projects)
     if (projects.length > 0) {
         let work = []
         async.each(projects, async (project_id, done) => {
             let project = await db.getProjectDetails(project_id)
+            console.log(project)
             work.push({
                 project_id: project.project_id,
                 project_name: project.project_name,
                 icon: project.icon,
-                issues: project.Issues.filter((issue) => issue.Assignee == req.user.id),
+                issues: project.Issues.filter((issue) => issue.assignee.user_id === req.user.id),
                 modifiedAt: project.modifiedAt
             })
         },
@@ -379,7 +382,8 @@ app.get("/getProjectDetails/:project_id", isLoggedIn, async (req, res) => {
             Sprint: project.Sprint,
             Issues: project.Issues,
             code: project.code,
-            backlog:project.backlog
+            backlog:project.backlog,
+            invited: project.invited
         }
         res.json({ data: result })
     }
@@ -553,6 +557,25 @@ app.put("/updateBacklog/:project_id", isLoggedIn, async (req, res) => {
 app.put("/updateIssues/:project_id", isLoggedIn, async (req, res) => {
     let result = await db.updateIssues(req.params.project_id, req.body.Issues)
     if (result.modifiedCount) {
+        res.json({ status: "success" })
+    }
+    else
+        res.json({ status: "failure" })
+})
+
+////////////////////////////////////////////////////////////////// Updating members of a specific project
+
+app.put("/acceptInvite/:project_id", isLoggedIn, async (req, res) => {
+    // remove user email from invited list
+    let result = await db.removeInvitedUser(req.params.project_id, req.body.email)
+
+    // add user details to project members list
+    let result2 = await db.addMember(req.params.project_id, req.body)
+
+    // add project id to user projects list
+    let result3 = await db.addProject(req.body.user_id, req.params.project_id)
+
+    if (result.modifiedCount && result2.modifiedCount && result3.modifiedCount) {
         res.json({ status: "success" })
     }
     else

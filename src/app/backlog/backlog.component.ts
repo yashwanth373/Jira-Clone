@@ -944,6 +944,7 @@ export class BacklogComponent implements OnInit {
   }
 
   prepareNewIssue(type: any) {
+    console.log(this.user)
     this.createIssueTemplateDueDate = new FormControl(moment());
     if (type === 'sprint') {
       this.createIssueTemplate = {
@@ -983,6 +984,7 @@ export class BacklogComponent implements OnInit {
         },
         modifiedAt: +Date.now(),
       };
+      console.log("Create ISsues template assignee",this.createIssueTemplate.assignee)
     } else if (type === 'backlog') {
       this.createIssueTemplate = {
         issue_id: +Date.now(),

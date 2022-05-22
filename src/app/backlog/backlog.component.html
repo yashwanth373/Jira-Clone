@@ -1076,9 +1076,9 @@
                     <img
                       [src]="selectedIssue?.assignee.img"
                       alt=""
-                      *ngIf="selectedIssue?.assignee.img; else noImgIcon"
+                      *ngIf="selectedIssue?.assignee.img; else noImgIcon1"
                     />
-                    <ng-template #noImgIcon>
+                    <ng-template #noImgIcon1>
                       <div class="issue-assignee-no-img">
                         {{ selectedIssue?.assignee.dummy_img }}
                       </div>
@@ -1102,10 +1102,10 @@
                               alt=""
                               *ngIf="
                                 updatedSelectedIssue?.assignee.img;
-                                else noImgIcon
+                                else noImgIcon2
                               "
                             />
-                            <ng-template #noImgIcon>
+                            <ng-template #noImgIcon2>
                               <div class="issue-assignee-no-img">
                                 {{ updatedSelectedIssue?.assignee.dummy_img }}
                               </div>
@@ -1134,9 +1134,9 @@
                               <img
                                 [src]="assignee.img"
                                 alt=""
-                                *ngIf="assignee.img; else noImgIcon"
+                                *ngIf="assignee.img; else noImgIcon3"
                               />
-                              <ng-template #noImgIcon>
+                              <ng-template #noImgIcon3>
                                 <div class="issue-assignee-no-img">
                                   {{ assignee.dummy_img }}
                                 </div>
@@ -1189,9 +1189,9 @@
                     <img
                       [src]="selectedIssue?.reporter.img"
                       alt=""
-                      *ngIf="selectedIssue?.reporter.img; else noImgIcon"
+                      *ngIf="selectedIssue?.reporter.img; else noImgIcon4"
                     />
-                    <ng-template #noImgIcon>
+                    <ng-template #noImgIcon4>
                       <div class="issue-assignee-no-img">
                         {{ selectedIssue?.reporter.dummy_img }}
                       </div>
@@ -1529,12 +1529,12 @@
                             alt=""
                             *ngIf="
                               createIssueTemplate?.assignee.img;
-                              else noImgIcon
+                              else noImgIcon5
                             "
                           />
-                          <ng-template #noImgIcon>
+                          <ng-template #noImgIcon5>
                             <div class="issue-assignee-no-img">
-                              {{ createIssueTemplate?.assignee.dummy_img }}
+                              {{ createIssueTemplate?.assignee?.dummy_img }}
                             </div>
                           </ng-template>
                           {{ createIssueTemplate?.assignee.name }}
@@ -1561,9 +1561,9 @@
                             <img
                               [src]="assignee.img"
                               alt=""
-                              *ngIf="assignee.img; else noImgIcon"
+                              *ngIf="assignee.img; else noImgIcon6"
                             />
-                            <ng-template #noImgIcon>
+                            <ng-template #noImgIcon6>
                               <div class="issue-assignee-no-img">
                                 {{ assignee.dummy_img }}
                               </div>
@@ -1615,9 +1615,9 @@
                     <img
                       [src]="createIssueTemplate?.reporter.img"
                       alt=""
-                      *ngIf="createIssueTemplate?.reporter.img; else noImgIcon"
+                      *ngIf="createIssueTemplate?.reporter.img; else noImgIcon7"
                     />
-                    <ng-template #noImgIcon>
+                    <ng-template #noImgIcon7>
                       <div class="issue-assignee-no-img">
                         {{ createIssueTemplate?.reporter.dummy_img }}
                       </div>

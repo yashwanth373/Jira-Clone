@@ -1,1 +1,60 @@
-<p>invitation works!</p>
+<div class="mycontainer">
+    <div class="invite-left">
+        <div class="invite-container" *ngIf="user && project">
+            <div class="already-member" *ngIf="user && project && alreadyMember;else invite">
+                <div class="invite-title">
+                    <span style="height:40%;display:flex;align-items:center;font-weight:400">You have been invited to the project</span>
+                    <span class="invite-project-name"> {{project.project_name}} </span>
+                </div>
+                <div class="invite-subtitle">
+                    Using JIRA Clone, you can easily collaborate with your teams
+                    and manage your projects in a single place.
+                </div>
+                <div class="invite-action">
+                    You are already a member of this project
+                    <span class="invalid-subtitle">Search for &nbsp; <i> <b style="color:rgb(139, 139, 139)"> {{project.project_name}} </b> </i> &nbsp; in Projects Section.</span>
+                </div>
+            </div>
+            <ng-template #invite>
+                <div class="invite-okay" *ngIf="user && project && invited;else notInvited">
+                    <div class="invite-title">
+                        <span style="height:40%;display:flex;align-items:center;font-weight:400">You have been invited to the project</span>
+                        <span class="invite-project-name"> {{project.project_name}} </span>
+                    </div>
+                    <div class="invite-subtitle">
+                        Using JIRA Clone, you can easily collaborate with your teams
+                        and manage your projects in a single place.
+                    </div>
+                    <div class="invite-action valid">
+                        <div class="invite-action-accept-btn" (click)="accept()">
+                            Accept Invitation
+                        </div>
+                    </div>
+                </div>
+                <ng-template #notInvited>
+                    <div class="invite-okay" *ngIf="user && project">
+                        <div class="invite-title">
+                            <span style="height:40%;display:flex;align-items:center;font-weight:400">You have been invited to the project</span>
+                            <span class="invite-project-name"> {{project.project_name}} </span>
+                        </div>
+                        <div class="invite-subtitle">
+                            Using JIRA Clone, you can easily collaborate with your teams
+                            and manage your projects in a single place.
+                        </div>
+                        <div class="invite-action invalid">
+                            Oops!! It seems this invite is invalid or expired <br>
+                            <span class="invalid-subtitle">Please login from the email you received the invite or Contact Project Manager</span>
+                        </div>
+                    </div>
+                </ng-template>
+    
+            </ng-template>
+        </div>
+    </div>
+    <div class="invite-right">
+        <img src="../../assets/project-invite.svg" alt="invite">
+
+
+        
+    </div>
+</div>

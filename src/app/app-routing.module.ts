@@ -31,6 +31,7 @@ const routes: Routes = [
       {path: 'your-work', component: YourworkComponent, canActivate: [AuthGuard]},
       {path: 'Projectslist', component: ProjectslistComponent, canActivate: [AuthGuard]},
       {path: 'people',component: PeoplelistComponent, canActivate: [AuthGuard]},
+      {path:"invitation/:projectId", component: InvitationComponent, canActivate: [AuthGuard]},
       {path: ':projectId', component: ProjectdashboardComponent, canActivate: [AuthGuard] ,
         children:[
           { path: '', redirectTo: 'board', pathMatch: 'full' },
@@ -40,7 +41,6 @@ const routes: Routes = [
           {path: 'code', component: CodeComponent, canActivate: [AuthGuard,AccessGuard]},
           {path: 'members', component: MembersComponent, canActivate: [AuthGuard,AccessGuard]},
           {path: 'settings', component: SettingsComponent, canActivate: [AuthGuard,AccessGuard]},
-          {path: 'invitation', component: InvitationComponent, canActivate: [AuthGuard,AccessGuard]},
         ]
       },
       // {path: '', redirectTo: 'your-work'}

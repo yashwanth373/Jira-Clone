@@ -1,0 +1,117 @@
+.mycontainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.invite-left{
+    width: 60%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.invite-container{
+    width: 85%;
+    height: 75%;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+    background-color: #fafbfc;
+    border-radius: 10px;
+    padding:3%;
+}
+
+.already-member, .invite-okay{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.invite-title{
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: #2c3e50;
+    width: 100%;
+    height: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.invite-project-name{
+    font-size:2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    height: 42%;
+    display: flex;
+    align-items: center;
+}
+
+.invite-subtitle{
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin-top:5%;
+    color: #2c3e50;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+}
+
+.invite-action{
+    width: 100%;
+    height: 35%;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #d1d1d1;
+    display: flex;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.invite-action-accept-btn{
+    width: 22%;
+    height: 22%;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #fafbfc;
+    background-color: #2c3e50;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.invite-action-accept-btn:hover{
+    background-color: #405264;
+    color: #fafbfc;
+    cursor: pointer;
+}
+
+.invalid{
+    color: #ff4c38;
+    font-weight: 500;
+}
+
+.invalid-subtitle{
+    font-family: 300;
+    font-size: 1rem;
+    margin-top:1%;
+}
+
+.invite-right{
+    width: 40%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.invite-right img{
+    width: 70%;
+}
