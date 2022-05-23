@@ -1,0 +1,49 @@
+.mycontainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.background-img{
+    width: 80%;
+    height: 80%;
+    position: fixed;
+}
+
+.background-img img{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+}
+
+.code-content{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.8);
+}
+
+.code-content-title{
+    font-size: 3rem;
+    line-height: 3rem;
+    font-weight: 500;
+    width: 90%;
+    height: 40%;
+    text-align: center;
+}
+.code-content-status{
+    font-size: 1.5rem;
+    font-weight: 500;
+    width: 100%;
+    height: 10%;
+    text-align: center;
+    font-style: italic;
+}
+
