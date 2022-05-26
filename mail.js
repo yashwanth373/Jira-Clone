@@ -18,7 +18,7 @@ transporter.verify().then(console.log).catch(console.error);
 
 function invite(project_id, project_name, inviter, mails) {
 
-    const message = "<h2>Hi</h2> <h3>You have been invited to join the project <b>" + project_name + "</b> by " + inviter + "</h3> <h3>Please click on the link below to accept the invitation</h3> <a href='http://localhost:4500/Projects/invitation/" + project_id + "'>Accept Invitation</a>";
+    const message = "<h2>Hi</h2> <h3>You have been invited to join the project <b>" + project_name + "</b> by " + inviter + "</h3> <h3>Please click on the link below to accept the invitation</h3> <a href='https://simple-jira.herokuapp.com/Projects/invitation/" + project_id + "'>Accept Invitation</a>";
 
     transporter.sendMail({
         from: '"Jira Clone Support" <jiraclone@gmail.com>', // sender address
