@@ -1,27 +1,94 @@
-# JiraClone
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.5.
+![Logo](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/c773cf83a74663a25cee0ab3e58fd5e5b5a59e3e/media/logo.svg)
+# JIRA Clone
 
-## Development server
+A simplified version of Atlassian's JIRA. Manage your personal or private project by inviting people to Jira Clone and distribute work effectively.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- OAuth using Google, Microsoft and Github accounts
+- SCRUM template based Projects
+- Custom Project Boards for Projects
+- Sprints and Issues Creation & Management
+- Invite Members to a project via E-mail
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Tech Stack
 
-## Running unit tests
+**Client:** Angular, Angular Material, Bootstrap
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+**Server:** Node, Express, MongoDB, Cloudinary
 
-## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Run Locally
 
-## Further help
+Clone the repository by running 
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+  git clone https://github.com/yashwanth373/Jira-Clone.git
+```
+
+Go to the project directory
+
+```bash
+  cd jira-clone
+```
+
+Install necessary modules for the project by running 
+
+```bash
+  npm install
+```
+
+Start the server by running
+
+```bash
+  npm start
+```
+
+
+## Screenshots
+
+#### Landing Page
+
+![App Screenshot](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/main/media/Home%20Page.jpg)
+
+#
+
+#### Your Work Page
+
+![App Screenshot](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/main/media/Your%20Work%20Page.jpg)
+
+#
+
+#### Projects List Page
+
+![App Screenshot](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/main/media/Projects%20List%20Page.jpg)
+
+#
+
+#### Project Board
+
+![App Screenshot](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/main/media/Project%20Board%20Page.jpg)
+
+#
+
+#### Project Backlog
+
+![App Screenshot](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/main/media/Project%20Backlog%20Page.jpg)
+
+#
+
+#### Project Members
+
+![App Screenshot](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/main/media/Project%20Members%20Page.jpg)
+## Authors
+
+- [@yashwanth373](https://github.com/yashwanth373)
+
+
+## Support
+
+For any doubts regarding project, feel free to contact me on jyashwanthreddy373@gmail.com. 😊
+

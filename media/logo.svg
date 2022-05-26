@@ -3,6 +3,7 @@
             xmlns="http://www.w3.org/2000/svg"
             focusable="false"
             aria-hidden="true"
+		style="background-color:#FFFFFF"
           >
             <defs>
               <linearGradient
