@@ -1,5 +1,5 @@
 
-![Logo](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/c773cf83a74663a25cee0ab3e58fd5e5b5a59e3e/media/logo.svg)
+![Logo](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/f58b6b68a5af7f135845f116b41c846a8aeb191b/media/logo.svg)
 # JIRA Clone
 
 A simplified version of Atlassian's JIRA. Manage your personal or private project by inviting people to Jira Clone and distribute work effectively.
