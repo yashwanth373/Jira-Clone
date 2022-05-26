@@ -642,7 +642,7 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "dist/jira-clone/index.html"))
 })
 
-app.listen(process.env.PORT || 4500, '0.0.0.0', () => {
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
     console.log('Server is running on port 4500');
 })
 
