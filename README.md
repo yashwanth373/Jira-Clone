@@ -9,7 +9,7 @@ A simplified version of Atlassian's JIRA. Manage your personal or private projec
 
 - OAuth using Google, Microsoft and Github accounts
 - SCRUM template based Projects
-- Custom Project Boards for Projects
+- Custom Boards for Projects
 - Sprints and Issues Creation & Management
 - Invite Members to a project via E-mail
 
@@ -77,6 +77,12 @@ Start the server by running
 #### Project Backlog
 
 ![App Screenshot](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/main/media/Project%20Backlog%20Page.jpg)
+
+#
+
+#### Issue Modal
+
+![App Screenshot](https://raw.githubusercontent.com/yashwanth373/Jira-Clone/main/media/Issue%20Modal.jpg)
 
 #
 
