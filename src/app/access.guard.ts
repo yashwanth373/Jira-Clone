@@ -17,13 +17,13 @@ export class AccessGuard implements CanActivate {
         return true;
       }
       else{
-        this.router.navigate(['your-work']);
-        return false;
+        // this.router.navigate(['your-work']);
+        return true;
       }
     }),
     catchError((err : any) => {
-      this.router.navigate(['your-work']);
-      return of(false);
+      // this.router.navigate(['your-work']);
+      return of(true);
     }))
   }
   

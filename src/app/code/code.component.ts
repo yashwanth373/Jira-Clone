@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-code',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CodeComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _dsService : DataService) { }
 
   ngOnInit(): void {
+    this._dsService.getRepoDetails("yashwanth373","Jira-Clone").subscribe((data)=>{
+      console.log(data)
+    })
   }
 
 }

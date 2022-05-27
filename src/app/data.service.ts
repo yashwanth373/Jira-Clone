@@ -152,4 +152,9 @@ export class DataService {
     return this.http.put('/acceptInvite/' + project_id,userDetails);
   }
 
+  //Specific for Code Component
+  getRepoDetails(userId: any, repoName: any){
+    return this.http.get("https://api.github.com/repos/"+userId+"/"+repoName+"/commits?page=2");
+  }
+
 }
