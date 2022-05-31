@@ -72,6 +72,8 @@ export class IssuesComponent implements OnInit {
     | ElementRef
     | undefined;
 
+  @ViewChild('fileInput') fileInputbtn: ElementRef | undefined;
+
   sprintName: string = '';
 
   startDate: any = new FormControl(moment());
@@ -294,49 +296,122 @@ export class IssuesComponent implements OnInit {
     this.backendUpdateIssue();
   }
 
-  backendUpdateIssue(){
-
+  backendUpdateIssue() {
     this.project.Issues = this.project.Issues.map((issue: any) => {
-        if (issue.issue_id === this.selectedIssue.issue_id) {
-          issue = { ...this.selectedIssue };
-        }
-        return issue;
-      });
+      if (issue.issue_id === this.selectedIssue.issue_id) {
+        issue = { ...this.selectedIssue };
+      }
+      return issue;
+    });
 
-      let sprintIssues = this.project.Sprint.issues.map((issue: any) => issue.issue_id);
-      let backlogIssues = this.project.backlog.map(
-        (issue: any) => issue.issue_id
+    let sprintIssues = this.project.Sprint.issues.map(
+      (issue: any) => issue.issue_id
+    );
+    let backlogIssues = this.project.backlog.map(
+      (issue: any) => issue.issue_id
+    );
+
+    // this.prepareSprint();
+
+    if (sprintIssues.includes(this.selectedIssue.issue_id)) {
+      let foundIndex = this.project.Sprint.issues.findIndex(
+        (issue: any) => issue.issue_id === this.selectedIssue.issue_id
       );
-
-      // this.prepareSprint();
-      
-      if (sprintIssues.includes(this.selectedIssue.issue_id)) {
-        let foundIndex = this.project.Sprint.issues.findIndex(
-          (issue: any) => issue.issue_id === this.selectedIssue.issue_id
-        );
-        this.project.Sprint.issues.splice(foundIndex, 1, {
-          ...this.selectedIssue,
-        });
-      }
-      if (backlogIssues.includes(this.selectedIssue.issue_id)) {
-        let foundIndex2 = this.project.backlog.findIndex(
-          (issue: any) => issue.issue_id === this.selectedIssue.issue_id
-        );
-        this.project.backlog.splice(foundIndex2, 1, { ...this.selectedIssue });
-      }
-      this.backendUpdateIssues();
-    
+      this.project.Sprint.issues.splice(foundIndex, 1, {
+        ...this.selectedIssue,
+      });
+    }
+    if (backlogIssues.includes(this.selectedIssue.issue_id)) {
+      let foundIndex2 = this.project.backlog.findIndex(
+        (issue: any) => issue.issue_id === this.selectedIssue.issue_id
+      );
+      this.project.backlog.splice(foundIndex2, 1, { ...this.selectedIssue });
+    }
+    this.backendUpdateIssues();
   }
 
-  backendUpdateIssues(){
-    this._dsService.updateSprint(this.project.project_id, this.project.Sprint).subscribe((data: any) => {
+  backendUpdateIssues() {
+    this._dsService
+      .updateSprint(this.project.project_id, this.project.Sprint)
+      .subscribe((data: any) => {
         console.log(data);
-      })
-    this._dsService.updateBacklog(this.project.project_id, this.project.backlog).subscribe((data: any) => {
+      });
+    this._dsService
+      .updateBacklog(this.project.project_id, this.project.backlog)
+      .subscribe((data: any) => {
         console.log(data);
-      })
-    this._dsService.updateIssues(this.project.project_id, this.project.Issues).subscribe((data: any) => {
-      console.log(data);
+      });
+    this._dsService
+      .updateIssues(this.project.project_id, this.project.Issues)
+      .subscribe((data: any) => {
+        console.log(data);
+      });
+  }
+
+  openFileInput() {
+    this.fileInputbtn?.nativeElement.click();
+  }
+
+  async readFileAsDataURL(file: any) {
+    let result_base64 = await new Promise((resolve) => {
+      let fileReader = new FileReader();
+      fileReader.onload = (e) => resolve(fileReader.result);
+      fileReader.readAsDataURL(file);
     });
+
+    return result_base64;
+  }
+
+  async onChange(files: any) {
+    let attachments: any = [];
+    for (let i = 0; i < files.length; i++) {
+      if (files[i].size < 16000000) {
+        let file = files[i];
+        let attachment = {
+          file_name: file.name,
+          file_size: file.size,
+          isImage:
+            file.type === 'image/jpeg' ||
+            file.type === 'image/png' ||
+            file.type === 'image/gif' ||
+            file.type === 'image/jpg' ||
+            file.type === 'image/bmp' ||
+            file.type === 'image/svg+xml' ||
+            file.type === 'image/tiff' ||
+            file.type === 'image/webp',
+          file_data: file,
+        };
+        let dataURL = await this.readFileAsDataURL(file);
+        attachment.file_data = dataURL;
+        attachments.push(attachment);
+      }
+    }
+    this.selectedIssue.attachment =
+      this.selectedIssue.attachment.concat(attachments);
+    console.log(this.selectedIssue);
+    this._dsService
+      .updateIssue(this.project.project_id, this.selectedIssue)
+      .subscribe((data: any) => {
+        console.log(data);
+      });
+  }
+
+  downloadAttachment(index: any) {
+    let link = document.createElement('a');
+    let attachment = this.selectedIssue.attachment[index];
+    link.download = attachment.file_name;
+    link.href = attachment.file_data;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  deleteAttachment(index: any) {
+    this.selectedIssue.attachment.splice(index, 1);
+    this._dsService
+      .updateIssue(this.project.project_id, this.selectedIssue)
+      .subscribe((data: any) => {
+        console.log(data);
+      });
   }
 }

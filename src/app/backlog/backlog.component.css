@@ -1065,6 +1065,13 @@
     justify-content: center;
 }
 
+.issue-modal-left-attachments-header{
+    width: 100%;
+    height: 11%;
+    display: flex;
+    justify-content: flex-start;
+}
+
 .issue-modal-left-description-title,
 .issue-modal-left-attachments-title {
     width: 100%;
@@ -1075,6 +1082,33 @@
     font-weight: 500;
     font-size: 1.1rem;
     color: #0e1725;
+}
+
+.issue-modal-left-attachments-title{
+  height: 100%;
+  width: 26%;
+}
+
+
+.issue-modal-left-attachments-add-btn{
+  width: 6%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f6f8;
+    border-radius: 3px;
+}
+
+.issue-modal-left-attachments-add-btn:hover{
+  cursor: pointer;
+  background: rgba(9, 30, 66, 0.08);
+  color: #42526e;
+}
+
+.issue-modal-left-attachments-add-btn img {
+  width:16px;
+  height:16px;
 }
 
 .issue-modal-left-description-content,
@@ -1092,6 +1126,119 @@
     border-radius: 3px;
     padding: 1%;
     outline: none;
+}
+
+.attachments-area{
+  background-color: unset;
+  width: 445px;
+  display: block;
+}
+
+.issue-modal-left-attachments-item{
+  width: 200px;
+  height: 180px;
+  box-shadow: rgb(23 43 77 / 50%) 0px 0px 1px, rgb(23 43 77 / 50%) 0px 0px 1px;
+  border-radius: 3px;
+  display: inline-block;
+  margin: 1%;
+}
+
+.issue-modal-left-attachments-item-preview{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.issue-modal-left-attachments-item-content{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.issue-modal-left-attachments-item-content:hover{
+  background-color: rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+.issue-modal-left-attachments-item-upper{
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  height: 20%;
+}
+
+.issue-model-left-attachment-item-lower-delete-btn{
+  width: 16%;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f6f7f8;
+  border-radius: 3px;
+  margin: 1%;
+}
+
+.issue-model-left-attachment-item-lower-delete-btn:hover{
+  background-color: rgb(230,232,236);
+
+  
+  color: #42526e;
+}
+
+.issue-model-left-attachment-item-lower-delete-btn img{
+  width: 20px;
+  height: 20px;
+}
+
+.issue-modal-left-attachment-item-lower{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  width: 100%;
+  height: 40%;
+  border-radius: 3px;
+}
+
+.issue-model-left-attachment-item-lower-download-btn{
+  width: 16%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f6f7f8;
+  border-radius: 3px;
+  margin: 1%;
+}
+
+.issue-model-left-attachment-item-lower-download-btn:hover{
+  background: rgb(230,232,236);
+  color: #42526e;
+}
+
+.issue-model-left-attachment-item-lower-download-btn img{
+  width: 20px;
+  height: 20px;
+}
+
+.issue-modal-attachment-item-lower-file-name{
+  width: 100%;
+  height: 50%;
+  font-family: Roboto,sans-serif;
+  font-weight: 400;
+  font-size: .9rem;
+  color: #6b778c;
+  background-color: #fff;
+  border-radius: 3px;
+  padding-left: 2%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .editing {

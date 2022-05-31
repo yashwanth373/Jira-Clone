@@ -4,7 +4,10 @@
       <div class="board-title-left-subtitle">
         Projects / {{ project.project_name }}
       </div>
-      <div class="board-title-left-title" *ngIf="activeSprint.sprint_name; else noSprint">
+      <div
+        class="board-title-left-title"
+        *ngIf="activeSprint.sprint_name; else noSprint"
+      >
         {{ activeSprint.sprint_name }}
       </div>
       <ng-template #noSprint>
@@ -236,7 +239,11 @@
         <div class="board-content-body-section-title">
           <div class="board-content-body-section-title-left">
             {{ section.toUpperCase() }}
-            <span *ngIf="activeSprint.sprint_name && activeSprint[section].length > 1">
+            <span
+              *ngIf="
+                activeSprint.sprint_name && activeSprint[section].length > 1
+              "
+            >
               <span
                 style="
                   position: relative;
@@ -249,7 +256,11 @@
               </span>
               {{ activeSprint[section].length }} ISSUES
             </span>
-            <span *ngIf="activeSprint.sprint_name && activeSprint[section].length == 1">
+            <span
+              *ngIf="
+                activeSprint.sprint_name && activeSprint[section].length == 1
+              "
+            >
               <span
                 style="
                   position: relative;
@@ -507,14 +518,133 @@
                   </div>
                 </ng-template>
               </div>
-              <!-- <div class="issue-modal-left-attachments">
-                <div class="issue-modal-left-attachments-title">
-                  Attachments
+              <div class="issue-modal-left-attachments">
+                <div class="issue-modal-left-attachments-header">
+                  <div class="issue-modal-left-attachments-title">
+                    Attachments
+                  </div>
+                  <div
+                    class="issue-modal-left-attachments-add-btn"
+                    (click)="openFileInput()"
+                  >
+                    <img src="../../assets/plus-icon.svg" alt="Add Icon" />
+                  </div>
+                  <input
+                    type="file"
+                    id="issueAttachments"
+                    style="visibility: hidden"
+                    #fileInput
+                    multiple
+                    name="project_icon"
+                    (input)="onChange(fileInput?.files)"
+                  />
                 </div>
-                <div class="issue-modal-left-attachments-area">
+                <div
+                  class="issue-modal-left-attachments-area attachments-area"
+                  *ngIf="
+                    selectedIssue &&
+                      selectedIssue?.attachment &&
+                      selectedIssue?.attachment?.length === 0;
+                    else attachments
+                  "
+                >
                   All issue attachments will be previewed here.
                 </div>
-              </div> -->
+                <ng-template #attachments>
+                  <div
+                    class="issue-modal-left-attachments-area attachments-area"
+                  >
+                    <div
+                      class="issue-modal-left-attachments-item"
+                      *ngFor="
+                        let attachment of selectedIssue?.attachment;
+                        let i = index
+                      "
+                    >
+                      <div
+                        class="issue-modal-left-attachments-item-preview"
+                        *ngIf="attachment.isImage; else noPreview"
+                        style="background: url('{{attachment.file_data}}');background-size:contain;background-repeat:no-repeat;background-position:center"
+                      >
+                        <div class="issue-modal-left-attachments-item-content">
+                          <div class="issue-modal-left-attachments-item-upper">
+                            <div
+                              class="issue-model-left-attachment-item-lower-delete-btn"
+                              (click)="deleteAttachment(i)"
+                            >
+                              <img
+                                src="../../assets/delete-icon.svg"
+                                alt="delete"
+                              />
+                            </div>
+                          </div>
+                          <div class="issue-modal-left-attachment-item-lower">
+                            <div
+                              class="issue-model-left-attachment-item-lower-download-btn"
+                              (click)="downloadAttachment(i)"
+                            >
+                              <img
+                                src="../../assets/download-icon.svg"
+                                alt="download"
+                              />
+                            </div>
+                            <div
+                              class="issue-modal-attachment-item-lower-file-name"
+                            >
+                              {{ attachment.file_name }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <ng-template #noPreview>
+                        <div
+                          class="issue-modal-left-attachments-item-preview"
+                          style="
+                            background: url('../../assets/file-icon.svg');
+                            background-size: contain;
+                            background-repeat: no-repeat;
+                            background-position: center;
+                          "
+                        >
+                          <div
+                            class="issue-modal-left-attachments-item-content"
+                          >
+                            <div
+                              class="issue-modal-left-attachments-item-upper"
+                            >
+                              <div
+                                class="issue-model-left-attachment-item-lower-delete-btn"
+                                (click)="deleteAttachment(i)"
+                              >
+                                <img
+                                  src="../../assets/delete-icon.svg"
+                                  alt="delete"
+                                />
+                              </div>
+                            </div>
+                            <div class="issue-modal-left-attachment-item-lower">
+                              <div
+                                class="issue-model-left-attachment-item-lower-download-btn"
+                                (click)="downloadAttachment(i)"
+                              >
+                                <img
+                                  src="../../assets/download-icon.svg"
+                                  alt="download"
+                                />
+                              </div>
+                              <div
+                                class="issue-modal-attachment-item-lower-file-name"
+                              >
+                                {{ attachment.file_name }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
             </div>
             <div class="issue-modal-right">
               <div class="issue-modal-right-top">

@@ -34,7 +34,7 @@ const corsOpts = {
 
 app.use(cors(corsOpts));
 
-app.use(bodyparser.json())
+app.use(bodyparser.json({limit: '16mb'}));
 
 app.use(cookieSession({
     name: 'session',
@@ -236,7 +236,11 @@ app.get("/logout", (req, res) => {
 app.get("/getDetails", isLoggedIn, async (req, res) => {
 
     try {
+        // For prod
         let result = await db.findUser(req.user.id)
+
+        // For develop
+        //let result = await db.findUser(req.user.id)
 
         const ownerNameWords = result.name.split(" ");
 
@@ -642,7 +646,7 @@ app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "dist/jira-clone/index.html"))
 })
 
-app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
+app.listen(process.env.PORT || 4500, '0.0.0.0', () => {
     console.log('Server is running on port 4500');
 })
 
