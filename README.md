@@ -5,6 +5,9 @@
 A simplified version of Atlassian's JIRA. Manage your personal or private project by inviting people to Jira Clone and distribute work effectively.
 
 
+#### Access Live Website [here](https://simple-jira.herokuapp.com/)
+
+
 ## Features
 
 - OAuth using Google, Microsoft and Github accounts
